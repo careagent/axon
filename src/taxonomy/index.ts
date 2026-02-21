@@ -1,2 +1,11 @@
-// Taxonomy module entry point
-// Re-exports will be added as schemas and loader are implemented
+export {
+  AtomicActionSchema,
+  GovernedBySchema,
+  ProviderTypeCategorySchema,
+  TaxonomyActionSchema,
+  ProviderTypeSchema,
+  TaxonomyVersionSchema,
+  TaxonomyVersionValidator,
+} from './schemas.js'
+
+export { loadTaxonomy } from './loader.js'
