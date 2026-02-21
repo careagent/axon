@@ -37,7 +37,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 Plans:
 - [x] 01-01-PLAN.md — Package scaffold (pnpm, TypeScript, tsdown, vitest, TypeBox schemas, JSON loader)
-- [ ] 01-02-PLAN.md — Taxonomy data authoring (49 provider types, Physician actions, common cross-type actions)
+- [x] 01-02-PLAN.md — Taxonomy data authoring (49 provider types, Physician actions, common cross-type actions)
 - [ ] 01-03-PLAN.md — AxonTaxonomy API implementation with TDD and data integrity tests
 
 ### Phase 2: Questionnaire Repository
@@ -130,7 +130,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Package Foundation and Clinical Action Taxonomy | 1/3 | In Progress | - |
+| 1. Package Foundation and Clinical Action Taxonomy | 2/3 | In Progress | - |
 | 2. Questionnaire Repository | 0/2 | Not started | - |
 | 3. Registry and Credentials | 0/2 | Not started | - |
 | 4. Protocol Specification and Connection Broker | 0/3 | Not started | - |

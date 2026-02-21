@@ -15,12 +15,12 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Clinical Action Taxonomy
 
-- [ ] **TAXO-01**: Hierarchical action vocabulary with dot-notation identifiers under seven atomic actions (chart, order, charge, perform, interpret, educate, coordinate)
-- [ ] **TAXO-02**: Every action maps to one or more of the 49 provider types via `applicable_types`
+- [x] **TAXO-01**: Hierarchical action vocabulary with dot-notation identifiers under seven atomic actions (chart, order, charge, perform, interpret, educate, coordinate)
+- [x] **TAXO-02**: Every action maps to one or more of the 49 provider types via `applicable_types`
 - [x] **TAXO-03**: Taxonomy is versioned with semver; CANS.md records which taxonomy version was used (`scope.taxonomy_version`)
 - [ ] **TAXO-04**: `AxonTaxonomy.getActionsForType()` returns all valid actions for a given provider type
 - [ ] **TAXO-05**: `AxonTaxonomy.validateAction()` confirms an action ID exists in the current taxonomy version
-- [ ] **TAXO-06**: Full Physician (MD, DO) action set in v1; common cross-type actions for all 49 types; type-specific actions for others are v2
+- [x] **TAXO-06**: Full Physician (MD, DO) action set in v1; common cross-type actions for all 49 types; type-specific actions for others are v2
 - [x] **TAXO-07**: Taxonomy data is a versioned JSON data file (`data/taxonomy/v1.0.0.json`), not hardcoded enums
 
 ### Questionnaire Repository
@@ -129,12 +129,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | AXON-01 | Phase 1: Package Foundation and Clinical Action Taxonomy | Complete |
-| TAXO-01 | Phase 1: Package Foundation and Clinical Action Taxonomy | Pending |
-| TAXO-02 | Phase 1: Package Foundation and Clinical Action Taxonomy | Pending |
+| TAXO-01 | Phase 1: Package Foundation and Clinical Action Taxonomy | Complete |
+| TAXO-02 | Phase 1: Package Foundation and Clinical Action Taxonomy | Complete |
 | TAXO-03 | Phase 1: Package Foundation and Clinical Action Taxonomy | Complete |
 | TAXO-04 | Phase 1: Package Foundation and Clinical Action Taxonomy | Pending |
 | TAXO-05 | Phase 1: Package Foundation and Clinical Action Taxonomy | Pending |
-| TAXO-06 | Phase 1: Package Foundation and Clinical Action Taxonomy | Pending |
+| TAXO-06 | Phase 1: Package Foundation and Clinical Action Taxonomy | Complete |
 | TAXO-07 | Phase 1: Package Foundation and Clinical Action Taxonomy | Complete |
 | QUES-01 | Phase 2: Questionnaire Repository | Pending |
 | QUES-02 | Phase 2: Questionnaire Repository | Pending |
