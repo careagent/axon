@@ -33,12 +33,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. `AxonTaxonomy.validateAction('chart.progress_note')` confirms the action exists in the current taxonomy version; invalid IDs are rejected
   4. Taxonomy data lives in `data/taxonomy/v1.0.0.json` as a versioned JSON file, not as hardcoded TypeScript enums, and the taxonomy version string is accessible for CANS.md `scope.taxonomy_version`
   5. Every action in the taxonomy maps to at least one provider type via `applicable_types`, and every one of the 49 provider types has at least the common cross-type actions available
-**Plans**: TBD
+**Plans**: 3 plans in 3 waves
 
 Plans:
-- [ ] 01-01: TBD
-- [ ] 01-02: TBD
-- [ ] 01-03: TBD
+- [ ] 01-01-PLAN.md — Package scaffold (pnpm, TypeScript, tsdown, vitest, TypeBox schemas, JSON loader)
+- [ ] 01-02-PLAN.md — Taxonomy data authoring (49 provider types, Physician actions, common cross-type actions)
+- [ ] 01-03-PLAN.md — AxonTaxonomy API implementation with TDD and data integrity tests
 
 ### Phase 2: Questionnaire Repository
 **Goal**: Provider-core onboarding can retrieve a complete, conditional questionnaire for Physicians that produces CANS.md-compatible answers, with valid stubs for all other provider types
