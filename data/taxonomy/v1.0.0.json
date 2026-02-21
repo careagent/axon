@@ -1,0 +1,302 @@
+{
+  "version": "1.0.0",
+  "effective_date": "2026-02-21",
+  "description": "Axon clinical action taxonomy v1.0.0 — full Physician actions + common cross-type actions for all 49 provider types",
+  "provider_types": [
+    {
+      "id": "physician",
+      "display_name": "Physician",
+      "category": "medical",
+      "member_roles": ["MD", "DO"]
+    },
+    {
+      "id": "advanced_practice_provider",
+      "display_name": "Advanced Practice Provider",
+      "category": "medical",
+      "member_roles": ["NP", "PA", "CRNA", "CNM", "CNS"]
+    },
+    {
+      "id": "nursing",
+      "display_name": "Nursing",
+      "category": "medical",
+      "member_roles": ["RN", "LPN", "LVN"]
+    },
+    {
+      "id": "nursing_support",
+      "display_name": "Nursing Support",
+      "category": "medical",
+      "member_roles": ["CNA", "MA", "Patient Care Technician"]
+    },
+    {
+      "id": "pharmacy",
+      "display_name": "Pharmacy",
+      "category": "medical",
+      "member_roles": ["Pharmacist", "Pharmacy Technician"]
+    },
+    {
+      "id": "dental",
+      "display_name": "Dental",
+      "category": "dental",
+      "member_roles": ["Dentist", "Dental Hygienist", "Dental Assistant", "Dental Therapist"]
+    },
+    {
+      "id": "behavioral_mental_health",
+      "display_name": "Behavioral/Mental Health",
+      "category": "behavioral_health",
+      "member_roles": ["Psychologist", "LCSW", "LPC", "LMFT", "Psychiatric Technician", "Substance Abuse Counselor", "BCBA"]
+    },
+    {
+      "id": "physical_rehabilitation",
+      "display_name": "Physical Rehabilitation",
+      "category": "allied_health",
+      "member_roles": ["Physical Therapist", "PT Assistant"]
+    },
+    {
+      "id": "occupational_therapy",
+      "display_name": "Occupational Therapy",
+      "category": "allied_health",
+      "member_roles": ["Occupational Therapist", "OT Assistant"]
+    },
+    {
+      "id": "speech_language",
+      "display_name": "Speech & Language",
+      "category": "allied_health",
+      "member_roles": ["Speech-Language Pathologist", "SLP Assistant"]
+    },
+    {
+      "id": "respiratory",
+      "display_name": "Respiratory",
+      "category": "allied_health",
+      "member_roles": ["Respiratory Therapist"]
+    },
+    {
+      "id": "audiology",
+      "display_name": "Audiology",
+      "category": "allied_health",
+      "member_roles": ["Audiologist", "Audiology Assistant"]
+    },
+    {
+      "id": "vision_optometry",
+      "display_name": "Vision/Optometry",
+      "category": "allied_health",
+      "member_roles": ["Optometrist", "Optician", "Orthoptist", "Ocularist"]
+    },
+    {
+      "id": "radiology_imaging",
+      "display_name": "Radiology/Imaging",
+      "category": "diagnostics",
+      "member_roles": ["Radiologic Technologist", "MRI Technologist", "Ultrasound/Sonographer", "Nuclear Medicine Technologist", "Radiation Therapist", "Dosimetrist", "Mammographer"]
+    },
+    {
+      "id": "laboratory",
+      "display_name": "Laboratory",
+      "category": "diagnostics",
+      "member_roles": ["Medical Laboratory Scientist", "Lab Technician", "Phlebotomist", "Histotechnologist", "Cytotechnologist", "Pathologists' Assistant"]
+    },
+    {
+      "id": "surgical",
+      "display_name": "Surgical",
+      "category": "surgical",
+      "member_roles": ["Surgical Technologist", "Surgical First Assistant", "Perfusionist"]
+    },
+    {
+      "id": "emergency_prehospital",
+      "display_name": "Emergency/Prehospital",
+      "category": "emergency",
+      "member_roles": ["Paramedic", "EMT", "Emergency Medical Dispatcher"]
+    },
+    {
+      "id": "nutrition_dietetics",
+      "display_name": "Nutrition/Dietetics",
+      "category": "allied_health",
+      "member_roles": ["Registered Dietitian", "Dietetic Technician", "Nutritionist"]
+    },
+    {
+      "id": "podiatry",
+      "display_name": "Podiatry",
+      "category": "allied_health",
+      "member_roles": ["Podiatrist"]
+    },
+    {
+      "id": "chiropractic",
+      "display_name": "Chiropractic",
+      "category": "allied_health",
+      "member_roles": ["Chiropractor"]
+    },
+    {
+      "id": "midwifery",
+      "display_name": "Midwifery (non-nurse)",
+      "category": "allied_health",
+      "member_roles": ["Certified Professional Midwife", "Licensed Midwife"]
+    },
+    {
+      "id": "genetic_counseling",
+      "display_name": "Genetic Counseling",
+      "category": "allied_health",
+      "member_roles": ["Genetic Counselor"]
+    },
+    {
+      "id": "orthotics_prosthetics",
+      "display_name": "Orthotics & Prosthetics",
+      "category": "allied_health",
+      "member_roles": ["Orthotist", "Prosthetist", "O&P Technician", "Pedorthist"]
+    },
+    {
+      "id": "recreational_therapy",
+      "display_name": "Recreational Therapy",
+      "category": "allied_health",
+      "member_roles": ["Recreational Therapist"]
+    },
+    {
+      "id": "creative_arts_therapy",
+      "display_name": "Creative Arts Therapy",
+      "category": "allied_health",
+      "member_roles": ["Music Therapist", "Art Therapist", "Dance/Movement Therapist", "Drama Therapist"]
+    },
+    {
+      "id": "acupuncture_traditional_medicine",
+      "display_name": "Acupuncture & Traditional Medicine",
+      "category": "allied_health",
+      "member_roles": ["Acupuncturist", "Traditional Chinese Medicine Practitioner", "Naturopathic Physician"]
+    },
+    {
+      "id": "massage_bodywork",
+      "display_name": "Massage & Bodywork",
+      "category": "allied_health",
+      "member_roles": ["Licensed Massage Therapist"]
+    },
+    {
+      "id": "athletic_training",
+      "display_name": "Athletic Training",
+      "category": "allied_health",
+      "member_roles": ["Certified Athletic Trainer"]
+    },
+    {
+      "id": "sleep_medicine",
+      "display_name": "Sleep Medicine",
+      "category": "allied_health",
+      "member_roles": ["Polysomnographic Technologist", "Sleep Technician"]
+    },
+    {
+      "id": "cardiac_vascular_diagnostics",
+      "display_name": "Cardiac/Vascular Diagnostics",
+      "category": "diagnostics",
+      "member_roles": ["Cardiovascular Technologist", "Vascular Technologist", "EKG/ECG Technician"]
+    },
+    {
+      "id": "neurodiagnostics",
+      "display_name": "Neurodiagnostics",
+      "category": "diagnostics",
+      "member_roles": ["EEG Technologist", "Evoked Potential Technologist", "Intraoperative Neuromonitoring Technologist"]
+    },
+    {
+      "id": "dialysis_nephrology",
+      "display_name": "Dialysis/Nephrology",
+      "category": "diagnostics",
+      "member_roles": ["Dialysis Technician", "Nephrology Technician"]
+    },
+    {
+      "id": "wound_care",
+      "display_name": "Wound Care",
+      "category": "allied_health",
+      "member_roles": ["Wound Care Specialist", "Certified Wound Care Nurse"]
+    },
+    {
+      "id": "sterile_processing",
+      "display_name": "Sterile Processing",
+      "category": "administrative",
+      "member_roles": ["Sterile Processing Technician"]
+    },
+    {
+      "id": "health_information_coding",
+      "display_name": "Health Information/Coding",
+      "category": "administrative",
+      "member_roles": ["Health Information Technician", "Medical Coder", "Clinical Documentation Specialist"]
+    },
+    {
+      "id": "community_public_health",
+      "display_name": "Community/Public Health",
+      "category": "administrative",
+      "member_roles": ["Community Health Worker", "Health Educator", "Public Health Nurse"]
+    },
+    {
+      "id": "home_health_hospice",
+      "display_name": "Home Health/Hospice",
+      "category": "administrative",
+      "member_roles": ["Home Health Aide", "Hospice Aide"]
+    },
+    {
+      "id": "patient_navigation",
+      "display_name": "Patient Navigation",
+      "category": "administrative",
+      "member_roles": ["Patient Navigator", "Care Coordinator"]
+    },
+    {
+      "id": "lactation",
+      "display_name": "Lactation",
+      "category": "allied_health",
+      "member_roles": ["Lactation Consultant (IBCLC)"]
+    },
+    {
+      "id": "vision_rehabilitation",
+      "display_name": "Vision Rehabilitation",
+      "category": "allied_health",
+      "member_roles": ["Certified Low Vision Therapist", "Vision Rehabilitation Therapist", "Orientation & Mobility Specialist"]
+    },
+    {
+      "id": "deaf_hard_of_hearing",
+      "display_name": "Deaf/Hard of Hearing Services",
+      "category": "allied_health",
+      "member_roles": ["Medical Interpreter (ASL)", "Hearing Instrument Specialist"]
+    },
+    {
+      "id": "anesthesia_technology",
+      "display_name": "Anesthesia Technology",
+      "category": "surgical",
+      "member_roles": ["Anesthesia Technologist", "Anesthesia Technician"]
+    },
+    {
+      "id": "clinical_research",
+      "display_name": "Clinical Research",
+      "category": "administrative",
+      "member_roles": ["Clinical Research Coordinator", "Clinical Research Nurse"]
+    },
+    {
+      "id": "organ_tissue",
+      "display_name": "Organ/Tissue",
+      "category": "administrative",
+      "member_roles": ["Transplant Coordinator", "Organ Procurement Specialist"]
+    },
+    {
+      "id": "rehabilitation_engineering",
+      "display_name": "Rehabilitation Engineering",
+      "category": "administrative",
+      "member_roles": ["Assistive Technology Professional", "Rehabilitation Engineer"]
+    },
+    {
+      "id": "kinesiotherapy",
+      "display_name": "Kinesiotherapy",
+      "category": "allied_health",
+      "member_roles": ["Kinesiotherapist"]
+    },
+    {
+      "id": "child_life",
+      "display_name": "Child Life",
+      "category": "allied_health",
+      "member_roles": ["Certified Child Life Specialist"]
+    },
+    {
+      "id": "medical_physics",
+      "display_name": "Medical Physics",
+      "category": "diagnostics",
+      "member_roles": ["Medical Physicist"]
+    },
+    {
+      "id": "ophthalmic",
+      "display_name": "Ophthalmic",
+      "category": "diagnostics",
+      "member_roles": ["Ophthalmic Technician", "Ophthalmic Medical Technologist", "Ophthalmic Assistant"]
+    }
+  ],
+  "actions": []
+}
