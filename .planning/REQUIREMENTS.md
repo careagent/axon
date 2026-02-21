@@ -128,53 +128,53 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AXON-01 | Phase 1 | Pending |
-| TAXO-01 | Phase 1 | Pending |
-| TAXO-02 | Phase 1 | Pending |
-| TAXO-03 | Phase 1 | Pending |
-| TAXO-04 | Phase 1 | Pending |
-| TAXO-05 | Phase 1 | Pending |
-| TAXO-06 | Phase 1 | Pending |
-| TAXO-07 | Phase 1 | Pending |
-| QUES-01 | Phase 2 | Pending |
-| QUES-02 | Phase 2 | Pending |
-| QUES-03 | Phase 2 | Pending |
-| QUES-04 | Phase 2 | Pending |
-| QUES-05 | Phase 2 | Pending |
-| QUES-06 | Phase 2 | Pending |
-| REGI-01 | Phase 3 | Pending |
-| REGI-02 | Phase 3 | Pending |
-| REGI-03 | Phase 3 | Pending |
-| REGI-04 | Phase 3 | Pending |
-| REGI-05 | Phase 3 | Pending |
-| PROT-01 | Phase 4 | Pending |
-| PROT-02 | Phase 4 | Pending |
-| PROT-03 | Phase 4 | Pending |
-| PROT-04 | Phase 4 | Pending |
-| PROT-05 | Phase 4 | Pending |
-| BROK-01 | Phase 4 | Pending |
-| BROK-02 | Phase 4 | Pending |
-| BROK-03 | Phase 4 | Pending |
-| AXON-02 | Phase 5 | Pending |
-| AXON-03 | Phase 5 | Pending |
-| CLIT-01 | Phase 5 | Pending |
-| CLIT-02 | Phase 5 | Pending |
-| CLIT-03 | Phase 5 | Pending |
-| INTG-01 | Phase 5 | Pending |
-| INTG-02 | Phase 5 | Pending |
-| INTG-03 | Phase 5 | Pending |
-| DOCS-01 | Phase 6 | Pending |
-| DOCS-02 | Phase 6 | Pending |
-| DOCS-03 | Phase 6 | Pending |
-| DOCS-04 | Phase 6 | Pending |
-| DOCS-05 | Phase 6 | Pending |
-| DOCS-06 | Phase 6 | Pending |
+| AXON-01 | Phase 1: Package Foundation and Clinical Action Taxonomy | Pending |
+| TAXO-01 | Phase 1: Package Foundation and Clinical Action Taxonomy | Pending |
+| TAXO-02 | Phase 1: Package Foundation and Clinical Action Taxonomy | Pending |
+| TAXO-03 | Phase 1: Package Foundation and Clinical Action Taxonomy | Pending |
+| TAXO-04 | Phase 1: Package Foundation and Clinical Action Taxonomy | Pending |
+| TAXO-05 | Phase 1: Package Foundation and Clinical Action Taxonomy | Pending |
+| TAXO-06 | Phase 1: Package Foundation and Clinical Action Taxonomy | Pending |
+| TAXO-07 | Phase 1: Package Foundation and Clinical Action Taxonomy | Pending |
+| QUES-01 | Phase 2: Questionnaire Repository | Pending |
+| QUES-02 | Phase 2: Questionnaire Repository | Pending |
+| QUES-03 | Phase 2: Questionnaire Repository | Pending |
+| QUES-04 | Phase 2: Questionnaire Repository | Pending |
+| QUES-05 | Phase 2: Questionnaire Repository | Pending |
+| QUES-06 | Phase 2: Questionnaire Repository | Pending |
+| REGI-01 | Phase 3: Registry and Credentials | Pending |
+| REGI-02 | Phase 3: Registry and Credentials | Pending |
+| REGI-03 | Phase 3: Registry and Credentials | Pending |
+| REGI-04 | Phase 3: Registry and Credentials | Pending |
+| REGI-05 | Phase 3: Registry and Credentials | Pending |
+| PROT-01 | Phase 4: Protocol Specification and Connection Broker | Pending |
+| PROT-02 | Phase 4: Protocol Specification and Connection Broker | Pending |
+| PROT-03 | Phase 4: Protocol Specification and Connection Broker | Pending |
+| PROT-04 | Phase 4: Protocol Specification and Connection Broker | Pending |
+| PROT-05 | Phase 4: Protocol Specification and Connection Broker | Pending |
+| BROK-01 | Phase 4: Protocol Specification and Connection Broker | Pending |
+| BROK-02 | Phase 4: Protocol Specification and Connection Broker | Pending |
+| BROK-03 | Phase 4: Protocol Specification and Connection Broker | Pending |
+| AXON-02 | Phase 5: Client Facade, Package Exports, and Integration | Pending |
+| AXON-03 | Phase 5: Client Facade, Package Exports, and Integration | Pending |
+| CLIT-01 | Phase 5: Client Facade, Package Exports, and Integration | Pending |
+| CLIT-02 | Phase 5: Client Facade, Package Exports, and Integration | Pending |
+| CLIT-03 | Phase 5: Client Facade, Package Exports, and Integration | Pending |
+| INTG-01 | Phase 5: Client Facade, Package Exports, and Integration | Pending |
+| INTG-02 | Phase 5: Client Facade, Package Exports, and Integration | Pending |
+| INTG-03 | Phase 5: Client Facade, Package Exports, and Integration | Pending |
+| DOCS-01 | Phase 6: Documentation and Release | Pending |
+| DOCS-02 | Phase 6: Documentation and Release | Pending |
+| DOCS-03 | Phase 6: Documentation and Release | Pending |
+| DOCS-04 | Phase 6: Documentation and Release | Pending |
+| DOCS-05 | Phase 6: Documentation and Release | Pending |
+| DOCS-06 | Phase 6: Documentation and Release | Pending |
 
 **Coverage:**
 - v1 requirements: 41 total
 - Mapped to phases: 41
-- Unmapped: 0 ✓
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-21*
-*Last updated: 2026-02-21 after initial definition*
+*Last updated: 2026-02-21 after roadmap creation*
