@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeAll } from 'vitest'
 import { AxonTaxonomy } from '../src/taxonomy/taxonomy.js'
+import { TaxonomyVersionValidator } from '../src/taxonomy/schemas.js'
 import type { TaxonomyAction, ProviderType } from '../src/types/index.js'
 
 /**
@@ -317,6 +318,19 @@ describe('taxonomy data', () => {
           `Action "${action.id}" has prefix "${prefix}" but atomic_action is "${action.atomic_action}"`,
         ).toBe(action.atomic_action)
       }
+    })
+  })
+
+  describe('schema validation', () => {
+    it('validator rejects invalid taxonomy data', () => {
+      const invalidData = { version: 123, description: null }
+      expect(TaxonomyVersionValidator.Check(invalidData)).toBe(false)
+    })
+
+    it('validator reports errors for invalid taxonomy data', () => {
+      const invalidData = { version: 123, description: null }
+      const errors = [...TaxonomyVersionValidator.Errors(invalidData)]
+      expect(errors.length).toBeGreaterThan(0)
     })
   })
 })
