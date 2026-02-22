@@ -7,6 +7,8 @@ export default defineConfig({
     './src/questionnaires/index.ts',
     './src/types/index.ts',
     './src/mock/index.ts',
+    './src/server/index.ts',
+    './src/server/standalone.ts',
   ],
   format: ['es'],
   platform: 'node',

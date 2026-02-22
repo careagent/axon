@@ -8,6 +8,9 @@ importers:
 
   .:
     devDependencies:
+      '@careagent/axon':
+        specifier: link:.
+        version: 'link:'
       '@sinclair/typebox':
         specifier: ^0.34.48
         version: 0.34.48

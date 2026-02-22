@@ -11,7 +11,7 @@ import { AxonTaxonomy } from './taxonomy/index.js'
 import { AxonQuestionnaires } from './questionnaires/index.js'
 
 /** Version of the @careagent/axon package */
-export const AXON_VERSION = '0.1.0'
+export const AXON_VERSION = '1.0.0'
 
 /**
  * Convenience namespace object grouping all Axon core classes.

@@ -1,9 +1,12 @@
 {
   "name": "@careagent/axon",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "bin": {
+    "axon-server": "./dist/server/standalone.js"
+  },
   "exports": {
     ".": {
       "import": "./dist/index.js",
@@ -24,6 +27,10 @@
     "./mock": {
       "import": "./dist/mock/index.js",
       "types": "./dist/mock/index.d.ts"
+    },
+    "./server": {
+      "import": "./dist/server/index.js",
+      "types": "./dist/server/index.d.ts"
     }
   },
   "files": [
@@ -36,8 +43,12 @@
   "license": "Apache-2.0",
   "scripts": {
     "build": "tsdown",
+    "start": "node dist/server/standalone.js",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
