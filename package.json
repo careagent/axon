@@ -8,6 +8,18 @@
     ".": {
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
+    },
+    "./taxonomy": {
+      "import": "./dist/taxonomy/index.js",
+      "types": "./dist/taxonomy/index.d.ts"
+    },
+    "./questionnaires": {
+      "import": "./dist/questionnaires/index.js",
+      "types": "./dist/questionnaires/index.d.ts"
+    },
+    "./types": {
+      "import": "./dist/types/index.js",
+      "types": "./dist/types/index.d.ts"
     }
   },
   "files": [
