@@ -73,7 +73,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **DOCS-03**: Governance model (`docs/governance.md`)
 - [x] **DOCS-04**: Taxonomy guide (`docs/taxonomy.md`)
 - [x] **DOCS-05**: Questionnaire authoring guide (`docs/questionnaire-authoring.md`)
-- [ ] **DOCS-06**: CONTRIBUTING.md and release preparation
+- [x] **DOCS-06**: CONTRIBUTING.md and release preparation
 
 ## v2 Requirements
 
@@ -168,7 +168,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DOCS-03 | Phase 6: Documentation and Release | Complete |
 | DOCS-04 | Phase 6: Documentation and Release | Complete |
 | DOCS-05 | Phase 6: Documentation and Release | Complete |
-| DOCS-06 | Phase 6: Documentation and Release | Pending |
+| DOCS-06 | Phase 6: Documentation and Release | Complete |
 
 **Coverage:**
 - v1 requirements: 41 total

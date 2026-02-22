@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-21)
 ## Current Position
 
 Phase: 6 of 6 (Documentation and Release)
-Plan: 3 of 3 in current phase
-Status: In Progress
-Last activity: 2026-02-22 -- Completed 06-01-PLAN.md (Architecture guide and protocol documentation)
+Plan: 3 of 3 in current phase (COMPLETE)
+Status: Complete
+Last activity: 2026-02-22 -- Completed 06-03-PLAN.md (CONTRIBUTING.md and README reconciliation)
 
-Progress: [██████████████████████████████] 97%
+Progress: [██████████████████████████████] 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 17
+- Total plans completed: 18
 - Average duration: 4min
-- Total execution time: 0.98 hours
+- Total execution time: 1.03 hours
 
 **By Phase:**
 
@@ -33,10 +33,10 @@ Progress: [███████████████████████
 | 4 | 3 | 12min | 4min |
 | 5 | 3 | 9min | 3min |
 | 5.1 | 1 | 2min | 2min |
-| 6 | 2 | 6min | 3min |
+| 6 | 3 | 9min | 3min |
 
 **Recent Trend:**
-- Last 5 plans: 4min, 3min, 2min, 3min, 3min
+- Last 5 plans: 3min, 2min, 3min, 3min, 3min
 - Trend: stable
 
 *Updated after each plan completion*
@@ -54,6 +54,7 @@ Progress: [███████████████████████
 | Phase 05.1 P01 | 2min | 2 tasks | 3 files |
 | Phase 06 P01 | 3min | 2 tasks | 7 files |
 | Phase 06 P02 | 3min | 2 tasks | 3 files |
+| Phase 06 P03 | 3min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -117,6 +118,9 @@ Recent decisions affecting current work:
 - [06-02]: Used actual taxonomy data (8 categories, 61 actions) rather than plan's approximate counts for documentation accuracy
 - [06-02]: Questionnaire authoring guide written for clinical domain experts: JSON-first, no TypeBox/TypeScript jargon
 - [06-02]: Governance model scoped to practical v1 processes only -- foundation governance deferred to v2
+- [06-03]: Replaced aspirational 2-item README description with accurate 6-module listing matching actual exports
+- [06-03]: Removed CLI Commands section entirely -- Axon is a library package, not a CLI application
+- [06-03]: README Installation scoped to library consumption; development setup moved to CONTRIBUTING.md
 
 ### Pending Todos
 
@@ -129,5 +133,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-22
-Stopped at: Completed 06-01-PLAN.md (Architecture guide and protocol documentation)
-Resume file: .planning/phases/06-documentation-and-release/06-01-SUMMARY.md
+Stopped at: Completed 06-03-PLAN.md (CONTRIBUTING.md and README reconciliation) -- ALL PHASES COMPLETE
+Resume file: .planning/phases/06-documentation-and-release/06-03-SUMMARY.md
