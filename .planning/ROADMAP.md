@@ -86,8 +86,8 @@ Plans:
 **Plans**: 3 plans in 3 waves
 
 Plans:
-- [ ] 04-01-PLAN.md — Protocol primitives: Ed25519 identity, TypeBox message schemas, NonceStore, error types
-- [ ] 04-02-PLAN.md — Connection broker: AuditTrail, AxonBroker.connect() pipeline, protocol and broker test suites
+- [x] 04-01-PLAN.md — Protocol primitives: Ed25519 identity, TypeBox message schemas, NonceStore, error types
+- [x] 04-02-PLAN.md — Connection broker: AuditTrail, AxonBroker.connect() pipeline, protocol and broker test suites
 - [ ] 04-03-PLAN.md — Protocol specifications: 5 spec documents (handshake, identity, message, consent, credential)
 
 ### Phase 5: Client Facade, Package Exports, and Integration

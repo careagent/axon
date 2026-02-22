@@ -50,9 +50,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Connection Brokering
 
-- [ ] **BROK-01**: `AxonBroker.connect()` implements handshake: credential check -> endpoint lookup -> connection grant/deny
-- [ ] **BROK-02**: Connections with expired/suspended/revoked credentials are denied
-- [ ] **BROK-03**: All brokering events logged to audit trail (append-only, connection-level, no clinical content)
+- [x] **BROK-01**: `AxonBroker.connect()` implements handshake: credential check -> endpoint lookup -> connection grant/deny
+- [x] **BROK-02**: Connections with expired/suspended/revoked credentials are denied
+- [x] **BROK-03**: All brokering events logged to audit trail (append-only, connection-level, no clinical content)
 
 ### Client
 
@@ -152,9 +152,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PROT-03 | Phase 4: Protocol Specification and Connection Broker | Complete |
 | PROT-04 | Phase 4: Protocol Specification and Connection Broker | Pending |
 | PROT-05 | Phase 4: Protocol Specification and Connection Broker | Pending |
-| BROK-01 | Phase 4: Protocol Specification and Connection Broker | Pending |
-| BROK-02 | Phase 4: Protocol Specification and Connection Broker | Pending |
-| BROK-03 | Phase 4: Protocol Specification and Connection Broker | Pending |
+| BROK-01 | Phase 4: Protocol Specification and Connection Broker | Complete |
+| BROK-02 | Phase 4: Protocol Specification and Connection Broker | Complete |
+| BROK-03 | Phase 4: Protocol Specification and Connection Broker | Complete |
 | AXON-02 | Phase 5: Client Facade, Package Exports, and Integration | Pending |
 | AXON-03 | Phase 5: Client Facade, Package Exports, and Integration | Pending |
 | CLIT-01 | Phase 5: Client Facade, Package Exports, and Integration | Pending |

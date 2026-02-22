@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-21)
 ## Current Position
 
 Phase: 4 of 6 (Protocol Specification and Connection Broker)
-Plan: 1 of 3 in current phase
+Plan: 2 of 3 in current phase
 Status: In Progress
-Last activity: 2026-02-22 -- Completed 04-01-PLAN.md (Protocol primitives: identity, schemas, nonce, errors)
+Last activity: 2026-02-22 -- Completed 04-02-PLAN.md (Connection broker pipeline and audit trail)
 
-Progress: [███████████████████░] 60%
+Progress: [████████████████████] 67%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 9
+- Total plans completed: 10
 - Average duration: 4min
-- Total execution time: 0.53 hours
+- Total execution time: 0.63 hours
 
 **By Phase:**
 
@@ -30,10 +30,10 @@ Progress: [███████████████████░] 60%
 | 1 | 3 | 17min | 6min |
 | 2 | 3 | 7min | 2min |
 | 3 | 2 | 6min | 3min |
-| 4 | 1 | 2min | 2min |
+| 4 | 2 | 8min | 4min |
 
 **Recent Trend:**
-- Last 5 plans: 4min, 1min, 3min, 3min, 2min
+- Last 5 plans: 1min, 3min, 3min, 2min, 6min
 - Trend: stable
 
 *Updated after each plan completion*
@@ -43,6 +43,7 @@ Progress: [███████████████████░] 60%
 | Phase 03 P01 | 3min | 2 tasks | 6 files |
 | Phase 03 P02 | 3min | 2 tasks | 5 files |
 | Phase 04 P01 | 2min | 2 tasks | 6 files |
+| Phase 04 P02 | 6min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -80,6 +81,10 @@ Recent decisions affecting current work:
 - [04-01]: DenialCode as TypeBox Union of 6 string literals following existing project pattern (not enum)
 - [04-01]: NonceStore cleanup runs synchronously on each validate() call; no periodic timer for v1
 - [04-01]: Protocol barrel export not wired into src/index.ts yet; deferred to Plan 02 when broker is ready
+- [04-02]: Protocol types re-exported as type-only from types/index.ts to resolve ambiguous exports with protocol/index.ts
+- [04-02]: Endpoint resolution for individual providers goes through first affiliation's organization_npi
+- [04-02]: Stale heartbeat threshold set to 5 minutes (300,000ms) for connection gating
+- [04-02]: Entry-level credential_status (not individual credentials) checked for connection gating
 
 ### Pending Todos
 
@@ -92,5 +97,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-22
-Stopped at: Completed 04-01-PLAN.md
-Resume file: .planning/phases/04-protocol-specification-and-connection-broker/04-01-SUMMARY.md
+Stopped at: Completed 04-02-PLAN.md
+Resume file: .planning/phases/04-protocol-specification-and-connection-broker/04-02-SUMMARY.md
