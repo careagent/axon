@@ -9,19 +9,19 @@ See: .planning/PROJECT.md (updated 2026-02-21)
 
 ## Current Position
 
-Phase: 5 of 6 (Client Facade, Package Exports, and Integration)
-Plan: 2 of 3 in current phase
-Status: In Progress
-Last activity: 2026-02-22 -- Completed 05-02-PLAN.md (Mock Axon server and fixtures)
+Phase: 5 of 6 (Client Facade, Package Exports, and Integration) -- COMPLETE
+Plan: 3 of 3 in current phase
+Status: Phase Complete
+Last activity: 2026-02-22 -- Completed 05-03-PLAN.md (Compatibility matrix and consumer integration tests)
 
-Progress: [███████████████████████████] 87%
+Progress: [██████████████████████████████] 93%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 13
+- Total plans completed: 14
 - Average duration: 4min
-- Total execution time: 0.80 hours
+- Total execution time: 0.85 hours
 
 **By Phase:**
 
@@ -31,10 +31,10 @@ Progress: [███████████████████████
 | 2 | 3 | 7min | 2min |
 | 3 | 2 | 6min | 3min |
 | 4 | 3 | 12min | 4min |
-| 5 | 2 | 6min | 3min |
+| 5 | 3 | 9min | 3min |
 
 **Recent Trend:**
-- Last 5 plans: 2min, 6min, 4min, 2min, 4min
+- Last 5 plans: 6min, 4min, 2min, 4min, 3min
 - Trend: stable
 
 *Updated after each plan completion*
@@ -48,6 +48,7 @@ Progress: [███████████████████████
 | Phase 04 P03 | 4min | 2 tasks | 5 files |
 | Phase 05 P01 | 2min | 2 tasks | 4 files |
 | Phase 05 P02 | 4min | 2 tasks | 4 files |
+| Phase 05 P03 | 3min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -99,6 +100,9 @@ Recent decisions affecting current work:
 - [05-01]: Axon namespace uses `as const` for full readonly type narrowing
 - [05-01]: TypeBox runtime schemas re-exported from types/index.ts alongside type-only exports (no ambiguous export conflicts)
 - [05-01]: Protocol schemas exported as value exports from types/index.ts while protocol types remain type-only exports to avoid ambiguity
+- [05-03]: Self-referencing link (@careagent/axon: link:.) in devDependencies for package-name import resolution in tests
+- [05-03]: Compatibility matrix iterates action_assignments.grants[] (not option-level action_id) matching actual schema shape
+- [05-03]: Integration tests use valid Luhn NPIs avoiding fixture collisions
 
 ### Pending Todos
 
@@ -111,5 +115,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-22
-Stopped at: Completed 05-02-PLAN.md
-Resume file: .planning/phases/05-client-facade-package-exports-and-integration/05-02-SUMMARY.md
+Stopped at: Completed 05-03-PLAN.md (Phase 5 complete)
+Resume file: .planning/phases/05-client-facade-package-exports-and-integration/05-03-SUMMARY.md

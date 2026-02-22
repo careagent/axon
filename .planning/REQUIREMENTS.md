@@ -62,9 +62,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Integration
 
-- [ ] **INTG-01**: Provider-core can consume taxonomy for `scope.permitted_actions` selection during onboarding
-- [ ] **INTG-02**: Patient-core can consume registry for provider discovery and connection initiation
-- [ ] **INTG-03**: Neuron can consume registry for organization/provider registration and endpoint management
+- [x] **INTG-01**: Provider-core can consume taxonomy for `scope.permitted_actions` selection during onboarding
+- [x] **INTG-02**: Patient-core can consume registry for provider discovery and connection initiation
+- [x] **INTG-03**: Neuron can consume registry for organization/provider registration and endpoint management
 
 ### Documentation
 
@@ -160,9 +160,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CLIT-01 | Phase 5: Client Facade, Package Exports, and Integration | Complete |
 | CLIT-02 | Phase 5: Client Facade, Package Exports, and Integration | Complete |
 | CLIT-03 | Phase 5: Client Facade, Package Exports, and Integration | Complete |
-| INTG-01 | Phase 5: Client Facade, Package Exports, and Integration | Pending |
-| INTG-02 | Phase 5: Client Facade, Package Exports, and Integration | Pending |
-| INTG-03 | Phase 5: Client Facade, Package Exports, and Integration | Pending |
+| INTG-01 | Phase 5: Client Facade, Package Exports, and Integration | Complete |
+| INTG-02 | Phase 5: Client Facade, Package Exports, and Integration | Complete |
+| INTG-03 | Phase 5: Client Facade, Package Exports, and Integration | Complete |
 | DOCS-01 | Phase 6: Documentation and Release | Pending |
 | DOCS-02 | Phase 6: Documentation and Release | Pending |
 | DOCS-03 | Phase 6: Documentation and Release | Pending |
