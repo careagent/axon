@@ -67,11 +67,11 @@ Plans:
   3. Registry search returns results filtered by NPI, name, specialty, provider type, organization, and credential status, with combinable query parameters
   4. Every credential record surfaces `verification_source: 'self_attested'` prominently, with the data model supporting progressive verification levels (self_attested, nppes_matched, state_board_verified)
   5. Restarting the process loads the previously persisted registry state from the JSON file without data loss
-**Plans**: TBD
+**Plans**: 2 plans in 2 waves
 
 Plans:
-- [ ] 03-01: TBD
-- [ ] 03-02: TBD
+- [ ] 03-01-PLAN.md — Registry TypeBox schemas, NPI Luhn validation, atomic persistence helpers, and derived types
+- [ ] 03-02-PLAN.md — AxonRegistry class with registration, credential management, multi-field search, persistence tests
 
 ### Phase 4: Protocol Specification and Connection Broker
 **Goal**: Two CareAgents can complete the full discover-verify-connect handshake through Axon with cryptographic identity verification, replay protection, and an immutable audit trail
@@ -133,7 +133,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 |-------|----------------|--------|-----------|
 | 1. Package Foundation and Clinical Action Taxonomy | 3/3 | Complete | 2026-02-21 |
 | 2. Questionnaire Repository | 3/3 | Complete | 2026-02-21 |
-| 3. Registry and Credentials | 0/2 | Not started | - |
+| 3. Registry and Credentials | 0/2 | Planned | - |
 | 4. Protocol Specification and Connection Broker | 0/3 | Not started | - |
 | 5. Client Facade, Package Exports, and Integration | 0/3 | Not started | - |
 | 6. Documentation and Release | 0/2 | Not started | - |
