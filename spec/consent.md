@@ -152,3 +152,9 @@ Axon deliberately does not touch consent for three reasons:
 3. **Transmit and exit** -- Axon's core principle is that it facilitates connections but does not remain in the data path. After granting a connection, Axon has no further involvement. Consent verification is part of the ongoing patient-provider relationship, which is the Neuron's domain.
 
 This separation means that consent policies can evolve independently of the Axon protocol. Neurons can implement granular consent models, revocation, and scope changes without requiring Axon protocol updates.
+
+## See Also
+
+- [handshake.md](./handshake.md) -- Connection handshake that precedes consent exchange (consent is post-handshake)
+- [identity.md](./identity.md) -- Ed25519 key format used for consent token signatures
+- [Protocol Overview](../docs/protocol.md) -- Entry point to all protocol specifications

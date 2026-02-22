@@ -196,3 +196,9 @@ function validateNPI(npi: string): boolean {
 ```
 
 See `src/registry/npi.ts` for the implementation.
+
+## See Also
+
+- [handshake.md](./handshake.md) -- How credentials are checked during the connect pipeline (Step 7)
+- [identity.md](./identity.md) -- Ed25519 identity format used alongside credentials for provider verification
+- [Protocol Overview](../docs/protocol.md) -- Entry point to all protocol specifications

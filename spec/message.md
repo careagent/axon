@@ -201,3 +201,10 @@ const VersionSchema = Type.Union([
 This allows the broker to accept multiple protocol versions simultaneously and route to version-specific processing logic. The `version` field is checked during schema validation, so unknown versions are rejected before any processing occurs.
 
 Version `1.0.0` covers the initial handshake protocol. New versions may add fields to `ConnectRequest`, introduce new message types, or modify validation rules while maintaining backward compatibility within the major version.
+
+## See Also
+
+- [identity.md](./identity.md) -- Ed25519 signing standard used for SignedMessage signatures
+- [handshake.md](./handshake.md) -- Connection pipeline where messages are processed and validated
+- [credential.md](./credential.md) -- Credential checks that occur after message validation
+- [Protocol Overview](../docs/protocol.md) -- Entry point to all protocol specifications

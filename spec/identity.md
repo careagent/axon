@@ -167,3 +167,10 @@ This means:
 - **Timing resistance:** Ed25519 implementations in `node:crypto` use constant-time operations, preventing timing side-channel attacks.
 - **FIPS compliance:** All cryptographic operations use the `node:crypto` module, which is backed by OpenSSL and FIPS-compliant.
 - **No key stretching:** Ed25519 keys are used directly for signing. There is no key derivation function (KDF) or password-based key stretching. Keys must be stored securely by the CareAgent.
+
+## See Also
+
+- [message.md](./message.md) -- SignedMessage envelope where Ed25519 signatures are used
+- [handshake.md](./handshake.md) -- Connection pipeline where identity is verified (Steps 2 and 4)
+- [consent.md](./consent.md) -- Consent tokens signed with the same Ed25519 keys
+- [Protocol Overview](../docs/protocol.md) -- Entry point to all protocol specifications

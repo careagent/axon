@@ -177,3 +177,11 @@ Audit entries are appended to a hash-chained JSONL file. Each entry includes the
 4. **Credentials-only** -- The broker verifies provider identity (NPI in registry), credential status (active), and endpoint availability (reachable, fresh heartbeat). It does not verify consent tokens -- consent is between the patient and the Neuron.
 
 5. **Transmit and exit** -- After granting a connection, Axon is not in the data path. The patient connects directly to the Neuron. Axon never proxies, relays, or inspects clinical traffic.
+
+## See Also
+
+- [identity.md](./identity.md) -- Ed25519 key generation, signing, and verification used in Steps 2 and 4
+- [message.md](./message.md) -- ConnectRequest schema and SignedMessage envelope format
+- [credential.md](./credential.md) -- CredentialRecord schema and status lifecycle checked in Step 7
+- [consent.md](./consent.md) -- Consent token format (verified by Neuron post-handshake, not by Axon)
+- [Protocol Overview](../docs/protocol.md) -- Entry point to all protocol specifications
