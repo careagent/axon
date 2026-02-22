@@ -9,6 +9,8 @@ import { AuditTrail } from '../broker/audit.js'
 import { SignedMessageValidator } from '../protocol/schemas.js'
 import type { MockFixtures } from './fixtures.js'
 import { DEFAULT_FIXTURES } from './fixtures.js'
+import { AxonTaxonomy } from '../taxonomy/taxonomy.js'
+import { AxonQuestionnaires } from '../questionnaires/questionnaires.js'
 import type { RegistryEntry, SignedMessage } from '../types/index.js'
 
 /** Options for creating a mock Axon server. */
@@ -343,15 +345,57 @@ export function createMockAxonServer(
       return
     }
 
-    // GET /v1/search -- provider search
-    if (req.method === 'GET' && pathname === '/v1/search') {
+    // GET /v1/taxonomy/actions -- taxonomy actions for a provider type
+    if (req.method === 'GET' && pathname === '/v1/taxonomy/actions') {
+      const providerType = url.searchParams.get('type')
+      if (!providerType) {
+        sendJson(res, 400, { error: 'Missing required query parameter: type' })
+        return
+      }
+
+      const typeExists = AxonTaxonomy.getType(providerType) !== undefined
+      if (!typeExists) {
+        sendJson(res, 404, { error: `Unknown provider type: "${providerType}"` })
+        return
+      }
+
+      const actionIds = AxonTaxonomy.getActionsForType(providerType)
+      const actions = actionIds
+        .map((id) => AxonTaxonomy.getAction(id))
+        .filter((a) => a !== undefined)
+
+      sendJson(res, 200, { actions })
+      return
+    }
+
+    // GET /v1/questionnaires/:typeId -- questionnaire for a provider type
+    const questionnaireMatch = pathname.match(/^\/v1\/questionnaires\/([^/]+)$/)
+    if (req.method === 'GET' && questionnaireMatch) {
+      const typeId = questionnaireMatch[1]!
+      const questionnaire = AxonQuestionnaires.getForType(typeId)
+
+      if (!questionnaire) {
+        sendJson(res, 404, { error: `No questionnaire found for provider type: "${typeId}"` })
+        return
+      }
+
+      sendJson(res, 200, questionnaire)
+      return
+    }
+
+    // GET /v1/registry/search -- provider search
+    if (req.method === 'GET' && pathname === '/v1/registry/search') {
       const npi = url.searchParams.get('npi') ?? undefined
       const name = url.searchParams.get('name') ?? undefined
       const specialty = url.searchParams.get('specialty') ?? undefined
       const providerType =
         url.searchParams.get('provider_type') ?? undefined
+      const organization =
+        url.searchParams.get('organization') ?? undefined
       const credentialStatus =
         url.searchParams.get('credential_status') ?? undefined
+      const limitParam = url.searchParams.get('limit')
+      const offsetParam = url.searchParams.get('offset')
 
       const results = reg.search({
         ...(npi !== undefined && { npi }),
@@ -360,6 +404,7 @@ export function createMockAxonServer(
         ...(providerType !== undefined && {
           provider_type: providerType,
         }),
+        ...(organization !== undefined && { organization }),
         ...(credentialStatus !== undefined && {
           credential_status: credentialStatus as
             | 'active'
@@ -368,9 +413,26 @@ export function createMockAxonServer(
             | 'suspended'
             | 'revoked',
         }),
+        ...(limitParam !== null && { limit: Number(limitParam) }),
+        ...(offsetParam !== null && { offset: Number(offsetParam) }),
       })
 
       sendJson(res, 200, { results })
+      return
+    }
+
+    // GET /v1/registry/:npi -- direct NPI lookup
+    const registryNpiMatch = pathname.match(/^\/v1\/registry\/([^/]+)$/)
+    if (req.method === 'GET' && registryNpiMatch) {
+      const npi = registryNpiMatch[1]!
+
+      const entry = reg.findByNPI(npi)
+      if (!entry) {
+        sendJson(res, 404, { error: `No registry entry found for NPI: "${npi}"` })
+        return
+      }
+
+      sendJson(res, 200, entry)
       return
     }
 
