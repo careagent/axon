@@ -134,6 +134,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 1. Package Foundation and Clinical Action Taxonomy | 3/3 | Complete | 2026-02-21 |
 | 2. Questionnaire Repository | 3/3 | Complete | 2026-02-21 |
 | 3. Registry and Credentials | 2/2 | Complete | 2026-02-22 |
-| 4. Protocol Specification and Connection Broker | 3/3 | Complete | 2026-02-22 |
+| 4. Protocol Specification and Connection Broker | 3/3 | Complete    | 2026-02-22 |
 | 5. Client Facade, Package Exports, and Integration | 0/3 | Not started | - |
 | 6. Documentation and Release | 0/2 | Not started | - |
