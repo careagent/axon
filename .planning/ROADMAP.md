@@ -133,13 +133,12 @@ Plans:
   3. `docs/taxonomy.md` explains the action hierarchy, versioning rules, and the process for proposing new actions through governance
   4. `docs/questionnaire-authoring.md` provides a step-by-step guide for clinical domain experts to author a new provider type questionnaire using the TypeBox schema, conditional logic, and CANS field mapping
   5. `CONTRIBUTING.md` exists with development setup, testing instructions, and the governance model for taxonomy and protocol changes
-**Plans**: TBD
-
-**Gap Closure**: Closes DOCS-01, DOCS-02, DOCS-03, DOCS-04, DOCS-05, DOCS-06 from v1.0 audit
+**Plans**: 3 plans in 2 waves
 
 Plans:
-- [ ] 06-01: TBD
-- [ ] 06-02: TBD
+- [ ] 06-01-PLAN.md — Architecture guide (docs/architecture.md) and protocol overview (docs/protocol.md) with spec cross-reference finalization
+- [ ] 06-02-PLAN.md — Taxonomy guide (docs/taxonomy.md), questionnaire authoring guide (docs/questionnaire-authoring.md), and governance model (docs/governance.md)
+- [ ] 06-03-PLAN.md — CONTRIBUTING.md and README.md reconciliation with actual implementation
 
 ## Progress
 
@@ -155,4 +154,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 5.1 -> 6
 | 4. Protocol Specification and Connection Broker | 3/3 | Complete    | 2026-02-22 |
 | 5. Client Facade, Package Exports, and Integration | 3/3 | Complete    | 2026-02-22 |
 | 5.1. Mock Server HTTP Route Completeness | 1/1 | Complete | 2026-02-22 |
-| 6. Documentation and Release | 0/2 | Not started | - |
+| 6. Documentation and Release | 0/3 | Not started | - |
