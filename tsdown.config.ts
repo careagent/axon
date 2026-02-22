@@ -6,6 +6,7 @@ export default defineConfig({
     './src/taxonomy/index.ts',
     './src/questionnaires/index.ts',
     './src/types/index.ts',
+    './src/mock/index.ts',
   ],
   format: ['es'],
   platform: 'node',
