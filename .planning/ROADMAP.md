@@ -100,12 +100,12 @@ Plans:
   3. The mock Axon server enables provider-core to test taxonomy consumption for `scope.permitted_actions`, patient-core to test provider discovery and connection, and neuron to test registration and endpoint management
   4. The published package has zero entries in the `dependencies` field of `package.json` -- all runtime code is bundled by tsdown
   5. The full compatibility matrix passes: every questionnaire's taxonomy action references resolve, every CANS field mapping is valid, every entry point exports the documented API
-**Plans**: TBD
+**Plans**: 3 plans in 2 waves
 
 Plans:
-- [ ] 05-01: TBD
-- [ ] 05-02: TBD
-- [ ] 05-03: TBD
+- [ ] 05-01-PLAN.md — Axon namespace facade, AXON_VERSION, multi-entry tsdown build, package.json subpath exports
+- [ ] 05-02-PLAN.md — Mock Axon HTTP server with pre-seeded fixtures and configurable failure scenarios
+- [ ] 05-03-PLAN.md — Compatibility matrix tests, consumer integration tests, mock entry wiring
 
 ### Phase 6: Documentation and Release
 **Goal**: A developer unfamiliar with Axon can understand its architecture, extend the taxonomy, author new questionnaires, and contribute to the project using published documentation
