@@ -26,8 +26,8 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Questionnaire Repository
 
 - [x] **QUES-01**: TypeBox schema for questionnaire format with conditional logic, CANS field mapping, and taxonomy-backed options
-- [ ] **QUES-02**: Full Physician questionnaire with conditional branching (surgical/non-surgical, academic/private practice), taxonomy-backed scope selection, and CANS field mapping
-- [ ] **QUES-03**: Stub questionnaires for all 48 remaining provider types (valid metadata, empty sections)
+- [x] **QUES-02**: Full Physician questionnaire with conditional branching (surgical/non-surgical, academic/private practice), taxonomy-backed scope selection, and CANS field mapping
+- [x] **QUES-03**: Stub questionnaires for all 48 remaining provider types (valid metadata, empty sections)
 - [x] **QUES-04**: `AxonQuestionnaires.getForType()` returns the appropriate questionnaire for a given provider type
 - [x] **QUES-05**: All taxonomy actions referenced in questionnaire options exist in the current taxonomy version
 - [x] **QUES-06**: All CANS field paths referenced in questionnaire mappings are valid against the CANS schema
@@ -137,8 +137,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TAXO-06 | Phase 1: Package Foundation and Clinical Action Taxonomy | Complete |
 | TAXO-07 | Phase 1: Package Foundation and Clinical Action Taxonomy | Complete |
 | QUES-01 | Phase 2: Questionnaire Repository | Complete |
-| QUES-02 | Phase 2: Questionnaire Repository | Pending |
-| QUES-03 | Phase 2: Questionnaire Repository | Pending |
+| QUES-02 | Phase 2: Questionnaire Repository | Complete |
+| QUES-03 | Phase 2: Questionnaire Repository | Complete |
 | QUES-04 | Phase 2: Questionnaire Repository | Complete |
 | QUES-05 | Phase 2: Questionnaire Repository | Complete |
 | QUES-06 | Phase 2: Questionnaire Repository | Complete |
