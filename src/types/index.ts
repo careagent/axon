@@ -25,14 +25,6 @@ import type {
   EntityTypeSchema,
   RegistrySearchQuerySchema,
 } from '../registry/schemas.js'
-import type {
-  ConnectRequestSchema,
-  ConnectGrantSchema,
-  ConnectDenialSchema,
-  SignedMessageSchema,
-  DenialCodeSchema,
-} from '../protocol/schemas.js'
-
 export type TaxonomyVersion = Static<typeof TaxonomyVersionSchema>
 export type TaxonomyAction = Static<typeof TaxonomyActionSchema>
 export type ProviderType = Static<typeof ProviderTypeSchema>
@@ -56,8 +48,6 @@ export type VerificationSource = Static<typeof VerificationSourceSchema>
 export type EntityType = Static<typeof EntityTypeSchema>
 export type RegistrySearchQuery = Static<typeof RegistrySearchQuerySchema>
 
-export type ConnectRequest = Static<typeof ConnectRequestSchema>
-export type ConnectGrant = Static<typeof ConnectGrantSchema>
-export type ConnectDenial = Static<typeof ConnectDenialSchema>
-export type SignedMessage = Static<typeof SignedMessageSchema>
-export type DenialCode = Static<typeof DenialCodeSchema>
+// Protocol types are re-exported from src/protocol/index.ts via src/index.ts
+// Do NOT duplicate them here to avoid ambiguous module exports
+export type { ConnectRequest, ConnectGrant, ConnectDenial, SignedMessage, DenialCode } from '../protocol/schemas.js'
