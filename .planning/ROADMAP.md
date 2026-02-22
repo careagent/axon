@@ -118,10 +118,10 @@ Plans:
   2. `GET /v1/questionnaires/:typeId` returns the questionnaire for the given provider type
   3. `GET /v1/registry/search?name=...` works (replacing `/v1/search`), and existing tests are updated to use the correct path
   4. `GET /v1/registry/:npi` returns the registry entry for a specific NPI via direct lookup
-**Plans**: TBD
+**Plans**: 1 plan in 1 wave
 
 Plans:
-- [ ] 05.1-01-PLAN.md — Add missing mock server HTTP routes and fix search path
+- [ ] 05.1-01-PLAN.md — Add taxonomy, questionnaire, registry routes; migrate search path to /v1/registry/search with pagination
 
 ### Phase 6: Documentation and Release
 **Goal**: A developer unfamiliar with Axon can understand its architecture, extend the taxonomy, author new questionnaires, and contribute to the project using published documentation
