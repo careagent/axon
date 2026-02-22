@@ -1,0 +1,8 @@
+{
+  "provider_type": "radiology_imaging",
+  "version": "1.0.0",
+  "taxonomy_version": "1.0.0",
+  "display_name": "Radiology/Imaging Onboarding Questionnaire",
+  "description": "Full questionnaire pending clinical domain expert review",
+  "questions": []
+}

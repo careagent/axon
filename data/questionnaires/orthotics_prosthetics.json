@@ -1,0 +1,8 @@
+{
+  "provider_type": "orthotics_prosthetics",
+  "version": "1.0.0",
+  "taxonomy_version": "1.0.0",
+  "display_name": "Orthotics & Prosthetics Onboarding Questionnaire",
+  "description": "Full questionnaire pending clinical domain expert review",
+  "questions": []
+}

@@ -1,0 +1,233 @@
+{
+  "provider_type": "physician",
+  "version": "1.0.0",
+  "taxonomy_version": "1.0.0",
+  "display_name": "Physician Onboarding Questionnaire",
+  "description": "Determines digital scope of practice for Physician (MD, DO) CareAgents",
+  "questions": [
+    {
+      "id": "practice_setting",
+      "text": "What is your primary practice setting?",
+      "answer_type": "single_select",
+      "required": true,
+      "options": [
+        {
+          "value": "academic",
+          "label": "Academic/Teaching",
+          "description": "University-affiliated or teaching hospital"
+        },
+        {
+          "value": "private",
+          "label": "Private Practice",
+          "description": "Solo or group private practice"
+        },
+        {
+          "value": "hospital",
+          "label": "Hospital-Employed",
+          "description": "Employed by a hospital or health system"
+        },
+        {
+          "value": "government",
+          "label": "Government/Military",
+          "description": "VA, military, or government-affiliated facility"
+        }
+      ],
+      "cans_field": "scope.practice_setting"
+    },
+    {
+      "id": "supervision_role",
+      "text": "Do you supervise residents or fellows?",
+      "answer_type": "boolean",
+      "required": true,
+      "show_when": {
+        "question_id": "practice_setting",
+        "equals": "academic"
+      },
+      "cans_field": "scope.supervision_level"
+    },
+    {
+      "id": "clinical_charting",
+      "text": "Do you document clinical encounters (progress notes, H&P, consultation notes)?",
+      "answer_type": "boolean",
+      "required": true,
+      "cans_field": "scope.permitted_actions",
+      "action_assignments": [
+        {
+          "answer_value": "true",
+          "grants": [
+            "chart.progress_note",
+            "chart.history_and_physical",
+            "chart.consultation_note",
+            "chart.communication",
+            "chart.referral_letter"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "prescribing",
+      "text": "Do you prescribe medications?",
+      "answer_type": "boolean",
+      "required": true,
+      "cans_field": "scope.permitted_actions",
+      "action_assignments": [
+        {
+          "answer_value": "true",
+          "grants": [
+            "order.medication",
+            "educate.medication_counseling"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "controlled_substances",
+      "text": "Do you prescribe controlled substances (DEA-scheduled)?",
+      "answer_type": "boolean",
+      "required": true,
+      "show_when": {
+        "question_id": "prescribing",
+        "equals": "true"
+      },
+      "cans_field": "scope.permitted_actions",
+      "action_assignments": [
+        {
+          "answer_value": "true",
+          "grants": [
+            "order.controlled_substance"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "diagnostic_ordering",
+      "text": "Do you order diagnostic tests (lab work, imaging, procedures)?",
+      "answer_type": "boolean",
+      "required": true,
+      "cans_field": "scope.permitted_actions",
+      "action_assignments": [
+        {
+          "answer_value": "true",
+          "grants": [
+            "order.laboratory",
+            "order.imaging",
+            "order.procedure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "results_interpretation",
+      "text": "Do you interpret diagnostic results (lab values, imaging, EKG)?",
+      "answer_type": "boolean",
+      "required": true,
+      "cans_field": "scope.permitted_actions",
+      "action_assignments": [
+        {
+          "answer_value": "true",
+          "grants": [
+            "interpret.laboratory_result",
+            "interpret.imaging_study",
+            "interpret.electrocardiogram",
+            "interpret.pathology_report"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "clinical_procedures",
+      "text": "Do you perform clinical procedures (injections, biopsies, laceration repair)?",
+      "answer_type": "boolean",
+      "required": true,
+      "cans_field": "scope.permitted_actions",
+      "action_assignments": [
+        {
+          "answer_value": "true",
+          "grants": [
+            "perform.physical_exam",
+            "perform.injection",
+            "perform.biopsy",
+            "perform.laceration_repair",
+            "perform.incision_drainage",
+            "perform.suturing",
+            "perform.cast_splint"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "surgical_practice",
+      "text": "Does your practice include surgical procedures?",
+      "answer_type": "boolean",
+      "required": true,
+      "cans_field": "scope.permitted_actions",
+      "action_assignments": [
+        {
+          "answer_value": "true",
+          "grants": [
+            "chart.operative_note",
+            "perform.surgical.craniotomy",
+            "perform.surgical.appendectomy",
+            "perform.surgical.cholecystectomy",
+            "perform.surgical.hernia_repair",
+            "perform.surgical.joint_replacement",
+            "perform.surgical.spinal_fusion",
+            "perform.surgical.coronary_bypass",
+            "perform.surgical.cardiac_catheterization"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "patient_education",
+      "text": "Do you provide patient education and discharge planning?",
+      "answer_type": "boolean",
+      "required": true,
+      "cans_field": "scope.permitted_actions",
+      "action_assignments": [
+        {
+          "answer_value": "true",
+          "grants": [
+            "educate.patient_education",
+            "educate.discharge_instructions",
+            "educate.informed_consent"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "care_coordination",
+      "text": "Do you coordinate care with other providers (referrals, transitions, team conferences)?",
+      "answer_type": "boolean",
+      "required": true,
+      "cans_field": "scope.permitted_actions",
+      "action_assignments": [
+        {
+          "answer_value": "true",
+          "grants": [
+            "coordinate.referral",
+            "coordinate.care_transition",
+            "coordinate.multidisciplinary_conference"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "billing",
+      "text": "Do you submit professional billing/coding?",
+      "answer_type": "boolean",
+      "required": true,
+      "cans_field": "scope.permitted_actions",
+      "action_assignments": [
+        {
+          "answer_value": "true",
+          "grants": [
+            "charge.evaluation_management",
+            "charge.procedure_coding",
+            "charge.diagnosis_coding"
+          ]
+        }
+      ]
+    }
+  ]
+}

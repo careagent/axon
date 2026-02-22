@@ -1,0 +1,8 @@
+{
+  "provider_type": "massage_bodywork",
+  "version": "1.0.0",
+  "taxonomy_version": "1.0.0",
+  "display_name": "Massage & Bodywork Onboarding Questionnaire",
+  "description": "Full questionnaire pending clinical domain expert review",
+  "questions": []
+}

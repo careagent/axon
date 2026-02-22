@@ -1,0 +1,8 @@
+{
+  "provider_type": "home_health_hospice",
+  "version": "1.0.0",
+  "taxonomy_version": "1.0.0",
+  "display_name": "Home Health/Hospice Onboarding Questionnaire",
+  "description": "Full questionnaire pending clinical domain expert review",
+  "questions": []
+}

@@ -1,0 +1,8 @@
+{
+  "provider_type": "cardiac_vascular_diagnostics",
+  "version": "1.0.0",
+  "taxonomy_version": "1.0.0",
+  "display_name": "Cardiac/Vascular Diagnostics Onboarding Questionnaire",
+  "description": "Full questionnaire pending clinical domain expert review",
+  "questions": []
+}

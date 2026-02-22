@@ -1,0 +1,8 @@
+{
+  "provider_type": "sleep_medicine",
+  "version": "1.0.0",
+  "taxonomy_version": "1.0.0",
+  "display_name": "Sleep Medicine Onboarding Questionnaire",
+  "description": "Full questionnaire pending clinical domain expert review",
+  "questions": []
+}
