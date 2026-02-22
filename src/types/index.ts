@@ -25,6 +25,13 @@ import type {
   EntityTypeSchema,
   RegistrySearchQuerySchema,
 } from '../registry/schemas.js'
+import type {
+  ConnectRequestSchema,
+  ConnectGrantSchema,
+  ConnectDenialSchema,
+  SignedMessageSchema,
+  DenialCodeSchema,
+} from '../protocol/schemas.js'
 
 export type TaxonomyVersion = Static<typeof TaxonomyVersionSchema>
 export type TaxonomyAction = Static<typeof TaxonomyActionSchema>
@@ -48,3 +55,9 @@ export type CredentialStatus = Static<typeof CredentialStatusSchema>
 export type VerificationSource = Static<typeof VerificationSourceSchema>
 export type EntityType = Static<typeof EntityTypeSchema>
 export type RegistrySearchQuery = Static<typeof RegistrySearchQuerySchema>
+
+export type ConnectRequest = Static<typeof ConnectRequestSchema>
+export type ConnectGrant = Static<typeof ConnectGrantSchema>
+export type ConnectDenial = Static<typeof ConnectDenialSchema>
+export type SignedMessage = Static<typeof SignedMessageSchema>
+export type DenialCode = Static<typeof DenialCodeSchema>
