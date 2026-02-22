@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-21)
 
 **Core value:** Trusted, open, neutral discovery and handshake layer so any patient CareAgent can find any provider CareAgent and establish a direct peer-to-peer connection -- without touching PHI or remaining in the path after handshake.
-**Current focus:** Phase 5: Client Facade, Package Exports, and Integration
+**Current focus:** Phase 5.1: Mock Server HTTP Route Completeness
 
 ## Current Position
 
-Phase: 5 of 6 (Client Facade, Package Exports, and Integration) -- COMPLETE
-Plan: 3 of 3 in current phase
+Phase: 5.1 of 6 (Mock Server HTTP Route Completeness) -- COMPLETE
+Plan: 1 of 1 in current phase
 Status: Phase Complete
-Last activity: 2026-02-22 -- Completed 05-03-PLAN.md (Compatibility matrix and consumer integration tests)
+Last activity: 2026-02-22 -- Completed 05.1-01-PLAN.md (Mock server HTTP route completeness)
 
-Progress: [██████████████████████████████] 93%
+Progress: [██████████████████████████████] 95%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 14
+- Total plans completed: 15
 - Average duration: 4min
-- Total execution time: 0.85 hours
+- Total execution time: 0.88 hours
 
 **By Phase:**
 
@@ -32,9 +32,10 @@ Progress: [███████████████████████
 | 3 | 2 | 6min | 3min |
 | 4 | 3 | 12min | 4min |
 | 5 | 3 | 9min | 3min |
+| 5.1 | 1 | 2min | 2min |
 
 **Recent Trend:**
-- Last 5 plans: 6min, 4min, 2min, 4min, 3min
+- Last 5 plans: 4min, 2min, 4min, 3min, 2min
 - Trend: stable
 
 *Updated after each plan completion*
@@ -49,6 +50,7 @@ Progress: [███████████████████████
 | Phase 05 P01 | 2min | 2 tasks | 4 files |
 | Phase 05 P02 | 4min | 2 tasks | 4 files |
 | Phase 05 P03 | 3min | 2 tasks | 4 files |
+| Phase 05.1 P01 | 2min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -103,6 +105,9 @@ Recent decisions affecting current work:
 - [05-03]: Self-referencing link (@careagent/axon: link:.) in devDependencies for package-name import resolution in tests
 - [05-03]: Compatibility matrix iterates action_assignments.grants[] (not option-level action_id) matching actual schema shape
 - [05-03]: Integration tests use valid Luhn NPIs avoiding fixture collisions
+- [05.1-01]: Taxonomy route returns full action objects (not just string IDs) for HTTP consumers without class API access
+- [05.1-01]: Hard swap /v1/search to /v1/registry/search with no backward compatibility
+- [05.1-01]: Route ordering: /v1/registry/search before /v1/registry/:npi to prevent 'search' matching as NPI
 
 ### Pending Todos
 
@@ -115,5 +120,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-22
-Stopped at: Completed 05-03-PLAN.md (Phase 5 complete)
-Resume file: .planning/phases/05-client-facade-package-exports-and-integration/05-03-SUMMARY.md
+Stopped at: Completed 05.1-01-PLAN.md (Phase 5.1 complete)
+Resume file: .planning/phases/05.1-mock-server-http-route-completeness/05.1-01-SUMMARY.md
