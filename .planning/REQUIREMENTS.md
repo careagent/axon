@@ -43,8 +43,8 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Protocol
 
 - [ ] **PROT-01**: Handshake specification documented in `spec/handshake.md` and implemented in code
-- [ ] **PROT-02**: Identity exchange using Ed25519 key pairs via Node.js built-in `node:crypto` with canonical base64url wire format
-- [ ] **PROT-03**: Versioned message format with TypeBox schema validation, nonce (>=16 bytes), and timestamp window (5 minutes)
+- [x] **PROT-02**: Identity exchange using Ed25519 key pairs via Node.js built-in `node:crypto` with canonical base64url wire format
+- [x] **PROT-03**: Versioned message format with TypeBox schema validation, nonce (>=16 bytes), and timestamp window (5 minutes)
 - [ ] **PROT-04**: Consent token format (signed by patient's key pair, verified by Neuron, never stored by Axon)
 - [ ] **PROT-05**: Credential format standard matching the registry CredentialRecord schema
 
@@ -148,8 +148,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | REGI-04 | Phase 3: Registry and Credentials | Complete |
 | REGI-05 | Phase 3: Registry and Credentials | Complete |
 | PROT-01 | Phase 4: Protocol Specification and Connection Broker | Pending |
-| PROT-02 | Phase 4: Protocol Specification and Connection Broker | Pending |
-| PROT-03 | Phase 4: Protocol Specification and Connection Broker | Pending |
+| PROT-02 | Phase 4: Protocol Specification and Connection Broker | Complete |
+| PROT-03 | Phase 4: Protocol Specification and Connection Broker | Complete |
 | PROT-04 | Phase 4: Protocol Specification and Connection Broker | Pending |
 | PROT-05 | Phase 4: Protocol Specification and Connection Broker | Pending |
 | BROK-01 | Phase 4: Protocol Specification and Connection Broker | Pending |

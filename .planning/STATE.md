@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-21)
 
 **Core value:** Trusted, open, neutral discovery and handshake layer so any patient CareAgent can find any provider CareAgent and establish a direct peer-to-peer connection -- without touching PHI or remaining in the path after handshake.
-**Current focus:** Phase 3: Registry and Credentials
+**Current focus:** Phase 4: Protocol Specification and Connection Broker
 
 ## Current Position
 
-Phase: 3 of 6 (Registry and Credentials) -- COMPLETE
-Plan: 2 of 2 in current phase
-Status: Phase Complete
-Last activity: 2026-02-22 -- Completed 03-02-PLAN.md (AxonRegistry class with CRUD, search, persistence)
+Phase: 4 of 6 (Protocol Specification and Connection Broker)
+Plan: 1 of 3 in current phase
+Status: In Progress
+Last activity: 2026-02-22 -- Completed 04-01-PLAN.md (Protocol primitives: identity, schemas, nonce, errors)
 
-Progress: [██████████████████░░] 53%
+Progress: [███████████████████░] 60%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 8
+- Total plans completed: 9
 - Average duration: 4min
-- Total execution time: 0.50 hours
+- Total execution time: 0.53 hours
 
 **By Phase:**
 
@@ -30,9 +30,10 @@ Progress: [██████████████████░░] 53%
 | 1 | 3 | 17min | 6min |
 | 2 | 3 | 7min | 2min |
 | 3 | 2 | 6min | 3min |
+| 4 | 1 | 2min | 2min |
 
 **Recent Trend:**
-- Last 5 plans: 2min, 4min, 1min, 3min, 3min
+- Last 5 plans: 4min, 1min, 3min, 3min, 2min
 - Trend: stable
 
 *Updated after each plan completion*
@@ -41,6 +42,7 @@ Progress: [██████████████████░░] 53%
 | Phase 02 P03 | 1min | 1 tasks | 1 files |
 | Phase 03 P01 | 3min | 2 tasks | 6 files |
 | Phase 03 P02 | 3min | 2 tasks | 5 files |
+| Phase 04 P01 | 2min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -74,6 +76,10 @@ Recent decisions affecting current work:
 - [03-02]: Provider type cross-validation against AxonTaxonomy at registration time (validates type IDs exist in taxonomy)
 - [03-02]: Conditional spread pattern for optional fields to comply with exactOptionalPropertyTypes
 - [03-02]: Linear scan search with AND logic -- sufficient for v1 development scale
+- [04-01]: signPayload requires both privateKey and publicKey because Ed25519 JWK import needs both d and x components
+- [04-01]: DenialCode as TypeBox Union of 6 string literals following existing project pattern (not enum)
+- [04-01]: NonceStore cleanup runs synchronously on each validate() call; no periodic timer for v1
+- [04-01]: Protocol barrel export not wired into src/index.ts yet; deferred to Plan 02 when broker is ready
 
 ### Pending Todos
 
@@ -86,5 +92,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-22
-Stopped at: Completed 03-02-PLAN.md (Phase 3 complete)
-Resume file: .planning/phases/03-registry-and-credentials/03-02-SUMMARY.md
+Stopped at: Completed 04-01-PLAN.md
+Resume file: .planning/phases/04-protocol-specification-and-connection-broker/04-01-SUMMARY.md
