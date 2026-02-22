@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Registry and Credentials** - NPI-keyed provider directory with file-backed storage, credential management, and multi-field search
 - [x] **Phase 4: Protocol Specification and Connection Broker** - Ed25519 identity exchange, signed message protocol, and stateless handshake brokering with audit trail
 - [x] **Phase 5: Client Facade, Package Exports, and Integration** - Public API surface, multi-entry build, mock server, and consumer integration verification (completed 2026-02-22)
-- [ ] **Phase 5.1: Mock Server HTTP Route Completeness** - INSERTED: Add missing taxonomy, questionnaire, and registry HTTP routes to mock server; fix search path mismatch (gap closure from v1.0 audit)
+- [x] **Phase 5.1: Mock Server HTTP Route Completeness** - INSERTED: Add missing taxonomy, questionnaire, and registry HTTP routes to mock server; fix search path mismatch (gap closure from v1.0 audit)
 - [ ] **Phase 6: Documentation and Release** - Architecture guide, protocol specs, taxonomy and questionnaire authoring guides, governance model, and release preparation
 
 **Note:** Phases 2 and 3 have no dependency on each other and can be executed in either order or in parallel.
@@ -104,9 +104,9 @@ Plans:
 **Plans**: 3 plans in 2 waves
 
 Plans:
-- [ ] 05-01-PLAN.md — Axon namespace facade, AXON_VERSION, multi-entry tsdown build, package.json subpath exports
-- [ ] 05-02-PLAN.md — Mock Axon HTTP server with pre-seeded fixtures and configurable failure scenarios
-- [ ] 05-03-PLAN.md — Compatibility matrix tests, consumer integration tests, mock entry wiring
+- [x] 05-01-PLAN.md — Axon namespace facade, AXON_VERSION, multi-entry tsdown build, package.json subpath exports
+- [x] 05-02-PLAN.md — Mock Axon HTTP server with pre-seeded fixtures and configurable failure scenarios
+- [x] 05-03-PLAN.md — Compatibility matrix tests, consumer integration tests, mock entry wiring
 
 ### Phase 5.1: Mock Server HTTP Route Completeness (INSERTED — Gap Closure)
 **Goal**: The mock Axon server exposes all documented HTTP routes so consumers can integration-test entirely over HTTP without class imports
@@ -121,7 +121,7 @@ Plans:
 **Plans**: 1 plan in 1 wave
 
 Plans:
-- [ ] 05.1-01-PLAN.md — Add taxonomy, questionnaire, registry routes; migrate search path to /v1/registry/search with pagination
+- [x] 05.1-01-PLAN.md — Add taxonomy, questionnaire, registry routes; migrate search path to /v1/registry/search with pagination
 
 ### Phase 6: Documentation and Release
 **Goal**: A developer unfamiliar with Axon can understand its architecture, extend the taxonomy, author new questionnaires, and contribute to the project using published documentation
@@ -134,6 +134,8 @@ Plans:
   4. `docs/questionnaire-authoring.md` provides a step-by-step guide for clinical domain experts to author a new provider type questionnaire using the TypeBox schema, conditional logic, and CANS field mapping
   5. `CONTRIBUTING.md` exists with development setup, testing instructions, and the governance model for taxonomy and protocol changes
 **Plans**: TBD
+
+**Gap Closure**: Closes DOCS-01, DOCS-02, DOCS-03, DOCS-04, DOCS-05, DOCS-06 from v1.0 audit
 
 Plans:
 - [ ] 06-01: TBD
@@ -151,6 +153,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 5.1 -> 6
 | 2. Questionnaire Repository | 3/3 | Complete | 2026-02-21 |
 | 3. Registry and Credentials | 2/2 | Complete | 2026-02-22 |
 | 4. Protocol Specification and Connection Broker | 3/3 | Complete    | 2026-02-22 |
-| 5. Client Facade, Package Exports, and Integration | 2/3 | Complete    | 2026-02-22 |
-| 5.1. Mock Server HTTP Route Completeness | 0/1 | Not started | - |
+| 5. Client Facade, Package Exports, and Integration | 3/3 | Complete    | 2026-02-22 |
+| 5.1. Mock Server HTTP Route Completeness | 1/1 | Complete | 2026-02-22 |
 | 6. Documentation and Release | 0/2 | Not started | - |
