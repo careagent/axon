@@ -13,7 +13,7 @@ Axon is built bottom-up along its dependency graph: shared types and taxonomy da
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Package Foundation and Clinical Action Taxonomy** - Scaffold the package and build the hierarchical action vocabulary with Physician-complete taxonomy data
-- [x] **Phase 2: Questionnaire Repository** - Declarative conditional questionnaire system with full Physician questionnaire and 48 provider type stubs
+- [ ] **Phase 2: Questionnaire Repository** - Declarative conditional questionnaire system with full Physician questionnaire and 48 provider type stubs
 - [ ] **Phase 3: Registry and Credentials** - NPI-keyed provider directory with file-backed storage, credential management, and multi-field search
 - [ ] **Phase 4: Protocol Specification and Connection Broker** - Ed25519 identity exchange, signed message protocol, and stateless handshake brokering with audit trail
 - [ ] **Phase 5: Client Facade, Package Exports, and Integration** - Public API surface, multi-entry build, mock server, and consumer integration verification
@@ -50,11 +50,12 @@ Plans:
   3. Every CANS field path referenced in questionnaire mappings is valid against the CANS schema structure
   4. `AxonQuestionnaires.getForType('nursing')` (and all other 48 non-Physician types) returns a valid stub questionnaire with correct metadata and empty sections -- no type causes a runtime error
   5. The questionnaire schema (TypeBox) enforces structure for conditional logic, CANS field mapping, and taxonomy-backed options so that malformed questionnaires fail validation
-**Plans**: 2 plans in 2 waves
+**Plans**: 3 plans in 3 waves
 
 Plans:
 - [x] 02-01-PLAN.md — Questionnaire schema, cross-validating loader, AxonQuestionnaires class, and module wiring
 - [x] 02-02-PLAN.md — Physician questionnaire data, 48 stub questionnaires, API tests, and data integrity tests
+- [ ] 02-03-PLAN.md — Gap closure: Add surgical/non-surgical conditional branching to physician questionnaire
 
 ### Phase 3: Registry and Credentials
 **Goal**: Neuron can register providers and organizations on an NPI-keyed directory, manage credentials with transparent verification status, and search across multiple fields
@@ -131,7 +132,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Package Foundation and Clinical Action Taxonomy | 3/3 | Complete | 2026-02-21 |
-| 2. Questionnaire Repository | 2/2 | Complete | 2026-02-21 |
+| 2. Questionnaire Repository | 2/3 | In Progress | 2026-02-21 |
 | 3. Registry and Credentials | 0/2 | Not started | - |
 | 4. Protocol Specification and Connection Broker | 0/3 | Not started | - |
 | 5. Client Facade, Package Exports, and Integration | 0/3 | Not started | - |
