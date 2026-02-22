@@ -45,6 +45,7 @@
     ]
   },
   "devDependencies": {
+    "@careagent/axon": "link:.",
     "@sinclair/typebox": "^0.34.48",
     "@tsconfig/node22": "^22.0.5",
     "@types/node": "^25.3.0",
