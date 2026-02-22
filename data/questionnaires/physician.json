@@ -179,6 +179,44 @@
       ]
     },
     {
+      "id": "surgical_subspecialty",
+      "text": "What best describes your surgical practice?",
+      "answer_type": "single_select",
+      "required": true,
+      "options": [
+        {
+          "value": "general_surgery",
+          "label": "General Surgery",
+          "description": "Broad-spectrum surgical procedures"
+        },
+        {
+          "value": "orthopedic",
+          "label": "Orthopedic Surgery",
+          "description": "Musculoskeletal surgical procedures"
+        },
+        {
+          "value": "cardiovascular",
+          "label": "Cardiovascular Surgery",
+          "description": "Heart and vascular surgical procedures"
+        },
+        {
+          "value": "neurological",
+          "label": "Neurological Surgery",
+          "description": "Brain and nervous system surgical procedures"
+        },
+        {
+          "value": "other_surgical",
+          "label": "Other Surgical Specialty",
+          "description": "Other surgical subspecialty not listed above"
+        }
+      ],
+      "show_when": {
+        "question_id": "surgical_practice",
+        "equals": "true"
+      },
+      "cans_field": "provider.subspecialty"
+    },
+    {
       "id": "patient_education",
       "text": "Do you provide patient education and discharge planning?",
       "answer_type": "boolean",
