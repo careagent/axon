@@ -15,6 +15,16 @@ import type {
   ActionAssignmentSchema,
   AnswerTypeSchema,
 } from '../questionnaires/schemas.js'
+import type {
+  RegistryEntrySchema,
+  NeuronEndpointSchema,
+  CredentialRecordSchema,
+  OrganizationAffiliationSchema,
+  CredentialStatusSchema,
+  VerificationSourceSchema,
+  EntityTypeSchema,
+  RegistrySearchQuerySchema,
+} from '../registry/schemas.js'
 
 export type TaxonomyVersion = Static<typeof TaxonomyVersionSchema>
 export type TaxonomyAction = Static<typeof TaxonomyActionSchema>
@@ -29,3 +39,12 @@ export type QuestionOption = Static<typeof QuestionOptionSchema>
 export type QuestionCondition = Static<typeof QuestionConditionSchema>
 export type ActionAssignment = Static<typeof ActionAssignmentSchema>
 export type AnswerType = Static<typeof AnswerTypeSchema>
+
+export type RegistryEntry = Static<typeof RegistryEntrySchema>
+export type NeuronEndpoint = Static<typeof NeuronEndpointSchema>
+export type CredentialRecord = Static<typeof CredentialRecordSchema>
+export type OrganizationAffiliation = Static<typeof OrganizationAffiliationSchema>
+export type CredentialStatus = Static<typeof CredentialStatusSchema>
+export type VerificationSource = Static<typeof VerificationSourceSchema>
+export type EntityType = Static<typeof EntityTypeSchema>
+export type RegistrySearchQuery = Static<typeof RegistrySearchQuerySchema>
