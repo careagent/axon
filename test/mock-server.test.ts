@@ -153,9 +153,9 @@ describe('MockAxonServer', () => {
 
   // --- Search ---
 
-  it('GET /v1/search?provider_type=physician returns pre-seeded providers', async () => {
+  it('GET /v1/registry/search?provider_type=physician returns pre-seeded providers', async () => {
     const res = await fetch(
-      `${url}/v1/search?provider_type=physician`,
+      `${url}/v1/registry/search?provider_type=physician`,
     )
 
     expect(res.status).toBe(200)
@@ -169,9 +169,9 @@ describe('MockAxonServer', () => {
     expect(npis).toContain('1003000126') // Dr. Robert Hayes
   })
 
-  it('GET /v1/search?specialty=surgery returns only surgery providers', async () => {
+  it('GET /v1/registry/search?specialty=surgery returns only surgery providers', async () => {
     const res = await fetch(
-      `${url}/v1/search?specialty=surgery`,
+      `${url}/v1/registry/search?specialty=surgery`,
     )
 
     expect(res.status).toBe(200)
@@ -184,9 +184,9 @@ describe('MockAxonServer', () => {
     }
   })
 
-  it('GET /v1/search?credential_status=expired returns providers with expired status', async () => {
+  it('GET /v1/registry/search?credential_status=expired returns providers with expired status', async () => {
     const res = await fetch(
-      `${url}/v1/search?credential_status=expired`,
+      `${url}/v1/registry/search?credential_status=expired`,
     )
 
     expect(res.status).toBe(200)
@@ -195,6 +195,90 @@ describe('MockAxonServer', () => {
     }
     expect(data.results.length).toBeGreaterThanOrEqual(1)
     expect(data.results[0]!.npi).toBe('1003000126') // Dr. Robert Hayes
+  })
+
+  it('GET /v1/search (old path) returns 404', async () => {
+    const res = await fetch(`${url}/v1/search?provider_type=physician`)
+    expect(res.status).toBe(404)
+  })
+
+  // --- Search Pagination ---
+
+  it('GET /v1/registry/search supports limit and offset params', async () => {
+    const res = await fetch(`${url}/v1/registry/search?provider_type=physician&limit=1&offset=0`)
+
+    expect(res.status).toBe(200)
+    const data = (await res.json()) as { results: Array<{ npi: string }> }
+    expect(data.results.length).toBe(1) // Limited to 1
+  })
+
+  // --- Taxonomy ---
+
+  it('GET /v1/taxonomy/actions?type=physician returns full action objects', async () => {
+    const res = await fetch(`${url}/v1/taxonomy/actions?type=physician`)
+
+    expect(res.status).toBe(200)
+    const data = (await res.json()) as {
+      actions: Array<{ id: string; description: string; applicable_types: string[] }>
+    }
+    expect(data.actions.length).toBeGreaterThan(0)
+    // Verify full objects returned (not just string IDs)
+    expect(data.actions[0]!.id).toBeTruthy()
+    expect(data.actions[0]!.description).toBeTruthy()
+    expect(data.actions[0]!.applicable_types).toContain('physician')
+  })
+
+  it('GET /v1/taxonomy/actions without type param returns 400', async () => {
+    const res = await fetch(`${url}/v1/taxonomy/actions`)
+    expect(res.status).toBe(400)
+    const data = (await res.json()) as { error: string }
+    expect(data.error).toContain('type')
+  })
+
+  it('GET /v1/taxonomy/actions?type=nonexistent returns 404', async () => {
+    const res = await fetch(`${url}/v1/taxonomy/actions?type=nonexistent_type`)
+    expect(res.status).toBe(404)
+    const data = (await res.json()) as { error: string }
+    expect(data.error).toContain('nonexistent_type')
+  })
+
+  // --- Questionnaires ---
+
+  it('GET /v1/questionnaires/physician returns the physician questionnaire', async () => {
+    const res = await fetch(`${url}/v1/questionnaires/physician`)
+
+    expect(res.status).toBe(200)
+    const data = (await res.json()) as {
+      provider_type: string
+      questions: unknown[]
+    }
+    expect(data.provider_type).toBe('physician')
+    expect(data.questions.length).toBeGreaterThan(0)
+  })
+
+  it('GET /v1/questionnaires/nonexistent returns 404', async () => {
+    const res = await fetch(`${url}/v1/questionnaires/nonexistent_type`)
+    expect(res.status).toBe(404)
+    const data = (await res.json()) as { error: string }
+    expect(data.error).toContain('nonexistent_type')
+  })
+
+  // --- Registry Direct Lookup ---
+
+  it('GET /v1/registry/:npi returns the registry entry for a known NPI', async () => {
+    const res = await fetch(`${url}/v1/registry/1679576722`)
+
+    expect(res.status).toBe(200)
+    const data = (await res.json()) as { npi: string; name: string }
+    expect(data.npi).toBe('1679576722')
+    expect(data.name).toBe('Dr. Sarah Chen')
+  })
+
+  it('GET /v1/registry/:npi returns 404 for unknown NPI', async () => {
+    const res = await fetch(`${url}/v1/registry/9999999999`)
+    expect(res.status).toBe(404)
+    const data = (await res.json()) as { error: string }
+    expect(data.error).toContain('9999999999')
   })
 
   // --- Connect ---

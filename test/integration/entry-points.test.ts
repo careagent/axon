@@ -60,7 +60,7 @@ describe('Patient-core: provider discovery and connection', () => {
   })
 
   it('can search for providers by specialty', async () => {
-    const res = await fetch(`${url}/v1/search?specialty=internal_medicine`)
+    const res = await fetch(`${url}/v1/registry/search?specialty=internal_medicine`)
 
     expect(res.status).toBe(200)
     const data = (await res.json()) as {
