@@ -51,3 +51,41 @@ export type RegistrySearchQuery = Static<typeof RegistrySearchQuerySchema>
 // Protocol types are re-exported from src/protocol/index.ts via src/index.ts
 // Do NOT duplicate them here to avoid ambiguous module exports
 export type { ConnectRequest, ConnectGrant, ConnectDenial, SignedMessage, DenialCode } from '../protocol/schemas.js'
+
+// Runtime TypeBox schemas for consumers needing runtime validation
+export {
+  TaxonomyVersionSchema,
+  TaxonomyActionSchema,
+  ProviderTypeSchema,
+  AtomicActionSchema,
+  GovernedBySchema,
+  ProviderTypeCategorySchema,
+} from '../taxonomy/schemas.js'
+
+export {
+  QuestionnaireSchema,
+  QuestionSchema,
+  QuestionOptionSchema,
+  QuestionConditionSchema,
+  ActionAssignmentSchema,
+  AnswerTypeSchema,
+} from '../questionnaires/schemas.js'
+
+export {
+  RegistryEntrySchema,
+  NeuronEndpointSchema,
+  CredentialRecordSchema,
+  OrganizationAffiliationSchema,
+  CredentialStatusSchema,
+  VerificationSourceSchema,
+  EntityTypeSchema,
+  RegistrySearchQuerySchema,
+} from '../registry/schemas.js'
+
+export {
+  ConnectRequestSchema,
+  ConnectGrantSchema,
+  ConnectDenialSchema,
+  DenialCodeSchema,
+  SignedMessageSchema,
+} from '../protocol/schemas.js'
