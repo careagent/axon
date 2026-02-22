@@ -21,3 +21,7 @@ export { validateNPI } from './npi.js'
 
 // Persistence helpers
 export { persistRegistry, loadRegistry } from './persistence.js'
+
+// Registry instance class
+export { AxonRegistry } from './registry.js'
+export type { ProviderRegistration, NeuronRegistration } from './registry.js'
