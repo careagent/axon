@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Package Foundation and Clinical Action Taxonomy** - Scaffold the package and build the hierarchical action vocabulary with Physician-complete taxonomy data
 - [x] **Phase 2: Questionnaire Repository** - Declarative conditional questionnaire system with full Physician questionnaire and 48 provider type stubs
-- [ ] **Phase 3: Registry and Credentials** - NPI-keyed provider directory with file-backed storage, credential management, and multi-field search
+- [x] **Phase 3: Registry and Credentials** - NPI-keyed provider directory with file-backed storage, credential management, and multi-field search
 - [ ] **Phase 4: Protocol Specification and Connection Broker** - Ed25519 identity exchange, signed message protocol, and stateless handshake brokering with audit trail
 - [ ] **Phase 5: Client Facade, Package Exports, and Integration** - Public API surface, multi-entry build, mock server, and consumer integration verification
 - [ ] **Phase 6: Documentation and Release** - Architecture guide, protocol specs, taxonomy and questionnaire authoring guides, governance model, and release preparation
@@ -71,7 +71,7 @@ Plans:
 
 Plans:
 - [x] 03-01-PLAN.md — Registry TypeBox schemas, NPI Luhn validation, atomic persistence helpers, and derived types
-- [ ] 03-02-PLAN.md — AxonRegistry class with registration, credential management, multi-field search, persistence tests
+- [x] 03-02-PLAN.md — AxonRegistry class with registration, credential management, multi-field search, persistence tests
 
 ### Phase 4: Protocol Specification and Connection Broker
 **Goal**: Two CareAgents can complete the full discover-verify-connect handshake through Axon with cryptographic identity verification, replay protection, and an immutable audit trail
@@ -83,12 +83,12 @@ Plans:
   3. `AxonBroker.connect()` completes the handshake sequence: credential check -> endpoint lookup -> connection grant/deny, and denies connections when credentials are expired, suspended, or revoked
   4. Every brokering event (connect attempt, grant, denial, reason) is logged to an append-only audit trail that contains no clinical content
   5. Five protocol specification documents exist in `spec/` (handshake, identity, message, consent, credential) that match the implemented behavior
-**Plans**: TBD
+**Plans**: 3 plans in 3 waves
 
 Plans:
-- [ ] 04-01: TBD
-- [ ] 04-02: TBD
-- [ ] 04-03: TBD
+- [ ] 04-01-PLAN.md — Protocol primitives: Ed25519 identity, TypeBox message schemas, NonceStore, error types
+- [ ] 04-02-PLAN.md — Connection broker: AuditTrail, AxonBroker.connect() pipeline, protocol and broker test suites
+- [ ] 04-03-PLAN.md — Protocol specifications: 5 spec documents (handshake, identity, message, consent, credential)
 
 ### Phase 5: Client Facade, Package Exports, and Integration
 **Goal**: Authorized consumers (provider-core, patient-core, neuron) can import Axon through purpose-specific entry points and integration-test against a mock Axon server
@@ -133,7 +133,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 |-------|----------------|--------|-----------|
 | 1. Package Foundation and Clinical Action Taxonomy | 3/3 | Complete | 2026-02-21 |
 | 2. Questionnaire Repository | 3/3 | Complete | 2026-02-21 |
-| 3. Registry and Credentials | 0/2 | Planned | - |
-| 4. Protocol Specification and Connection Broker | 0/3 | Not started | - |
+| 3. Registry and Credentials | 2/2 | Complete | 2026-02-22 |
+| 4. Protocol Specification and Connection Broker | 0/3 | Planned | - |
 | 5. Client Facade, Package Exports, and Integration | 0/3 | Not started | - |
 | 6. Documentation and Release | 0/2 | Not started | - |
