@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-02-21)
 ## Current Position
 
 Phase: 5 of 6 (Client Facade, Package Exports, and Integration)
-Plan: 1 of 3 in current phase
+Plan: 2 of 3 in current phase
 Status: In Progress
-Last activity: 2026-02-22 -- Completed 05-01-PLAN.md (Client facade and subpath exports)
+Last activity: 2026-02-22 -- Completed 05-02-PLAN.md (Mock Axon server and fixtures)
 
-Progress: [██████████████████████████] 80%
+Progress: [███████████████████████████] 87%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 12
+- Total plans completed: 13
 - Average duration: 4min
-- Total execution time: 0.73 hours
+- Total execution time: 0.80 hours
 
 **By Phase:**
 
@@ -31,10 +31,10 @@ Progress: [███████████████████████
 | 2 | 3 | 7min | 2min |
 | 3 | 2 | 6min | 3min |
 | 4 | 3 | 12min | 4min |
-| 5 | 1 | 2min | 2min |
+| 5 | 2 | 6min | 3min |
 
 **Recent Trend:**
-- Last 5 plans: 3min, 2min, 6min, 4min, 2min
+- Last 5 plans: 2min, 6min, 4min, 2min, 4min
 - Trend: stable
 
 *Updated after each plan completion*
@@ -47,6 +47,7 @@ Progress: [███████████████████████
 | Phase 04 P02 | 6min | 2 tasks | 7 files |
 | Phase 04 P03 | 4min | 2 tasks | 5 files |
 | Phase 05 P01 | 2min | 2 tasks | 4 files |
+| Phase 05 P02 | 4min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -91,6 +92,10 @@ Recent decisions affecting current work:
 - [04-03]: Specs written code-first: every section describes actual implemented behavior from Plans 01 and 02
 - [04-03]: Consent spec is explicitly descriptive-only with dedicated section explaining HIPAA boundary rationale
 - [04-03]: Denial codes in handshake spec mapped to specific pipeline steps for developer clarity
+- [05-02]: Mock server uses real AxonRegistry and AxonBroker internally for schema-validated state management
+- [05-02]: Fixture NPIs validated against Luhn algorithm: 1245319599 (org), 1679576722, 1376841239, 1003000126 (providers)
+- [05-02]: Failure modes short-circuit before broker pipeline for deterministic test behavior
+- [05-02]: neuronTokens map tracks registration_id to NPI for route dispatch
 - [05-01]: Axon namespace uses `as const` for full readonly type narrowing
 - [05-01]: TypeBox runtime schemas re-exported from types/index.ts alongside type-only exports (no ambiguous export conflicts)
 - [05-01]: Protocol schemas exported as value exports from types/index.ts while protocol types remain type-only exports to avoid ambiguity
@@ -106,5 +111,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-22
-Stopped at: Completed 05-01-PLAN.md
-Resume file: .planning/phases/05-client-facade-package-exports-and-integration/05-01-SUMMARY.md
+Stopped at: Completed 05-02-PLAN.md
+Resume file: .planning/phases/05-client-facade-package-exports-and-integration/05-02-SUMMARY.md

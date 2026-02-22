@@ -58,7 +58,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **CLIT-01**: `AxonRegistry`, `AxonBroker`, `AxonTaxonomy`, `AxonQuestionnaires` exported from package entry point
 - [x] **CLIT-02**: Consumer-specific entry points (taxonomy-only, registry-only, questionnaires-only, types-only) via tsdown multi-entry
-- [ ] **CLIT-03**: Mock Axon server for consumer integration testing (provider-core, patient-core, neuron)
+- [x] **CLIT-03**: Mock Axon server for consumer integration testing (provider-core, patient-core, neuron)
 
 ### Integration
 
@@ -159,7 +159,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AXON-03 | Phase 5: Client Facade, Package Exports, and Integration | Complete |
 | CLIT-01 | Phase 5: Client Facade, Package Exports, and Integration | Complete |
 | CLIT-02 | Phase 5: Client Facade, Package Exports, and Integration | Complete |
-| CLIT-03 | Phase 5: Client Facade, Package Exports, and Integration | Pending |
+| CLIT-03 | Phase 5: Client Facade, Package Exports, and Integration | Complete |
 | INTG-01 | Phase 5: Client Facade, Package Exports, and Integration | Pending |
 | INTG-02 | Phase 5: Client Facade, Package Exports, and Integration | Pending |
 | INTG-03 | Phase 5: Client Facade, Package Exports, and Integration | Pending |
