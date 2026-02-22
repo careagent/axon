@@ -10,8 +10,8 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Package Foundation
 
 - [x] **AXON-01**: Package scaffold with pnpm, TypeScript, tsdown build, vitest testing, and zero runtime npm dependencies
-- [ ] **AXON-02**: Package exports TypeScript types, classes, and data for authorized consumers (provider-core, patient-core, neuron)
-- [ ] **AXON-03**: Multiple entry points: full package, taxonomy-only, questionnaires-only, types-only
+- [x] **AXON-02**: Package exports TypeScript types, classes, and data for authorized consumers (provider-core, patient-core, neuron)
+- [x] **AXON-03**: Multiple entry points: full package, taxonomy-only, questionnaires-only, types-only
 
 ### Clinical Action Taxonomy
 
@@ -56,8 +56,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Client
 
-- [ ] **CLIT-01**: `AxonRegistry`, `AxonBroker`, `AxonTaxonomy`, `AxonQuestionnaires` exported from package entry point
-- [ ] **CLIT-02**: Consumer-specific entry points (taxonomy-only, registry-only, questionnaires-only, types-only) via tsdown multi-entry
+- [x] **CLIT-01**: `AxonRegistry`, `AxonBroker`, `AxonTaxonomy`, `AxonQuestionnaires` exported from package entry point
+- [x] **CLIT-02**: Consumer-specific entry points (taxonomy-only, registry-only, questionnaires-only, types-only) via tsdown multi-entry
 - [ ] **CLIT-03**: Mock Axon server for consumer integration testing (provider-core, patient-core, neuron)
 
 ### Integration
@@ -155,10 +155,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BROK-01 | Phase 4: Protocol Specification and Connection Broker | Complete |
 | BROK-02 | Phase 4: Protocol Specification and Connection Broker | Complete |
 | BROK-03 | Phase 4: Protocol Specification and Connection Broker | Complete |
-| AXON-02 | Phase 5: Client Facade, Package Exports, and Integration | Pending |
-| AXON-03 | Phase 5: Client Facade, Package Exports, and Integration | Pending |
-| CLIT-01 | Phase 5: Client Facade, Package Exports, and Integration | Pending |
-| CLIT-02 | Phase 5: Client Facade, Package Exports, and Integration | Pending |
+| AXON-02 | Phase 5: Client Facade, Package Exports, and Integration | Complete |
+| AXON-03 | Phase 5: Client Facade, Package Exports, and Integration | Complete |
+| CLIT-01 | Phase 5: Client Facade, Package Exports, and Integration | Complete |
+| CLIT-02 | Phase 5: Client Facade, Package Exports, and Integration | Complete |
 | CLIT-03 | Phase 5: Client Facade, Package Exports, and Integration | Pending |
 | INTG-01 | Phase 5: Client Facade, Package Exports, and Integration | Pending |
 | INTG-02 | Phase 5: Client Facade, Package Exports, and Integration | Pending |

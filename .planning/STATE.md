@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-21)
 
 **Core value:** Trusted, open, neutral discovery and handshake layer so any patient CareAgent can find any provider CareAgent and establish a direct peer-to-peer connection -- without touching PHI or remaining in the path after handshake.
-**Current focus:** Phase 4: Protocol Specification and Connection Broker
+**Current focus:** Phase 5: Client Facade, Package Exports, and Integration
 
 ## Current Position
 
-Phase: 4 of 6 (Protocol Specification and Connection Broker)
-Plan: 3 of 3 in current phase
-Status: Phase Complete
-Last activity: 2026-02-22 -- Completed 04-03-PLAN.md (Protocol specification documents)
+Phase: 5 of 6 (Client Facade, Package Exports, and Integration)
+Plan: 1 of 3 in current phase
+Status: In Progress
+Last activity: 2026-02-22 -- Completed 05-01-PLAN.md (Client facade and subpath exports)
 
-Progress: [█████████████████████████] 76%
+Progress: [██████████████████████████] 80%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 11
+- Total plans completed: 12
 - Average duration: 4min
-- Total execution time: 0.70 hours
+- Total execution time: 0.73 hours
 
 **By Phase:**
 
@@ -31,9 +31,10 @@ Progress: [███████████████████████
 | 2 | 3 | 7min | 2min |
 | 3 | 2 | 6min | 3min |
 | 4 | 3 | 12min | 4min |
+| 5 | 1 | 2min | 2min |
 
 **Recent Trend:**
-- Last 5 plans: 3min, 3min, 2min, 6min, 4min
+- Last 5 plans: 3min, 2min, 6min, 4min, 2min
 - Trend: stable
 
 *Updated after each plan completion*
@@ -45,6 +46,7 @@ Progress: [███████████████████████
 | Phase 04 P01 | 2min | 2 tasks | 6 files |
 | Phase 04 P02 | 6min | 2 tasks | 7 files |
 | Phase 04 P03 | 4min | 2 tasks | 5 files |
+| Phase 05 P01 | 2min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -89,6 +91,9 @@ Recent decisions affecting current work:
 - [04-03]: Specs written code-first: every section describes actual implemented behavior from Plans 01 and 02
 - [04-03]: Consent spec is explicitly descriptive-only with dedicated section explaining HIPAA boundary rationale
 - [04-03]: Denial codes in handshake spec mapped to specific pipeline steps for developer clarity
+- [05-01]: Axon namespace uses `as const` for full readonly type narrowing
+- [05-01]: TypeBox runtime schemas re-exported from types/index.ts alongside type-only exports (no ambiguous export conflicts)
+- [05-01]: Protocol schemas exported as value exports from types/index.ts while protocol types remain type-only exports to avoid ambiguity
 
 ### Pending Todos
 
@@ -101,5 +106,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-22
-Stopped at: Completed 04-03-PLAN.md (Phase 4 complete)
-Resume file: .planning/phases/04-protocol-specification-and-connection-broker/04-03-SUMMARY.md
+Stopped at: Completed 05-01-PLAN.md
+Resume file: .planning/phases/05-client-facade-package-exports-and-integration/05-01-SUMMARY.md
