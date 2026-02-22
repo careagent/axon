@@ -26,3 +26,26 @@
 
 ---
 
+## Standalone Server Deployment (Shipped: 2026-02-22, out-of-band)
+
+**Delivered:** Production HTTP server for VPS deployment, enabling Neuron instances to register providers, send heartbeats, and broker connections over the network.
+
+**Implemented outside GSD workflow** — recorded here for continuity.
+
+**What was built:**
+- `src/server/index.ts` — Production HTTP server with all routes matching neuron AxonClient contract (register, heartbeat, provider CRUD, search, taxonomy, questionnaires, connect)
+- `src/server/tokens.ts` — `PersistentTokenStore` with atomic JSON persistence and bearer token authentication
+- `src/server/standalone.ts` — Entry point with env var config (`AXON_PORT`, `AXON_HOST`, `AXON_DATA_DIR`), graceful shutdown
+- `Dockerfile` — Multi-stage build (Node 22 Alpine, non-root user, healthcheck)
+- `docker-compose.yml` — Axon + Caddy services with persistent volumes
+- `Caddyfile` — TLS reverse proxy with security headers
+- `.github/workflows/ci.yml` — Build + test on push/PR
+- `.github/workflows/publish.yml` — Publish to GitHub Packages on v* tags
+- `test/server.test.ts` — 22 new tests (CORS, auth, all routes, persistence, shutdown)
+
+**Stats:** Version bumped 0.1.0 → 1.0.0, 253 tests passing (231 + 22 new), commit `21d88ba`
+
+**Config changes:** tsdown entry points, package.json (bin, start, exports, publishConfig), .npmrc, .gitignore
+
+---
+

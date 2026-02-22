@@ -9,11 +9,11 @@ See: .planning/PROJECT.md (updated 2026-02-22)
 
 ## Current Position
 
-Phase: v1.0 complete (7 phases, 18 plans shipped)
-Status: Milestone archived
-Last activity: 2026-02-22 -- v1.0 milestone completed and archived
+Phase: v1.0 complete + standalone server deployed
+Status: Milestone archived, server deployment complete (out-of-band)
+Last activity: 2026-02-22 -- standalone server deployment committed and pushed
 
-Progress: [██████████████████████████████] 100% (v1.0)
+Progress: [██████████████████████████████] 100% (v1.0 + server deployment)
 
 ## Performance Metrics
 
@@ -22,6 +22,10 @@ Progress: [███████████████████████
 - Average duration: 4min
 - Total execution time: 1.03 hours
 - Timeline: 4 days (2026-02-19 → 2026-02-22)
+
+**Out-of-band work (2026-02-22):**
+- Standalone server deployment: production HTTP server, Docker, CI/CD, GitHub Packages publish
+- 22 new tests added (253 total), version bumped to 1.0.0
 
 ## Accumulated Context
 
@@ -41,4 +45,4 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-22
-Stopped at: v1.0 milestone archived -- ready for /gsd:new-milestone
+Stopped at: Standalone server deployment completed (out-of-band, commit 21d88ba) -- ready for /gsd:new-milestone

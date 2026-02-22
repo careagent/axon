@@ -51,7 +51,7 @@ Axon must provide a trusted, open, neutral discovery and handshake layer so that
 
 ## Context
 
-**Current state:** v1.0 shipped (2026-02-22). 6,229 LOC TypeScript, 231 tests, 0 runtime deps, >80% coverage.
+**Current state:** v1.0.0 shipped (2026-02-22). Standalone production server deployed. 253 tests, 0 runtime deps, >80% coverage.
 
 **Tech stack:** TypeScript 5.9, pnpm, tsdown 0.20, vitest 4.0, @sinclair/typebox 0.34, Node.js >=22.12.0
 
@@ -67,6 +67,7 @@ Only `@careagent/provider-core`, `@careagent/patient-core`, and `@careagent/neur
 - README.md and docs/questionnaire-authoring.md say "12 questions" for physician (actual: 13)
 - README.md `new AxonRegistry()` example missing required `filePath` argument
 - 1 pending todo: build-permitted-actions-taxonomy (may be v2 scope)
+- README.md does not yet document the standalone server, Docker deployment, or GitHub Packages publishing
 
 ## Constraints
 
@@ -95,6 +96,9 @@ Only `@careagent/provider-core`, `@careagent/patient-core`, and `@careagent/neur
 | Hash-chained audit trail | Tamper-evident JSONL with SHA-256 chain | ✓ Good — verifyChain() detects tampering |
 | ASCII over Mermaid for docs | Universal rendering without special tooling | ✓ Good — works in any markdown viewer |
 | 2-level taxonomy hierarchy (3 for surgical) | Balance between specificity and manageability | ✓ Good — 61 actions cover physician scope adequately |
+| Standalone server with bearer token auth | Neuron instances need authenticated access; simple token-per-registration | ✓ Good — persistent tokens survive restarts |
+| Docker + Caddy for VPS deployment | Auto TLS, reverse proxy, non-root container, health checks | ✓ Good — single `docker compose up` deploys |
+| GitHub Packages for npm distribution | Private registry for @careagent scoped packages | ✓ Good — v* tag triggers automated publish |
 
 ---
-*Last updated: 2026-02-22 after v1.0 milestone*
+*Last updated: 2026-02-22 after standalone server deployment*
