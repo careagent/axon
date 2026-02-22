@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Package Foundation and Clinical Action Taxonomy** - Scaffold the package and build the hierarchical action vocabulary with Physician-complete taxonomy data
 - [x] **Phase 2: Questionnaire Repository** - Declarative conditional questionnaire system with full Physician questionnaire and 48 provider type stubs
 - [x] **Phase 3: Registry and Credentials** - NPI-keyed provider directory with file-backed storage, credential management, and multi-field search
-- [ ] **Phase 4: Protocol Specification and Connection Broker** - Ed25519 identity exchange, signed message protocol, and stateless handshake brokering with audit trail
+- [x] **Phase 4: Protocol Specification and Connection Broker** - Ed25519 identity exchange, signed message protocol, and stateless handshake brokering with audit trail
 - [ ] **Phase 5: Client Facade, Package Exports, and Integration** - Public API surface, multi-entry build, mock server, and consumer integration verification
 - [ ] **Phase 6: Documentation and Release** - Architecture guide, protocol specs, taxonomy and questionnaire authoring guides, governance model, and release preparation
 
@@ -88,7 +88,7 @@ Plans:
 Plans:
 - [x] 04-01-PLAN.md — Protocol primitives: Ed25519 identity, TypeBox message schemas, NonceStore, error types
 - [x] 04-02-PLAN.md — Connection broker: AuditTrail, AxonBroker.connect() pipeline, protocol and broker test suites
-- [ ] 04-03-PLAN.md — Protocol specifications: 5 spec documents (handshake, identity, message, consent, credential)
+- [x] 04-03-PLAN.md — Protocol specifications: 5 spec documents (handshake, identity, message, consent, credential)
 
 ### Phase 5: Client Facade, Package Exports, and Integration
 **Goal**: Authorized consumers (provider-core, patient-core, neuron) can import Axon through purpose-specific entry points and integration-test against a mock Axon server
@@ -134,6 +134,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 1. Package Foundation and Clinical Action Taxonomy | 3/3 | Complete | 2026-02-21 |
 | 2. Questionnaire Repository | 3/3 | Complete | 2026-02-21 |
 | 3. Registry and Credentials | 2/2 | Complete | 2026-02-22 |
-| 4. Protocol Specification and Connection Broker | 0/3 | Planned | - |
+| 4. Protocol Specification and Connection Broker | 3/3 | Complete | 2026-02-22 |
 | 5. Client Facade, Package Exports, and Integration | 0/3 | Not started | - |
 | 6. Documentation and Release | 0/2 | Not started | - |
