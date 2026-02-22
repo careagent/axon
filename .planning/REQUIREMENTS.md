@@ -68,8 +68,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Documentation
 
-- [ ] **DOCS-01**: Architecture guide (`docs/architecture.md`)
-- [ ] **DOCS-02**: Protocol specification (5 spec documents in `spec/`: handshake, identity, message, consent, credential)
+- [x] **DOCS-01**: Architecture guide (`docs/architecture.md`)
+- [x] **DOCS-02**: Protocol specification (5 spec documents in `spec/`: handshake, identity, message, consent, credential)
 - [x] **DOCS-03**: Governance model (`docs/governance.md`)
 - [x] **DOCS-04**: Taxonomy guide (`docs/taxonomy.md`)
 - [x] **DOCS-05**: Questionnaire authoring guide (`docs/questionnaire-authoring.md`)
@@ -163,8 +163,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INTG-01 | Phase 5: Client Facade, Package Exports, and Integration | Complete |
 | INTG-02 | Phase 5: Client Facade, Package Exports, and Integration | Complete |
 | INTG-03 | Phase 5: Client Facade, Package Exports, and Integration | Complete |
-| DOCS-01 | Phase 6: Documentation and Release | Pending |
-| DOCS-02 | Phase 6: Documentation and Release | Pending |
+| DOCS-01 | Phase 6: Documentation and Release | Complete |
+| DOCS-02 | Phase 6: Documentation and Release | Complete |
 | DOCS-03 | Phase 6: Documentation and Release | Complete |
 | DOCS-04 | Phase 6: Documentation and Release | Complete |
 | DOCS-05 | Phase 6: Documentation and Release | Complete |
