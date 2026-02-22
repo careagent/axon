@@ -5,36 +5,37 @@
 See: .planning/PROJECT.md (updated 2026-02-21)
 
 **Core value:** Trusted, open, neutral discovery and handshake layer so any patient CareAgent can find any provider CareAgent and establish a direct peer-to-peer connection -- without touching PHI or remaining in the path after handshake.
-**Current focus:** Phase 1: Package Foundation and Clinical Action Taxonomy
+**Current focus:** Phase 2: Questionnaire Repository
 
 ## Current Position
 
-Phase: 1 of 6 (Package Foundation and Clinical Action Taxonomy)
-Plan: 3 of 3 in current phase (COMPLETE)
-Status: Phase Complete
-Last activity: 2026-02-21 -- Completed 01-03-PLAN.md (AxonTaxonomy static class with TDD, 46 tests, >80% coverage)
+Phase: 2 of 6 (Questionnaire Repository)
+Plan: 1 of 2 in current phase
+Status: In Progress
+Last activity: 2026-02-21 -- Completed 02-01-PLAN.md (Questionnaire module infrastructure: schemas, loader, AxonQuestionnaires class)
 
-Progress: [██████░░░░░░░░░░░░░░] 20%
+Progress: [████████░░░░░░░░░░░░] 30%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3
-- Average duration: 6min
-- Total execution time: 0.28 hours
+- Total plans completed: 4
+- Average duration: 5min
+- Total execution time: 0.32 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 1 | 3 | 17min | 6min |
+| 2 | 1 | 2min | 2min |
 
 **Recent Trend:**
-- Last 5 plans: 8min, 5min, 4min
+- Last 5 plans: 8min, 5min, 4min, 2min
 - Trend: improving
 
 *Updated after each plan completion*
-| Phase 01 P03 | 4min | 2 tasks | 5 files |
+| Phase 02 P01 | 2min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -55,6 +56,8 @@ Recent decisions affecting current work:
 - [01-03]: Non-null assertion in _buildIndexes instead of defensive undefined guard (dead code elimination)
 - [01-03]: Schema validation tested directly via TaxonomyVersionValidator for branch coverage
 - [Phase 01]: Replaced createRequire JSON loading with readFileSync + directory walk-up for bundle compatibility
+- [02-01]: 4-step validation pipeline in loader: schema, taxonomy cross-validation, CANS field validation, show_when ordering
+- [02-01]: CANS field allowlist as explicit Set<string> contract between questionnaires and provider-core
 
 ### Pending Todos
 
@@ -67,5 +70,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-21
-Stopped at: Completed 01-03-PLAN.md (Phase 1 complete)
-Resume file: .planning/phases/01-package-foundation-and-clinical-action-taxonomy/01-03-SUMMARY.md
+Stopped at: Completed 02-01-PLAN.md
+Resume file: .planning/phases/02-questionnaire-repository/02-01-SUMMARY.md

@@ -25,12 +25,12 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Questionnaire Repository
 
-- [ ] **QUES-01**: TypeBox schema for questionnaire format with conditional logic, CANS field mapping, and taxonomy-backed options
+- [x] **QUES-01**: TypeBox schema for questionnaire format with conditional logic, CANS field mapping, and taxonomy-backed options
 - [ ] **QUES-02**: Full Physician questionnaire with conditional branching (surgical/non-surgical, academic/private practice), taxonomy-backed scope selection, and CANS field mapping
 - [ ] **QUES-03**: Stub questionnaires for all 48 remaining provider types (valid metadata, empty sections)
-- [ ] **QUES-04**: `AxonQuestionnaires.getForType()` returns the appropriate questionnaire for a given provider type
-- [ ] **QUES-05**: All taxonomy actions referenced in questionnaire options exist in the current taxonomy version
-- [ ] **QUES-06**: All CANS field paths referenced in questionnaire mappings are valid against the CANS schema
+- [x] **QUES-04**: `AxonQuestionnaires.getForType()` returns the appropriate questionnaire for a given provider type
+- [x] **QUES-05**: All taxonomy actions referenced in questionnaire options exist in the current taxonomy version
+- [x] **QUES-06**: All CANS field paths referenced in questionnaire mappings are valid against the CANS schema
 
 ### Registry
 
@@ -136,12 +136,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TAXO-05 | Phase 1: Package Foundation and Clinical Action Taxonomy | Complete |
 | TAXO-06 | Phase 1: Package Foundation and Clinical Action Taxonomy | Complete |
 | TAXO-07 | Phase 1: Package Foundation and Clinical Action Taxonomy | Complete |
-| QUES-01 | Phase 2: Questionnaire Repository | Pending |
+| QUES-01 | Phase 2: Questionnaire Repository | Complete |
 | QUES-02 | Phase 2: Questionnaire Repository | Pending |
 | QUES-03 | Phase 2: Questionnaire Repository | Pending |
-| QUES-04 | Phase 2: Questionnaire Repository | Pending |
-| QUES-05 | Phase 2: Questionnaire Repository | Pending |
-| QUES-06 | Phase 2: Questionnaire Repository | Pending |
+| QUES-04 | Phase 2: Questionnaire Repository | Complete |
+| QUES-05 | Phase 2: Questionnaire Repository | Complete |
+| QUES-06 | Phase 2: Questionnaire Repository | Complete |
 | REGI-01 | Phase 3: Registry and Credentials | Pending |
 | REGI-02 | Phase 3: Registry and Credentials | Pending |
 | REGI-03 | Phase 3: Registry and Credentials | Pending |
