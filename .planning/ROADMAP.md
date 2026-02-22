@@ -17,6 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Registry and Credentials** - NPI-keyed provider directory with file-backed storage, credential management, and multi-field search
 - [x] **Phase 4: Protocol Specification and Connection Broker** - Ed25519 identity exchange, signed message protocol, and stateless handshake brokering with audit trail
 - [x] **Phase 5: Client Facade, Package Exports, and Integration** - Public API surface, multi-entry build, mock server, and consumer integration verification (completed 2026-02-22)
+- [ ] **Phase 5.1: Mock Server HTTP Route Completeness** - INSERTED: Add missing taxonomy, questionnaire, and registry HTTP routes to mock server; fix search path mismatch (gap closure from v1.0 audit)
 - [ ] **Phase 6: Documentation and Release** - Architecture guide, protocol specs, taxonomy and questionnaire authoring guides, governance model, and release preparation
 
 **Note:** Phases 2 and 3 have no dependency on each other and can be executed in either order or in parallel.
@@ -107,6 +108,21 @@ Plans:
 - [ ] 05-02-PLAN.md — Mock Axon HTTP server with pre-seeded fixtures and configurable failure scenarios
 - [ ] 05-03-PLAN.md — Compatibility matrix tests, consumer integration tests, mock entry wiring
 
+### Phase 5.1: Mock Server HTTP Route Completeness (INSERTED — Gap Closure)
+**Goal**: The mock Axon server exposes all documented HTTP routes so consumers can integration-test entirely over HTTP without class imports
+**Depends on**: Phase 5 (mock server must exist)
+**Requirements**: CLIT-03, REGI-05 (already satisfied — this improves API surface completeness)
+**Gap Closure**: Closes INTG-MOCK-01, INTG-MOCK-02, INTG-MOCK-03 from v1.0 audit
+**Success Criteria** (what must be TRUE):
+  1. `GET /v1/taxonomy/actions?type=physician` returns the taxonomy actions for the given provider type
+  2. `GET /v1/questionnaires/:typeId` returns the questionnaire for the given provider type
+  3. `GET /v1/registry/search?name=...` works (replacing `/v1/search`), and existing tests are updated to use the correct path
+  4. `GET /v1/registry/:npi` returns the registry entry for a specific NPI via direct lookup
+**Plans**: TBD
+
+Plans:
+- [ ] 05.1-01-PLAN.md — Add missing mock server HTTP routes and fix search path
+
 ### Phase 6: Documentation and Release
 **Goal**: A developer unfamiliar with Axon can understand its architecture, extend the taxonomy, author new questionnaires, and contribute to the project using published documentation
 **Depends on**: Phase 5 (documentation describes the complete, tested implementation)
@@ -126,7 +142,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 5.1 -> 6
 (Phases 2 and 3 are independent and can run in either order or parallel)
 
 | Phase | Plans Complete | Status | Completed |
@@ -136,4 +152,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 3. Registry and Credentials | 2/2 | Complete | 2026-02-22 |
 | 4. Protocol Specification and Connection Broker | 3/3 | Complete    | 2026-02-22 |
 | 5. Client Facade, Package Exports, and Integration | 2/3 | Complete    | 2026-02-22 |
+| 5.1. Mock Server HTTP Route Completeness | 0/1 | Not started | - |
 | 6. Documentation and Release | 0/2 | Not started | - |
