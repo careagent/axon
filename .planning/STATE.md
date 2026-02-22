@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-21)
 
 **Core value:** Trusted, open, neutral discovery and handshake layer so any patient CareAgent can find any provider CareAgent and establish a direct peer-to-peer connection -- without touching PHI or remaining in the path after handshake.
-**Current focus:** Phase 2: Questionnaire Repository
+**Current focus:** Phase 3: Registry and Credentials
 
 ## Current Position
 
-Phase: 2 of 6 (Questionnaire Repository) -- COMPLETE
-Plan: 3 of 3 in current phase
-Status: Phase Complete
-Last activity: 2026-02-21 -- Completed 02-03-PLAN.md (Gap closure: surgical subspecialty conditional branch)
+Phase: 3 of 6 (Registry and Credentials)
+Plan: 1 of 2 in current phase
+Status: In Progress
+Last activity: 2026-02-22 -- Completed 03-01-PLAN.md (Registry schemas, NPI validation, persistence helpers)
 
-Progress: [████████████░░░░░░░░] 40%
+Progress: [██████████████░░░░░░] 47%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
+- Total plans completed: 7
 - Average duration: 4min
-- Total execution time: 0.40 hours
+- Total execution time: 0.45 hours
 
 **By Phase:**
 
@@ -29,15 +29,17 @@ Progress: [████████████░░░░░░░░] 40%
 |-------|-------|-------|----------|
 | 1 | 3 | 17min | 6min |
 | 2 | 3 | 7min | 2min |
+| 3 | 1 | 3min | 3min |
 
 **Recent Trend:**
-- Last 5 plans: 5min, 4min, 2min, 4min, 1min
+- Last 5 plans: 4min, 2min, 4min, 1min, 3min
 - Trend: stable
 
 *Updated after each plan completion*
 | Phase 02 P01 | 2min | 2 tasks | 7 files |
 | Phase 02 P02 | 4min | 2 tasks | 51 files |
 | Phase 02 P03 | 1min | 1 tasks | 1 files |
+| Phase 03 P01 | 3min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -64,6 +66,10 @@ Recent decisions affecting current work:
 - [02-02]: All action_assignments use string answer_value ('true'/'false') not JSON booleans, matching schema contract
 - [02-02]: Error path tests use temporary JSON files for loader validation coverage
 - [Phase 02-03]: No action_assignments on surgical_subspecialty -- scope actions already granted by surgical_practice
+- [03-01]: verification_source is REQUIRED on CredentialRecord (not optional) to surface verification status prominently
+- [03-01]: NPI Luhn algorithm uses constant 24 for 80840 prefix instead of prefixing digits
+- [03-01]: Atomic persistence uses write-to-temp-then-rename with randomUUID temp file names
+- [03-01]: Persistence format wraps entries in { version: '1.0.0', entries: {...} } for future migration support
 
 ### Pending Todos
 
@@ -75,6 +81,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-21
-Stopped at: Completed 02-03-PLAN.md (Phase 2 gap closure complete)
-Resume file: .planning/phases/02-questionnaire-repository/02-03-SUMMARY.md
+Last session: 2026-02-22
+Stopped at: Completed 03-01-PLAN.md
+Resume file: .planning/phases/03-registry-and-credentials/03-01-SUMMARY.md

@@ -70,7 +70,7 @@ Plans:
 **Plans**: 2 plans in 2 waves
 
 Plans:
-- [ ] 03-01-PLAN.md — Registry TypeBox schemas, NPI Luhn validation, atomic persistence helpers, and derived types
+- [x] 03-01-PLAN.md — Registry TypeBox schemas, NPI Luhn validation, atomic persistence helpers, and derived types
 - [ ] 03-02-PLAN.md — AxonRegistry class with registration, credential management, multi-field search, persistence tests
 
 ### Phase 4: Protocol Specification and Connection Broker

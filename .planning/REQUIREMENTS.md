@@ -34,8 +34,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Registry
 
-- [ ] **REGI-01**: TypeBox schemas for RegistryEntry, NeuronEndpoint, CredentialRecord, OrganizationAffiliation
-- [ ] **REGI-02**: NPI validation (Luhn check algorithm with 80840 prefix, 10-digit format validation)
+- [x] **REGI-01**: TypeBox schemas for RegistryEntry, NeuronEndpoint, CredentialRecord, OrganizationAffiliation
+- [x] **REGI-02**: NPI validation (Luhn check algorithm with 80840 prefix, 10-digit format validation)
 - [ ] **REGI-03**: In-memory registry with file-backed JSON persistence for development (atomic write-to-temp-then-rename pattern)
 - [ ] **REGI-04**: `AxonRegistry` supports provider/Neuron registration, credential management, and search
 - [ ] **REGI-05**: Search supports queries by NPI, name, specialty, provider type, organization, and credential status
@@ -142,8 +142,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | QUES-04 | Phase 2: Questionnaire Repository | Complete |
 | QUES-05 | Phase 2: Questionnaire Repository | Complete |
 | QUES-06 | Phase 2: Questionnaire Repository | Complete |
-| REGI-01 | Phase 3: Registry and Credentials | Pending |
-| REGI-02 | Phase 3: Registry and Credentials | Pending |
+| REGI-01 | Phase 3: Registry and Credentials | Complete |
+| REGI-02 | Phase 3: Registry and Credentials | Complete |
 | REGI-03 | Phase 3: Registry and Credentials | Pending |
 | REGI-04 | Phase 3: Registry and Credentials | Pending |
 | REGI-05 | Phase 3: Registry and Credentials | Pending |
