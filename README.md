@@ -1,4 +1,4 @@
-# axon# @careagent/axon
+# @careagent/axon
 
 **The open foundation network layer for the CareAgent ecosystem.**
 
@@ -6,15 +6,23 @@
 
 ---
 
----
-
 ## What This Package Does
 
-@careagent/axon is a pnpm package that provides two things:
+@careagent/axon is a TypeScript library that provides:
 
-**1. The Axon Registry** — open foundation infrastructure that maintains the national directory of NPI-registered providers and organizations, verifies credentials, maintains Neuron endpoint information, and brokers the initial connection handshake between patient and provider CareAgents. Axon never handles PHI. Patients are never registered on Axon. Clinical content flows directly between installations, peer to peer, after the handshake — Axon steps out of the way.
+**1. Clinical Action Taxonomy** — a versioned, data-driven taxonomy of clinical actions organized by provider type. The taxonomy governs what each provider type is permitted to do on the network. See [docs/taxonomy.md](docs/taxonomy.md).
 
-**2. The Axon API Client** — a TypeScript client library used internally by @careagent/provider-core, @careagent/patient-core, and @careagent/neuron to interact with the Axon registry. Direct third-party access to Axon is not permitted. All third-party integration happens through Neuron — see [careagent/neuron](https://github.com/careagent/neuron).
+**2. Provider Questionnaire System** — declarative JSON questionnaires that determine a provider's digital scope of practice during onboarding. Clinical domain experts author questionnaires without writing code. See [docs/questionnaire-authoring.md](docs/questionnaire-authoring.md).
+
+**3. Provider Registry** — an NPI-keyed directory of registered providers and organizations with credential records and Neuron endpoint tracking. Patients are never registered on Axon.
+
+**4. Connection Broker** — a stateless pipeline that brokers the initial handshake between a patient's CareAgent and a provider's Neuron using Ed25519 signed messages. Axon steps out of the way after the handshake -- clinical content flows peer to peer.
+
+**5. Protocol Specification** — the handshake, identity, message, consent, and credential standards that make the network interoperable. See [spec/](spec/).
+
+**6. Mock HTTP Server** — a development server used by @careagent/neuron, @careagent/provider-core, and @careagent/patient-core for integration testing. See [docs/architecture.md](docs/architecture.md).
+
+Direct third-party access to Axon is not permitted. All third-party integration happens through Neuron -- see [careagent/neuron](https://github.com/careagent/neuron).
 
 ---
 
@@ -132,24 +140,25 @@ The protocol for verifying that a care relationship and valid consent exist befo
 **Credential Format**
 The standard for how provider credentials are represented, verified, and presented in the Axon registry.
 
-### The Axon API Client
+### The Axon API
 
-The `@careagent/axon` package exports an internal API client used by provider-core, patient-core, and neuron. This is not a public integration surface — it is the canonical implementation of the protocol for authorized participants only.
+The `@careagent/axon` package exports a namespace and module-level classes used by provider-core, patient-core, and neuron. This is not a public integration surface -- it is the canonical implementation of the protocol for authorized participants only.
 
 ```typescript
-import { AxonClient, AxonRegistry } from '@careagent/axon'
+import { AxonTaxonomy, AxonRegistry, AxonBroker, AxonQuestionnaires } from '@careagent/axon'
 
-// Query the registry (patient-core — initial provider discovery only)
+// Taxonomy
+const actions = AxonTaxonomy.getActionsForType('physician')
+const isValid = AxonTaxonomy.validateAction('chart.progress_note')
+
+// Questionnaires
+const questionnaire = AxonQuestionnaires.getForType('physician')
+
+// Registry (instance with file-backed persistence)
 const registry = new AxonRegistry()
-const provider = await registry.findByNPI('1234567890')
-const results = await registry.search({ specialty: 'neurosurgery', location: 'Charleston, SC' })
 
-// Register a Neuron endpoint (neuron — at initialization)
-await registry.register({ npi: '1234567890', endpoint: 'https://neuron.example.com' })
-
-// Broker a connection (patient-core — new relationship only)
-const client = new AxonClient({ cans: patientCans })
-const session = await client.connect({ neuronEndpoint: provider.neuronEndpoint })
+// Mock server (for integration testing)
+import { createMockAxonServer } from '@careagent/axon/mock'
 ```
 
 Third-party developers building on the CareAgent ecosystem should refer to [careagent/neuron](https://github.com/careagent/neuron) for the Neuron API and SDK.
@@ -158,73 +167,42 @@ Third-party developers building on the CareAgent ecosystem should refer to [care
 
 ## Installation
 
-### Running the Axon Registry (Foundation Infrastructure)
-
-> **Note:** The Axon registry is open foundation infrastructure intended to be governed and operated by the CareAgent open foundation. Individual organizations do not run their own Axon registry — they register with the foundation's registry through their Neuron.
-
-For development and testing, a local Axon registry can be run:
-
-```bash
-# Install pnpm if you don't have it
-npm install -g pnpm
-
-# Clone and install
-git clone https://github.com/careagent/axon
-cd axon
-pnpm install
-```
-
-### Using the Axon API Client
-
-The API client is consumed as a dependency by @careagent/provider-core, @careagent/patient-core, and @careagent/neuron. It is not intended for direct use by third-party applications.
+@careagent/axon is consumed as a dependency by @careagent/provider-core, @careagent/patient-core, and @careagent/neuron. It is not intended for direct use by third-party applications.
 
 ```bash
 pnpm add @careagent/axon
 ```
 
+For development setup, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ---
 
 ## Local Development
 
-This project uses [pnpm](https://pnpm.io) as its package manager.
+This project uses [pnpm](https://pnpm.io) as its package manager. Prerequisites: Node.js >= 22.12.0, pnpm.
 
 ```bash
 pnpm install          # Install dependencies
-pnpm test             # Run test suites
-pnpm build            # Build the package and registry
-pnpm dev:registry     # Run a local Axon registry for development
-pnpm dev:mock         # Run with mock provider and patient CareAgent connections
+pnpm build            # Build the package (tsdown, multi-entry)
+pnpm test             # Run all tests (vitest)
+pnpm test:coverage    # Run with coverage (80% threshold on all metrics)
 ```
 
-> **Dev platform note:** All development uses synthetic data and mock CareAgent connections. No real patient data or PHI is used at this stage.
-
----
-
-## CLI Commands
-
-```bash
-axon start            # Start the Axon registry service
-axon status           # Show registry status, registered providers, active connections
-axon register         # Register a new Neuron endpoint with the registry
-axon verify <npi>     # Verify credentials for a given NPI
-axon dev:registry     # Start a local registry instance for development
-```
+All development uses synthetic data and mock CareAgent connections. No real patient data or PHI is used. For full development setup instructions, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 
 ## Governance
 
-Axon is governed as an open foundation. The governance model is documented in `docs/governance.md` and covers:
+Axon is governed as an open project. The governance model is documented in [docs/governance.md](docs/governance.md) and covers:
 
-- Foundation structure and decision-making
-- Protocol versioning and change management
-- Registry participation requirements
-- Credential verification standards
-- Dispute resolution
+- Taxonomy change process (proposing new actions and provider types)
+- Protocol change process (handshake, identity, message, consent, credential)
+- Semantic versioning rules for taxonomy data and protocol specifications
 
 The Axon protocol is versioned. Breaking changes require a governance process. Non-breaking extensions can be proposed through the standard contribution process.
 
-Protocol changes require discussion and consensus before implementation. Open an issue before writing code for any protocol-level change.
+Protocol changes require discussion and consensus before implementation. Open an issue before writing code for any protocol-level change. Full foundation governance (board structure, voting, funding) is deferred to v2.
 
 ---
 
@@ -257,35 +235,56 @@ Organization Neuron                   Patient CareAgent
 ```
 careagent/axon/
 ├── src/
-│   ├── registry/             # National provider and organization registry
-│   │   ├── index.ts          # Registry entry point
-│   │   ├── npi.ts            # NPI validation and lookup
-│   │   ├── credentials.ts    # Credential verification
-│   │   └── endpoints.ts      # Neuron endpoint directory
-│   ├── broker/               # Connection brokering
-│   │   ├── index.ts          # Broker entry point
-│   │   ├── handshake.ts      # Handshake sequence implementation
-│   │   └── session.ts        # Session establishment and teardown
-│   ├── protocol/             # Axon protocol implementation
-│   │   ├── identity.ts       # Identity exchange standard
-│   │   ├── message.ts        # Message format
-│   │   ├── consent.ts        # Consent verification protocol
-│   │   └── credential.ts     # Credential format standard
-│   └── client/               # Axon API client — for authorized internal use only
-│       ├── index.ts          # Client entry point
-│       ├── registry.ts       # AxonRegistry — provider registration and lookup
-│       └── broker.ts         # AxonClient — connection initiation
-├── spec/                     # Axon protocol specification (human-readable)
+│   ├── index.ts              # Axon namespace, re-exports all modules
+│   ├── taxonomy/             # Clinical action taxonomy (AxonTaxonomy)
+│   │   ├── taxonomy.ts       # Static class with lazy-loaded indexes
+│   │   ├── schemas.ts        # TypeBox schemas for taxonomy data
+│   │   └── loader.ts         # JSON data loading with directory walk-up
+│   ├── questionnaires/       # Provider questionnaire system (AxonQuestionnaires)
+│   │   ├── questionnaires.ts # Static class with lazy Map index
+│   │   ├── schemas.ts        # TypeBox schemas for questionnaire data
+│   │   ├── loader.ts         # 4-step validation pipeline
+│   │   └── cans-fields.ts    # CANS field allowlist
+│   ├── registry/             # NPI-keyed provider directory (AxonRegistry)
+│   │   ├── registry.ts       # Registry class: register, search, credentials
+│   │   ├── schemas.ts        # TypeBox schemas for registry entries
+│   │   ├── npi.ts            # NPI Luhn check digit validation
+│   │   └── persistence.ts    # Atomic write-to-temp-then-rename JSON storage
+│   ├── protocol/             # Ed25519 identity, message schemas, nonce store
+│   │   ├── identity.ts       # Key generation, signing, verification (node:crypto)
+│   │   ├── schemas.ts        # TypeBox schemas for protocol messages
+│   │   ├── nonce.ts          # Replay protection with timestamp window
+│   │   └── errors.ts         # AxonProtocolError hierarchy
+│   ├── broker/               # Connection broker pipeline (AxonBroker)
+│   │   ├── broker.ts         # Stateless connect() pipeline
+│   │   └── audit.ts          # Hash-chained JSONL append-only audit log
+│   ├── mock/                 # HTTP mock server for integration testing
+│   │   ├── server.ts         # createMockAxonServer() HTTP server
+│   │   └── fixtures.ts       # Pre-seeded registry data
+│   └── types/                # TypeBox schemas and derived types
+│       └── index.ts          # Re-exports schemas + Static<typeof> types
+├── data/
+│   ├── taxonomy/             # Versioned taxonomy JSON
+│   │   └── v1.0.0.json       # 49 provider types, 61 clinical actions
+│   └── questionnaires/       # Provider onboarding questionnaires
+│       ├── physician.json    # Full 12-question questionnaire
+│       └── ...               # 48 additional provider type stubs
+├── spec/                     # Axon protocol specification (authoritative)
 │   ├── handshake.md          # Handshake sequence specification
 │   ├── identity.md           # Identity exchange specification
 │   ├── message.md            # Message format specification
-│   └── consent.md            # Consent verification specification
-├── test/                     # Test suites
-├── docs/
-│   ├── architecture.md       # Axon architecture guide
-│   ├── governance.md         # Open foundation governance model
-│   └── protocol.md           # Protocol overview
-└── package.json              # pnpm package
+│   ├── consent.md            # Consent verification specification
+│   └── credential.md         # Credential format specification
+├── docs/                     # Developer and contributor documentation
+│   ├── architecture.md       # Component layers, dependency graph, design decisions
+│   ├── protocol.md           # Protocol overview linking to all 5 specs
+│   ├── taxonomy.md           # Action hierarchy, versioning, extension process
+│   ├── questionnaire-authoring.md  # Authoring guide for clinical domain experts
+│   └── governance.md         # Change processes for taxonomy and protocol
+├── test/                     # Test suites (vitest)
+├── CONTRIBUTING.md           # Development setup and contribution guidelines
+├── LICENSE                   # Apache 2.0
+└── package.json
 ```
 
 ---
@@ -299,7 +298,7 @@ CareAgent is released under Apache 2.0. Contributions to Axon are especially wel
 - Healthcare policy experts with knowledge of HIPAA, NPI, and credentialing frameworks
 - Developers building on the Axon protocol
 
-Before contributing, read the architecture guide in `docs/architecture.md`, the protocol specification in `spec/`, and the contribution guidelines in `CONTRIBUTING.md`.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, testing, build instructions, and contribution guidelines. For architecture context, see [docs/architecture.md](docs/architecture.md). For the protocol specification, see [docs/protocol.md](docs/protocol.md) and the individual specs in [spec/](spec/).
 
 ---
 
