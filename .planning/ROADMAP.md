@@ -36,7 +36,8 @@ Implemented outside GSD workflow. Deployed Axon as a public HTTP service on VPS.
 - [x] Server tests — 22 new tests (health, CORS, auth, all routes, persistence, graceful shutdown)
 - [x] Version bump — 0.1.0 → 1.0.0
 
-**Commit:** `21d88ba` on main
+**Live:** `https://axon.opencare.ai` (46.202.178.111)
+**Commits:** `21d88ba` (server), `2ee1952` (domain), `52a83d2` (healthcheck fix)
 **Tests:** 253 total (231 existing + 22 new), all passing
 
 </details>

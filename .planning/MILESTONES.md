@@ -43,9 +43,18 @@
 - `.github/workflows/publish.yml` — Publish to GitHub Packages on v* tags
 - `test/server.test.ts` — 22 new tests (CORS, auth, all routes, persistence, shutdown)
 
-**Stats:** Version bumped 0.1.0 → 1.0.0, 253 tests passing (231 + 22 new), commit `21d88ba`
+**Stats:** Version bumped 0.1.0 → 1.0.0, 253 tests passing (231 + 22 new)
 
 **Config changes:** tsdown entry points, package.json (bin, start, exports, publishConfig), .npmrc, .gitignore
+
+**VPS Deployment (2026-02-22):**
+- Live at `https://axon.opencare.ai` (46.202.178.111, Hostinger VPS)
+- DNS: A record `axon` → `46.202.178.111` on GoDaddy (opencare.ai)
+- Docker + Caddy running, TLS auto-provisioned via Let's Encrypt
+- Fixed Alpine healthcheck bug: `localhost` → `127.0.0.1` (commit `52a83d2`)
+- Caddyfile domain set to `axon.opencare.ai` (commit `2ee1952`)
+
+**Key commits:** `21d88ba` (server implementation), `2ee1952` (Caddyfile domain), `52a83d2` (healthcheck fix)
 
 ---
 

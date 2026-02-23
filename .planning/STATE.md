@@ -9,9 +9,9 @@ See: .planning/PROJECT.md (updated 2026-02-22)
 
 ## Current Position
 
-Phase: v1.0 complete + standalone server deployed
-Status: Milestone archived, server deployment complete (out-of-band)
-Last activity: 2026-02-22 -- standalone server deployment committed and pushed
+Phase: v1.0 complete + standalone server deployed and live
+Status: Milestone archived, server live at https://axon.opencare.ai
+Last activity: 2026-02-22 -- VPS deployment verified, DNS propagated, TLS active
 
 Progress: [██████████████████████████████] 100% (v1.0 + server deployment)
 
@@ -45,4 +45,4 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-22
-Stopped at: Standalone server deployment completed (out-of-band, commit 21d88ba) -- ready for /gsd:new-milestone
+Stopped at: Axon live at https://axon.opencare.ai -- ready for /gsd:new-milestone

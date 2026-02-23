@@ -51,7 +51,7 @@ Axon must provide a trusted, open, neutral discovery and handshake layer so that
 
 ## Context
 
-**Current state:** v1.0.0 shipped (2026-02-22). Standalone production server deployed. 253 tests, 0 runtime deps, >80% coverage.
+**Current state:** v1.0.0 shipped (2026-02-22). Production server live at `https://axon.opencare.ai`. 253 tests, 0 runtime deps, >80% coverage.
 
 **Tech stack:** TypeScript 5.9, pnpm, tsdown 0.20, vitest 4.0, @sinclair/typebox 0.34, Node.js >=22.12.0
 
