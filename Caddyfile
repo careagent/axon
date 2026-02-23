@@ -1,4 +1,4 @@
-axon.yourdomain.com {
+axon.opencare.ai {
 	reverse_proxy axon:9999
 
 	header {
