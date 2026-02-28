@@ -3,4 +3,11 @@ dist/
 coverage/
 *.tsbuildinfo
 axon-data/
+.git/
+.planning/
+.claude/
+test/
+*.md
 secrets.env
+.env
+CLAUDE.md
