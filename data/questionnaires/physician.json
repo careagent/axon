@@ -46,6 +46,27 @@
       "cans_field": "scope.supervision_level"
     },
     {
+      "id": "practice_npi",
+      "text": "Enter your practice or organization NPI (10 digits, or skip if unknown):",
+      "answer_type": "text",
+      "required": false,
+      "cans_field": "provider.organizations",
+      "npi_lookup": true,
+      "validation": {
+        "pattern": "^\\d{10}$"
+      }
+    },
+    {
+      "id": "practice_name",
+      "text": "What is the name of your practice or organization?",
+      "answer_type": "text",
+      "required": true,
+      "cans_field": "provider.organizations",
+      "validation": {
+        "min_length": 2
+      }
+    },
+    {
       "id": "clinical_charting",
       "text": "Do you document clinical encounters (progress notes, H&P, consultation notes)?",
       "answer_type": "boolean",

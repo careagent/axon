@@ -5,6 +5,7 @@ import { TypeCompiler } from '@sinclair/typebox/compiler'
 export const AnswerTypeSchema = Type.Union([
   Type.Literal('boolean'),
   Type.Literal('single_select'),
+  Type.Literal('text'),
 ])
 
 // --- Question Option (for single_select questions) ---
@@ -26,6 +27,13 @@ export const ActionAssignmentSchema = Type.Object({
   grants: Type.Array(Type.String()),
 })
 
+// --- Validation constraints for text questions ---
+export const TextValidationSchema = Type.Object({
+  pattern: Type.Optional(Type.String()),
+  min_length: Type.Optional(Type.Number()),
+  max_length: Type.Optional(Type.Number()),
+})
+
 // --- Question ---
 export const QuestionSchema = Type.Object({
   id: Type.String(),
@@ -36,6 +44,8 @@ export const QuestionSchema = Type.Object({
   show_when: Type.Optional(QuestionConditionSchema),
   cans_field: Type.String(),
   action_assignments: Type.Optional(Type.Array(ActionAssignmentSchema)),
+  validation: Type.Optional(TextValidationSchema),
+  npi_lookup: Type.Optional(Type.Boolean()),
 })
 
 // --- Questionnaire (root schema) ---
