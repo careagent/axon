@@ -386,6 +386,110 @@ export function createAxonServer(config: AxonServerConfig): AxonServer {
       return
     }
 
+    // GET /v1/taxonomy/provider-types — list all provider types
+    if (req.method === 'GET' && pathname === '/v1/taxonomy/provider-types') {
+      const providerTypes = AxonTaxonomy.getProviderTypes()
+      sendJson(res, 200, { provider_types: providerTypes })
+      return
+    }
+
+    // GET /v1/npi/lookup/:npi — look up provider identity via NPPES registry
+    const npiLookupMatch = pathname.match(/^\/v1\/npi\/lookup\/([^/]+)$/)
+    if (req.method === 'GET' && npiLookupMatch) {
+      const npi = npiLookupMatch[1]!
+
+      if (!/^\d{10}$/.test(npi)) {
+        sendJson(res, 400, { error: 'NPI must be exactly 10 digits' })
+        return
+      }
+
+      try {
+        const nppesUrl = `https://npiregistry.cms.hhs.gov/api/?number=${npi}&version=2.1`
+        const nppesRes = await fetch(nppesUrl, {
+          signal: AbortSignal.timeout(10_000),
+        })
+        if (!nppesRes.ok) {
+          sendJson(res, 502, { error: 'NPPES registry returned an error' })
+          return
+        }
+        const nppesData = (await nppesRes.json()) as {
+          result_count?: number
+          results?: Array<{
+            number?: string
+            enumeration_type?: string
+            basic?: Record<string, string>
+            taxonomies?: Array<{
+              code?: string
+              desc?: string
+              primary?: boolean
+              state?: string
+              license?: string
+            }>
+            addresses?: Array<{
+              address_purpose?: string
+              city?: string
+              state?: string
+            }>
+          }>
+        }
+
+        if (!nppesData.result_count || nppesData.result_count === 0 || !nppesData.results?.[0]) {
+          sendJson(res, 404, { error: `No NPPES record found for NPI: ${npi}` })
+          return
+        }
+
+        const result = nppesData.results[0]
+        const basic = result.basic ?? {}
+        const enumerationType = result.enumeration_type === 'NPI-1' ? 'NPI-1' : 'NPI-2'
+        const primaryTaxonomy = result.taxonomies?.find(t => t.primary) ?? result.taxonomies?.[0]
+        const practiceAddress = result.addresses?.find(a => a.address_purpose === 'LOCATION')
+
+        // Build response
+        const response: Record<string, unknown> = {
+          npi,
+          enumeration_type: enumerationType,
+          status: basic['status'] === 'A' ? 'active' : basic['status'] ?? 'unknown',
+        }
+
+        if (enumerationType === 'NPI-1') {
+          // Individual provider
+          const nameParts: string[] = []
+          if (basic['name_prefix']) nameParts.push(basic['name_prefix'])
+          if (basic['first_name']) nameParts.push(basic['first_name'])
+          if (basic['middle_name']) nameParts.push(basic['middle_name'])
+          if (basic['last_name']) nameParts.push(basic['last_name'])
+          let displayName = nameParts.join(' ')
+          if (basic['credential']) displayName += `, ${basic['credential']}`
+
+          response['name'] = displayName
+          response['first_name'] = basic['first_name'] ?? ''
+          response['last_name'] = basic['last_name'] ?? ''
+          response['credential'] = basic['credential'] ?? undefined
+        } else {
+          // Organization
+          response['name'] = basic['organization_name'] ?? 'Unknown Organization'
+          response['organization_name'] = basic['organization_name'] ?? undefined
+        }
+
+        if (primaryTaxonomy) {
+          response['specialty'] = primaryTaxonomy.desc ?? undefined
+          response['taxonomy_code'] = primaryTaxonomy.code ?? undefined
+          response['license_state'] = primaryTaxonomy.state ?? undefined
+          response['license_number'] = primaryTaxonomy.license ?? undefined
+        }
+
+        if (practiceAddress) {
+          response['practice_state'] = practiceAddress.state ?? undefined
+          response['practice_city'] = practiceAddress.city ?? undefined
+        }
+
+        sendJson(res, 200, response)
+      } catch {
+        sendJson(res, 502, { error: 'Failed to reach NPPES registry' })
+      }
+      return
+    }
+
     // GET /v1/questionnaires/:typeId — questionnaire for provider type
     const questionnaireMatch = pathname.match(/^\/v1\/questionnaires\/([^/]+)$/)
     if (req.method === 'GET' && questionnaireMatch) {
