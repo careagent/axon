@@ -46,6 +46,8 @@ export const QuestionSchema = Type.Object({
   action_assignments: Type.Optional(Type.Array(ActionAssignmentSchema)),
   validation: Type.Optional(TextValidationSchema),
   npi_lookup: Type.Optional(Type.Boolean()),
+  /** Key into NPI lookup result to pre-fill this question's value. */
+  npi_prefill: Type.Optional(Type.String()),
 })
 
 // --- Questionnaire (root schema) ---

@@ -11,10 +11,12 @@
  * provider-core CANS schema.
  */
 export const VALID_CANS_FIELDS: Set<string> = new Set([
+  'provider.types',
+  'provider.degrees',
   'provider.licenses',
   'provider.certifications',
-  'provider.specialty',
-  'provider.subspecialty',
+  'provider.specialties',
+  'provider.subspecialties',
   'provider.organizations',
   'scope.permitted_actions',
   'scope.taxonomy_version',

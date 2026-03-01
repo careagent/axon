@@ -1,10 +1,121 @@
 {
   "provider_type": "physician",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "taxonomy_version": "1.0.0",
   "display_name": "Physician Onboarding Questionnaire",
   "description": "Determines digital scope of practice for Physician (MD, DO) CareAgents",
   "questions": [
+    {
+      "id": "has_degrees",
+      "text": "Do you hold any medical degrees (MD, DO, etc.)?",
+      "answer_type": "boolean",
+      "required": true,
+      "cans_field": "provider.degrees",
+      "npi_prefill": "credential"
+    },
+    {
+      "id": "degrees_list",
+      "text": "List your degree(s) (comma-separated, e.g., MD, DO):",
+      "answer_type": "text",
+      "required": true,
+      "show_when": {
+        "question_id": "has_degrees",
+        "equals": "true"
+      },
+      "cans_field": "provider.degrees",
+      "npi_prefill": "credential",
+      "validation": {
+        "min_length": 1
+      }
+    },
+    {
+      "id": "has_licenses",
+      "text": "Do you hold any active medical licenses?",
+      "answer_type": "boolean",
+      "required": true,
+      "cans_field": "provider.licenses",
+      "npi_prefill": "license"
+    },
+    {
+      "id": "licenses_list",
+      "text": "List your license(s) (comma-separated, e.g., SC-25231, TX-MD-98765):",
+      "answer_type": "text",
+      "required": true,
+      "show_when": {
+        "question_id": "has_licenses",
+        "equals": "true"
+      },
+      "cans_field": "provider.licenses",
+      "npi_prefill": "license",
+      "validation": {
+        "min_length": 1
+      }
+    },
+    {
+      "id": "has_certifications",
+      "text": "Do you hold any board certifications?",
+      "answer_type": "boolean",
+      "required": true,
+      "cans_field": "provider.certifications"
+    },
+    {
+      "id": "certifications_list",
+      "text": "List your certification(s) (comma-separated, e.g., ABNS Board Certified):",
+      "answer_type": "text",
+      "required": true,
+      "show_when": {
+        "question_id": "has_certifications",
+        "equals": "true"
+      },
+      "cans_field": "provider.certifications",
+      "validation": {
+        "min_length": 1
+      }
+    },
+    {
+      "id": "has_specialty",
+      "text": "Do you have a primary medical specialty?",
+      "answer_type": "boolean",
+      "required": true,
+      "cans_field": "provider.specialties",
+      "npi_prefill": "specialty"
+    },
+    {
+      "id": "specialty_list",
+      "text": "List your specialty or specialties (comma-separated, e.g., Neurosurgery, Internal Medicine):",
+      "answer_type": "text",
+      "required": true,
+      "show_when": {
+        "question_id": "has_specialty",
+        "equals": "true"
+      },
+      "cans_field": "provider.specialties",
+      "npi_prefill": "specialty",
+      "validation": {
+        "min_length": 2
+      }
+    },
+    {
+      "id": "has_subspecialty",
+      "text": "Do you have a subspecialty?",
+      "answer_type": "boolean",
+      "required": true,
+      "cans_field": "provider.subspecialties"
+    },
+    {
+      "id": "subspecialty_list",
+      "text": "List your subspecialty or subspecialties (comma-separated, e.g., Spine, Electrophysiology):",
+      "answer_type": "text",
+      "required": true,
+      "show_when": {
+        "question_id": "has_subspecialty",
+        "equals": "true"
+      },
+      "cans_field": "provider.subspecialties",
+      "validation": {
+        "min_length": 2
+      }
+    },
     {
       "id": "practice_setting",
       "text": "What is your primary practice setting?",
@@ -235,7 +346,7 @@
         "question_id": "surgical_practice",
         "equals": "true"
       },
-      "cans_field": "provider.subspecialty"
+      "cans_field": "provider.subspecialties"
     },
     {
       "id": "patient_education",
