@@ -474,8 +474,23 @@ export function createAxonServer(config: AxonServerConfig): AxonServer {
         if (primaryTaxonomy) {
           response['specialty'] = primaryTaxonomy.desc ?? undefined
           response['taxonomy_code'] = primaryTaxonomy.code ?? undefined
+          // Keep singular fields for backward compatibility
           response['license_state'] = primaryTaxonomy.state ?? undefined
           response['license_number'] = primaryTaxonomy.license ?? undefined
+        }
+
+        // All licenses from all taxonomy entries (not just primary)
+        const allLicenses = (result.taxonomies ?? [])
+          .filter(t => t.state && t.license)
+          .map(t => ({
+            state: t.state!,
+            number: t.license!,
+            specialty: t.desc ?? undefined,
+            taxonomy_code: t.code ?? undefined,
+            primary: t.primary ?? false,
+          }))
+        if (allLicenses.length > 0) {
+          response['licenses'] = allLicenses
         }
 
         if (practiceAddress) {

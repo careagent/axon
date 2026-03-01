@@ -248,7 +248,7 @@
     },
     {
       "id": "diagnostic_ordering",
-      "text": "Do you order diagnostic tests (lab work, imaging, procedures)?",
+      "text": "Do you order diagnostic tests (lab work, imaging)?",
       "answer_type": "boolean",
       "required": true,
       "cans_field": "scope.permitted_actions",
@@ -257,8 +257,7 @@
           "answer_value": "true",
           "grants": [
             "order.laboratory",
-            "order.imaging",
-            "order.procedure"
+            "order.imaging"
           ]
         }
       ]
@@ -291,77 +290,11 @@
         {
           "answer_value": "true",
           "grants": [
-            "perform.physical_exam",
-            "perform.injection",
-            "perform.biopsy",
-            "perform.laceration_repair",
-            "perform.incision_drainage",
-            "perform.suturing",
-            "perform.cast_splint"
+            "order.procedure",
+            "perform.physical_exam"
           ]
         }
       ]
-    },
-    {
-      "id": "surgical_practice",
-      "text": "Does your practice include surgical procedures?",
-      "answer_type": "boolean",
-      "required": true,
-      "cans_field": "scope.permitted_actions",
-      "action_assignments": [
-        {
-          "answer_value": "true",
-          "grants": [
-            "chart.operative_note",
-            "perform.surgical.craniotomy",
-            "perform.surgical.appendectomy",
-            "perform.surgical.cholecystectomy",
-            "perform.surgical.hernia_repair",
-            "perform.surgical.joint_replacement",
-            "perform.surgical.spinal_fusion",
-            "perform.surgical.coronary_bypass",
-            "perform.surgical.cardiac_catheterization"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "surgical_subspecialty",
-      "text": "What best describes your surgical practice?",
-      "answer_type": "single_select",
-      "required": true,
-      "options": [
-        {
-          "value": "general_surgery",
-          "label": "General Surgery",
-          "description": "Broad-spectrum surgical procedures"
-        },
-        {
-          "value": "orthopedic",
-          "label": "Orthopedic Surgery",
-          "description": "Musculoskeletal surgical procedures"
-        },
-        {
-          "value": "cardiovascular",
-          "label": "Cardiovascular Surgery",
-          "description": "Heart and vascular surgical procedures"
-        },
-        {
-          "value": "neurological",
-          "label": "Neurological Surgery",
-          "description": "Brain and nervous system surgical procedures"
-        },
-        {
-          "value": "other_surgical",
-          "label": "Other Surgical Specialty",
-          "description": "Other surgical subspecialty not listed above"
-        }
-      ],
-      "show_when": {
-        "question_id": "surgical_practice",
-        "equals": "true"
-      },
-      "cans_field": "provider.subspecialties"
     },
     {
       "id": "patient_education",
