@@ -213,6 +213,21 @@
       ]
     },
     {
+      "id": "dea_number",
+      "text": "What is your DEA number?",
+      "answer_type": "text",
+      "required": true,
+      "show_when": {
+        "question_id": "prescribing",
+        "equals": "true"
+      },
+      "cans_field": "provider.dea_number",
+      "validation": {
+        "pattern": "^[A-Z]{2}\\d{7}$",
+        "min_length": 9
+      }
+    },
+    {
       "id": "controlled_substances",
       "text": "Do you prescribe controlled substances (DEA-scheduled)?",
       "answer_type": "boolean",

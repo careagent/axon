@@ -15,6 +15,7 @@ export const VALID_CANS_FIELDS: Set<string> = new Set([
   'provider.degrees',
   'provider.licenses',
   'provider.certifications',
+  'provider.dea_number',
   'provider.specialties',
   'provider.subspecialties',
   'provider.organizations',
