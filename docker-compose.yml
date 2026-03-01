@@ -9,7 +9,7 @@ services:
       - AXON_HOST=0.0.0.0
       - AXON_DATA_DIR=/app/axon-data
     ports:
-      - "127.0.0.1:9999:9999"
+      - "${AXON_BIND:-0.0.0.0}:9999:9999"
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1:9999/health"]
       interval: 30s
