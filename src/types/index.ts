@@ -14,6 +14,8 @@ import type {
   QuestionConditionSchema,
   ActionAssignmentSchema,
   AnswerTypeSchema,
+  ClassificationSchema,
+  SectionSchema,
 } from '../questionnaires/schemas.js'
 import type {
   RegistryEntrySchema,
@@ -38,6 +40,8 @@ export type QuestionOption = Static<typeof QuestionOptionSchema>
 export type QuestionCondition = Static<typeof QuestionConditionSchema>
 export type ActionAssignment = Static<typeof ActionAssignmentSchema>
 export type AnswerType = Static<typeof AnswerTypeSchema>
+export type Classification = Static<typeof ClassificationSchema>
+export type Section = Static<typeof SectionSchema>
 
 export type RegistryEntry = Static<typeof RegistryEntrySchema>
 export type NeuronEndpoint = Static<typeof NeuronEndpointSchema>
@@ -69,6 +73,8 @@ export {
   QuestionConditionSchema,
   ActionAssignmentSchema,
   AnswerTypeSchema,
+  ClassificationSchema,
+  SectionSchema,
 } from '../questionnaires/schemas.js'
 
 export {

@@ -85,9 +85,9 @@ export function loadQuestionnaire(providerTypeId: string): Questionnaire {
     }
   }
 
-  // Step 3: CANS field validation (QUES-06)
+  // Step 3: CANS field validation (QUES-06) — skip for questions without cans_field
   for (const question of data.questions) {
-    if (!VALID_CANS_FIELDS.has(question.cans_field)) {
+    if (question.cans_field !== undefined && !VALID_CANS_FIELDS.has(question.cans_field)) {
       throw new Error(
         `Questionnaire '${providerTypeId}', question '${question.id}': invalid CANS field path '${question.cans_field}'`,
       )
@@ -95,12 +95,22 @@ export function loadQuestionnaire(providerTypeId: string): Questionnaire {
   }
 
   // Step 4: Show_when forward-reference validation
+  // Supports both legacy `equals` and new `operator`+`value` condition format
   const seenIds = new Set<string>()
   for (const question of data.questions) {
     if (question.show_when !== undefined) {
       if (!seenIds.has(question.show_when.question_id)) {
         throw new Error(
           `Questionnaire '${providerTypeId}', question '${question.id}': show_when references '${question.show_when.question_id}' which has not appeared yet (forward reference)`,
+        )
+      }
+      // Validate condition has either legacy `equals` or new `operator`+`value`
+      const cond = question.show_when
+      const hasLegacy = cond.equals !== undefined
+      const hasNew = cond.operator !== undefined && cond.value !== undefined
+      if (!hasLegacy && !hasNew) {
+        throw new Error(
+          `Questionnaire '${providerTypeId}', question '${question.id}': show_when must have either 'equals' or both 'operator' and 'value'`,
         )
       }
     }

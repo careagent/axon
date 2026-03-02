@@ -15,11 +15,12 @@ axon/
   data/
     taxonomy/           # v1.0.0.json -- provider type taxonomy (49 types)
     questionnaires/     # Per-specialty onboarding questionnaire JSON files
-  spec/                 # Protocol specifications (5 files)
+  spec/                 # Protocol specifications (6 files)
     consent.md          # Consent token format
     credential.md       # Credential verification rules
     handshake.md        # Connection handshake flow
     identity.md         # Ed25519 identity and signing
+    interaction.md      # Interaction protocol (questionnaire-driven conversations)
     message.md          # Message schemas (ConnectRequest/Grant/Denial)
   src/
     broker/             # AxonBroker -- stateless connection pipeline
@@ -92,7 +93,21 @@ Result is either a `ConnectGrant` (with Neuron endpoint URL) or a `ConnectDenial
 
 ### Questionnaires
 
-Per-specialty onboarding questionnaires in `data/questionnaires/`. Used during provider onboarding to collect practice-specific configuration.
+Per-specialty onboarding questionnaires in `data/questionnaires/`. Used during provider onboarding to collect practice-specific configuration. Questionnaire schemas support:
+- Answer types: `boolean`, `single_select`, `multi_select`, `text`, `number`, `date`
+- Optional `cans_field` (for questions that don't map to CANS)
+- `llm_guidance`, `classification`, `mode` per-question
+- `show_when` conditions: legacy `equals` format and extended `operator`+`value` format
+- Questionnaire-level: `id`, `authority`, `target_type`, `classification`, `output_schema`, `output_artifact`, `sections`, `llm_system_prompt`, `completion_criteria`
+
+### Interaction Protocol (spec/interaction.md)
+
+The interaction protocol defines structured agent-to-human conversations:
+- LLM presents questions naturally, code validates answers deterministically
+- Session lifecycle: created → active → completed/failed
+- `submit_answer` tool use for structured answer extraction
+- Classification-aware (clinical/administrative × sensitive/non_sensitive)
+- Authority hierarchy: axon > provider > patient
 
 ### Exports
 
