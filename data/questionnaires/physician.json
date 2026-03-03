@@ -4,7 +4,7 @@
   "version": "2.0.0",
   "taxonomy_version": "1.0.0",
   "display_name": "Physician Onboarding Questionnaire",
-  "description": "Complete onboarding for Physician (MD, DO) CareAgents — identity, credentials, scope, autonomy, and consent.",
+  "description": "Complete onboarding for Physician (MD, DO) CareAgents — identity, credentials, scope, and autonomy.",
   "authority": "axon",
   "target_type": "provider",
   "classification": {
@@ -13,7 +13,7 @@
   },
   "output_artifact": "cans",
   "llm_system_prompt": "You are CareAgent, conducting a structured provider onboarding interview for a physician. Present each question exactly as specified. Do not improvise, skip, or reorder questions. Be professional, warm, and concise. When NPI lookup returns data, present it for confirmation rather than re-asking. For optional questions, accept 'skip' or 'no' gracefully.",
-  "completion_criteria": "All required fields collected: identity (NPI + name), credentials, specialty, scope of practice, clinical philosophy, autonomy tiers for all 7 actions, and three consent acknowledgments.",
+  "completion_criteria": "All required fields collected: identity (NPI + name), credentials, specialty, scope of practice, clinical philosophy, and autonomy tiers for all 7 actions.",
   "sections": [
     {
       "id": "identity",
@@ -56,12 +56,6 @@
       "title": "Autonomy Configuration",
       "description": "Per-action autonomy tiers controlling CareAgent's independence.",
       "question_ids": ["autonomy_chart", "autonomy_order", "autonomy_charge", "autonomy_perform", "autonomy_interpret", "autonomy_educate", "autonomy_coordinate"]
-    },
-    {
-      "id": "consent",
-      "title": "Consent Acknowledgment",
-      "description": "HIPAA, synthetic data, and audit consent — all three are required to proceed.",
-      "question_ids": ["consent_hipaa", "consent_synthetic", "consent_audit"]
     }
   ],
   "questions": [
@@ -791,45 +785,6 @@
       "classification": {
         "domain": "administrative",
         "sensitivity": "non_sensitive"
-      },
-      "mode": "structured"
-    },
-    {
-      "id": "consent_hipaa",
-      "text": "I understand this system operates under HIPAA guidelines and I will not input real patient data. Do you acknowledge?",
-      "answer_type": "boolean",
-      "required": true,
-      "cans_field": "consent.hipaa_warning_acknowledged",
-      "llm_guidance": "This is a hard-stop consent question. The provider MUST answer 'yes' to proceed. If they answer 'no', explain that this acknowledgment is required and ask again. Do not skip.",
-      "classification": {
-        "domain": "administrative",
-        "sensitivity": "sensitive"
-      },
-      "mode": "structured"
-    },
-    {
-      "id": "consent_synthetic",
-      "text": "I confirm that this system uses synthetic data only — no real patient data will be processed. Do you confirm?",
-      "answer_type": "boolean",
-      "required": true,
-      "cans_field": "consent.synthetic_data_only",
-      "llm_guidance": "This is a hard-stop consent question. The provider MUST answer 'yes' to proceed. If they answer 'no', explain that this confirmation is required and ask again. Do not skip.",
-      "classification": {
-        "domain": "administrative",
-        "sensitivity": "sensitive"
-      },
-      "mode": "structured"
-    },
-    {
-      "id": "consent_audit",
-      "text": "I consent to all clinical interactions being logged to an append-only audit trail. Do you consent?",
-      "answer_type": "boolean",
-      "required": true,
-      "cans_field": "consent.audit_consent",
-      "llm_guidance": "This is a hard-stop consent question. The provider MUST answer 'yes' to proceed. If they answer 'no', explain that audit consent is required for clinical AI use and ask again. Do not skip.",
-      "classification": {
-        "domain": "administrative",
-        "sensitivity": "sensitive"
       },
       "mode": "structured"
     }

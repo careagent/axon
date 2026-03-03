@@ -248,6 +248,47 @@ describe('AxonServer', () => {
     expect(res.status).toBe(404)
   })
 
+  // --- Meta-questionnaires ---
+
+  it('GET /v1/questionnaires/_universal_consent returns consent questionnaire', async () => {
+    const res = await fetch(`${url}/v1/questionnaires/_universal_consent`)
+    expect(res.status).toBe(200)
+    const data = (await res.json()) as { provider_type: string; questions: unknown[] }
+    expect(data.provider_type).toBe('_universal_consent')
+    expect(data.questions).toHaveLength(3)
+  })
+
+  it('GET /v1/questionnaires/_provider_type_selection returns routing questionnaire with enriched options', async () => {
+    const res = await fetch(`${url}/v1/questionnaires/_provider_type_selection`)
+    expect(res.status).toBe(200)
+    const data = (await res.json()) as {
+      provider_type: string
+      questions: Array<{ id: string; options?: Array<{ value: string }> }>
+    }
+    expect(data.provider_type).toBe('_provider_type_selection')
+    const typeQ = data.questions.find((q) => q.id === 'provider_type')
+    expect(typeQ).toBeDefined()
+    expect(typeQ!.options!.length).toBeGreaterThan(0)
+  })
+
+  // --- Onboarding Flow ---
+
+  it('GET /v1/onboarding/flow/provider returns 3-step flow', async () => {
+    const res = await fetch(`${url}/v1/onboarding/flow/provider`)
+    expect(res.status).toBe(200)
+    const data = (await res.json()) as { target_type: string; steps: Array<{ questionnaire_id: string }> }
+    expect(data.target_type).toBe('provider')
+    expect(data.steps).toHaveLength(3)
+    expect(data.steps[0]!.questionnaire_id).toBe('_universal_consent')
+    expect(data.steps[1]!.questionnaire_id).toBe('_provider_type_selection')
+    expect(data.steps[2]!.questionnaire_id).toBe('{{provider_type}}')
+  })
+
+  it('GET /v1/onboarding/flow/unknown returns 404', async () => {
+    const res = await fetch(`${url}/v1/onboarding/flow/unknown`)
+    expect(res.status).toBe(404)
+  })
+
   // --- Connect ---
 
   it('POST /v1/connect with valid signed message returns connect_grant', async () => {

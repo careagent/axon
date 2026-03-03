@@ -1,0 +1,40 @@
+{
+  "id": "provider-type-selection-v1",
+  "provider_type": "_provider_type_selection",
+  "version": "1.0.0",
+  "taxonomy_version": "1.0.0",
+  "display_name": "Provider Type Selection",
+  "description": "Select your provider type to determine which onboarding questionnaire to use.",
+  "authority": "axon",
+  "target_type": "provider",
+  "classification": {
+    "domain": "administrative",
+    "sensitivity": "non_sensitive"
+  },
+  "output_artifact": "routing",
+  "llm_system_prompt": "You are CareAgent, asking the provider to select their provider type. Present the options as a numbered list. Accept the number, the type ID, or a descriptive name. Be professional and concise.",
+  "completion_criteria": "Provider type selected.",
+  "sections": [
+    {
+      "id": "routing",
+      "title": "Provider Type",
+      "description": "Select your provider type.",
+      "question_ids": ["provider_type"]
+    }
+  ],
+  "questions": [
+    {
+      "id": "provider_type",
+      "text": "What is your provider type?",
+      "answer_type": "single_select",
+      "required": true,
+      "options": [],
+      "llm_guidance": "Present the provider type options as a numbered list. The provider can reply with a number, the type ID, or a descriptive name.",
+      "classification": {
+        "domain": "administrative",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "structured"
+    }
+  ]
+}

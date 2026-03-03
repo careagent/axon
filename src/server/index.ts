@@ -505,11 +505,27 @@ export function createAxonServer(config: AxonServerConfig): AxonServer {
       return
     }
 
-    // GET /v1/questionnaires/:typeId — questionnaire for provider type
+    // GET /v1/onboarding/flow/:targetType — onboarding flow for target type
+    const flowMatch = pathname.match(/^\/v1\/onboarding\/flow\/([^/]+)$/)
+    if (req.method === 'GET' && flowMatch) {
+      const targetType = flowMatch[1]!
+      const flow = AxonQuestionnaires.getOnboardingFlow(targetType)
+
+      if (!flow) {
+        sendJson(res, 404, { error: `No onboarding flow found for target type: "${targetType}"` })
+        return
+      }
+
+      sendJson(res, 200, flow)
+      return
+    }
+
+    // GET /v1/questionnaires/:typeId — questionnaire for provider type (or meta-questionnaire)
     const questionnaireMatch = pathname.match(/^\/v1\/questionnaires\/([^/]+)$/)
     if (req.method === 'GET' && questionnaireMatch) {
       const typeId = questionnaireMatch[1]!
       const questionnaire = AxonQuestionnaires.getForType(typeId)
+        ?? AxonQuestionnaires.getMetaQuestionnaire(typeId)
 
       if (!questionnaire) {
         sendJson(res, 404, { error: `No questionnaire found for provider type: "${typeId}"` })

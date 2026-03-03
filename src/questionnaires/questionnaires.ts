@@ -1,6 +1,8 @@
-import { loadQuestionnaire } from './loader.js'
+import { loadQuestionnaire, loadMetaQuestionnaire } from './loader.js'
 import { AxonTaxonomy } from '../taxonomy/taxonomy.js'
+import { getOnboardingFlow } from './onboarding-flow.js'
 import type { Questionnaire } from '../types/index.js'
+import type { OnboardingFlow } from './onboarding-flow.js'
 
 /**
  * Static API for accessing Axon questionnaires by provider type.
@@ -62,5 +64,39 @@ export class AxonQuestionnaires {
    */
   static listAvailableTypes(): string[] {
     return [...AxonQuestionnaires.index.keys()]
+  }
+
+  /**
+   * Get a meta-questionnaire by ID (e.g., '_universal_consent', '_provider_type_selection').
+   *
+   * Meta-questionnaires are system-level questionnaires not tied to a provider type.
+   * They are loaded on demand and cached.
+   *
+   * @param id - The meta-questionnaire ID (prefixed with '_')
+   * @returns The Questionnaire object, or undefined if loading fails
+   */
+  static getMetaQuestionnaire(id: string): Questionnaire | undefined {
+    // Check the main index first (in case it was cached there)
+    const cached = AxonQuestionnaires.index.get(id)
+    if (cached) return cached
+
+    try {
+      const questionnaire = loadMetaQuestionnaire(id)
+      // Cache it in the index for subsequent lookups
+      AxonQuestionnaires.index.set(id, questionnaire)
+      return questionnaire
+    } catch {
+      return undefined
+    }
+  }
+
+  /**
+   * Get the onboarding flow for a target type.
+   *
+   * @param targetType - The target type (e.g., 'provider')
+   * @returns The OnboardingFlow, or undefined if no flow exists for this type
+   */
+  static getOnboardingFlow(targetType: string): OnboardingFlow | undefined {
+    return getOnboardingFlow(targetType)
   }
 }
