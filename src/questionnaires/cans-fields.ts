@@ -11,6 +11,7 @@
  * provider-core CANS schema.
  */
 export const VALID_CANS_FIELDS: Set<string> = new Set([
+  'provider.name',
   'provider.types',
   'provider.degrees',
   'provider.licenses',
