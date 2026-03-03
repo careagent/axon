@@ -1,27 +1,181 @@
 {
+  "id": "physician-onboarding-v2",
   "provider_type": "physician",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "taxonomy_version": "1.0.0",
   "display_name": "Physician Onboarding Questionnaire",
-  "description": "Determines digital scope of practice for Physician (MD, DO) CareAgents",
+  "description": "Complete onboarding for Physician (MD, DO) CareAgents — identity, credentials, scope, autonomy, and consent.",
+  "authority": "axon",
+  "target_type": "provider",
+  "classification": {
+    "domain": "clinical",
+    "sensitivity": "sensitive"
+  },
+  "output_artifact": "cans",
+  "llm_system_prompt": "You are CareAgent, conducting a structured provider onboarding interview for a physician. Present each question exactly as specified. Do not improvise, skip, or reorder questions. Be professional, warm, and concise. When NPI lookup returns data, present it for confirmation rather than re-asking. For optional questions, accept 'skip' or 'no' gracefully.",
+  "completion_criteria": "All required fields collected: identity (NPI + name), credentials, specialty, scope of practice, clinical philosophy, autonomy tiers for all 7 actions, and three consent acknowledgments.",
+  "sections": [
+    {
+      "id": "identity",
+      "title": "Provider Identity",
+      "description": "NPI verification and provider identification.",
+      "question_ids": ["individual_npi", "provider_name", "organization_npi", "organization_name"]
+    },
+    {
+      "id": "credentials",
+      "title": "Credentials",
+      "description": "Professional degrees, licenses, and certifications.",
+      "question_ids": ["has_additional_types", "additional_types", "has_degrees", "degrees_list", "has_licenses", "licenses_list", "has_certifications", "certifications_list"]
+    },
+    {
+      "id": "specialty",
+      "title": "Specialty",
+      "description": "Medical specialty and subspecialty information.",
+      "question_ids": ["has_specialty", "specialty_list", "has_subspecialty", "subspecialty_list"]
+    },
+    {
+      "id": "scope",
+      "title": "Scope of Practice",
+      "description": "Clinical activities and permitted actions for the AI agent.",
+      "question_ids": ["practice_setting", "supervision_role", "clinical_charting", "prescribing", "dea_number", "controlled_substances", "diagnostic_ordering", "results_interpretation", "clinical_procedures", "patient_education", "care_coordination", "billing"]
+    },
+    {
+      "id": "philosophy",
+      "title": "Clinical Philosophy",
+      "description": "The provider's approach to clinical AI assistance.",
+      "question_ids": ["clinical_philosophy"]
+    },
+    {
+      "id": "voice",
+      "title": "Voice Directives",
+      "description": "Optional per-action instructions for how CareAgent should behave.",
+      "question_ids": ["voice_chart", "voice_educate", "voice_interpret"]
+    },
+    {
+      "id": "autonomy",
+      "title": "Autonomy Configuration",
+      "description": "Per-action autonomy tiers controlling CareAgent's independence.",
+      "question_ids": ["autonomy_chart", "autonomy_order", "autonomy_charge", "autonomy_perform", "autonomy_interpret", "autonomy_educate", "autonomy_coordinate"]
+    },
+    {
+      "id": "consent",
+      "title": "Consent Acknowledgment",
+      "description": "HIPAA, synthetic data, and audit consent — all three are required to proceed.",
+      "question_ids": ["consent_hipaa", "consent_synthetic", "consent_audit"]
+    }
+  ],
   "questions": [
+    {
+      "id": "individual_npi",
+      "text": "What is your individual NPI number (10 digits)?",
+      "answer_type": "text",
+      "required": true,
+      "npi_lookup": true,
+      "cans_field": "provider.npi",
+      "validation": {
+        "pattern": "^\\d{10}$"
+      },
+      "llm_guidance": "Ask for their individual NPI number (NPI-1). This is their personal provider NPI, not their organization's NPI-2. The number is exactly 10 digits.",
+      "classification": {
+        "domain": "clinical",
+        "sensitivity": "sensitive"
+      },
+      "mode": "structured"
+    },
     {
       "id": "provider_name",
       "text": "What is your full name as it appears on your medical license?",
       "answer_type": "text",
       "required": true,
+      "npi_prefill": "name",
       "cans_field": "provider.name",
       "validation": {
         "min_length": 2
-      }
+      },
+      "llm_guidance": "If the NPI lookup returned a name, present it for confirmation: 'NPI lookup shows your name as [name]. Is this correct?' If they confirm, use that name. If not, ask them to provide the correct name.",
+      "classification": {
+        "domain": "clinical",
+        "sensitivity": "sensitive"
+      },
+      "mode": "structured"
+    },
+    {
+      "id": "organization_npi",
+      "text": "What is your practice or organization NPI (10 digits)? You may skip if unknown.",
+      "answer_type": "text",
+      "required": false,
+      "npi_lookup": true,
+      "cans_field": "provider.organizations",
+      "validation": {
+        "pattern": "^\\d{10}$"
+      },
+      "llm_guidance": "This is the organization NPI (NPI-2), separate from their individual NPI-1. It's optional — if they don't know it or are in solo practice, they can skip.",
+      "classification": {
+        "domain": "administrative",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "structured"
+    },
+    {
+      "id": "organization_name",
+      "text": "What is the name of your practice or organization?",
+      "answer_type": "text",
+      "required": true,
+      "cans_field": "provider.organizations",
+      "validation": {
+        "min_length": 2
+      },
+      "llm_guidance": "If the organization NPI lookup returned a name, present it for confirmation. Otherwise, ask them to type their practice or organization name.",
+      "classification": {
+        "domain": "administrative",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "structured"
+    },
+    {
+      "id": "has_additional_types",
+      "text": "Do you hold any additional provider types beyond Physician (MD/DO)?",
+      "answer_type": "boolean",
+      "required": true,
+      "llm_guidance": "Some physicians also hold other provider type credentials (e.g., a physician who is also a licensed acupuncturist). Most will answer no.",
+      "classification": {
+        "domain": "clinical",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "structured"
+    },
+    {
+      "id": "additional_types",
+      "text": "List your additional provider types (comma-separated):",
+      "answer_type": "text",
+      "required": true,
+      "show_when": {
+        "question_id": "has_additional_types",
+        "operator": "equals",
+        "value": "true"
+      },
+      "cans_field": "provider.types",
+      "validation": {
+        "min_length": 2
+      },
+      "classification": {
+        "domain": "clinical",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "structured"
     },
     {
       "id": "has_degrees",
       "text": "Do you hold any medical degrees (MD, DO, etc.)?",
       "answer_type": "boolean",
       "required": true,
-      "cans_field": "provider.degrees",
-      "npi_prefill": "credential"
+      "npi_prefill": "credential",
+      "llm_guidance": "If NPI lookup returned credential information, present it: 'NPI records show credential [credential]. Do you hold a medical degree?' Most physicians will answer yes.",
+      "classification": {
+        "domain": "clinical",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "structured"
     },
     {
       "id": "degrees_list",
@@ -30,21 +184,33 @@
       "required": true,
       "show_when": {
         "question_id": "has_degrees",
-        "equals": "true"
+        "operator": "equals",
+        "value": "true"
       },
-      "cans_field": "provider.degrees",
       "npi_prefill": "credential",
+      "cans_field": "provider.degrees",
       "validation": {
         "min_length": 1
-      }
+      },
+      "llm_guidance": "If NPI lookup returned a credential, pre-fill it: 'NPI shows [credential]. Please confirm or add additional degrees.'",
+      "classification": {
+        "domain": "clinical",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "structured"
     },
     {
       "id": "has_licenses",
       "text": "Do you hold any active medical licenses?",
       "answer_type": "boolean",
       "required": true,
-      "cans_field": "provider.licenses",
-      "npi_prefill": "license"
+      "npi_prefill": "license",
+      "llm_guidance": "If NPI lookup returned license information, present it: 'NPI records show licenses in [states]. Do you hold active medical licenses?' Most physicians will answer yes.",
+      "classification": {
+        "domain": "clinical",
+        "sensitivity": "sensitive"
+      },
+      "mode": "structured"
     },
     {
       "id": "licenses_list",
@@ -53,20 +219,31 @@
       "required": true,
       "show_when": {
         "question_id": "has_licenses",
-        "equals": "true"
+        "operator": "equals",
+        "value": "true"
       },
-      "cans_field": "provider.licenses",
       "npi_prefill": "license",
+      "cans_field": "provider.licenses",
       "validation": {
         "min_length": 1
-      }
+      },
+      "llm_guidance": "If NPI lookup returned license data, present the licenses for confirmation: 'NPI shows the following licenses: [licenses]. Please confirm, correct, or add additional licenses.'",
+      "classification": {
+        "domain": "clinical",
+        "sensitivity": "sensitive"
+      },
+      "mode": "structured"
     },
     {
       "id": "has_certifications",
       "text": "Do you hold any board certifications?",
       "answer_type": "boolean",
       "required": true,
-      "cans_field": "provider.certifications"
+      "classification": {
+        "domain": "clinical",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "structured"
     },
     {
       "id": "certifications_list",
@@ -75,20 +252,31 @@
       "required": true,
       "show_when": {
         "question_id": "has_certifications",
-        "equals": "true"
+        "operator": "equals",
+        "value": "true"
       },
       "cans_field": "provider.certifications",
       "validation": {
         "min_length": 1
-      }
+      },
+      "classification": {
+        "domain": "clinical",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "structured"
     },
     {
       "id": "has_specialty",
       "text": "Do you have a primary medical specialty?",
       "answer_type": "boolean",
       "required": true,
-      "cans_field": "provider.specialties",
-      "npi_prefill": "specialty"
+      "npi_prefill": "specialty",
+      "llm_guidance": "If NPI lookup returned specialty information, present it: 'NPI records show your specialty as [specialty]. Is this correct?'",
+      "classification": {
+        "domain": "clinical",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "structured"
     },
     {
       "id": "specialty_list",
@@ -97,20 +285,31 @@
       "required": true,
       "show_when": {
         "question_id": "has_specialty",
-        "equals": "true"
+        "operator": "equals",
+        "value": "true"
       },
-      "cans_field": "provider.specialties",
       "npi_prefill": "specialty",
+      "cans_field": "provider.specialties",
       "validation": {
         "min_length": 2
-      }
+      },
+      "llm_guidance": "If NPI lookup returned a specialty, pre-fill it for confirmation. The provider may have multiple specialties.",
+      "classification": {
+        "domain": "clinical",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "structured"
     },
     {
       "id": "has_subspecialty",
       "text": "Do you have a subspecialty?",
       "answer_type": "boolean",
       "required": true,
-      "cans_field": "provider.subspecialties"
+      "classification": {
+        "domain": "clinical",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "structured"
     },
     {
       "id": "subspecialty_list",
@@ -119,12 +318,18 @@
       "required": true,
       "show_when": {
         "question_id": "has_subspecialty",
-        "equals": "true"
+        "operator": "equals",
+        "value": "true"
       },
       "cans_field": "provider.subspecialties",
       "validation": {
         "min_length": 2
-      }
+      },
+      "classification": {
+        "domain": "clinical",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "structured"
     },
     {
       "id": "practice_setting",
@@ -153,7 +358,12 @@
           "description": "VA, military, or government-affiliated facility"
         }
       ],
-      "cans_field": "scope.practice_setting"
+      "cans_field": "scope.practice_setting",
+      "classification": {
+        "domain": "administrative",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "structured"
     },
     {
       "id": "supervision_role",
@@ -162,30 +372,15 @@
       "required": true,
       "show_when": {
         "question_id": "practice_setting",
-        "equals": "academic"
+        "operator": "equals",
+        "value": "academic"
       },
-      "cans_field": "scope.supervision_level"
-    },
-    {
-      "id": "practice_npi",
-      "text": "Enter your practice or organization NPI (10 digits, or skip if unknown):",
-      "answer_type": "text",
-      "required": false,
-      "cans_field": "provider.organizations",
-      "npi_lookup": true,
-      "validation": {
-        "pattern": "^\\d{10}$"
-      }
-    },
-    {
-      "id": "practice_name",
-      "text": "What is the name of your practice or organization?",
-      "answer_type": "text",
-      "required": true,
-      "cans_field": "provider.organizations",
-      "validation": {
-        "min_length": 2
-      }
+      "cans_field": "scope.supervision_level",
+      "classification": {
+        "domain": "administrative",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "structured"
     },
     {
       "id": "clinical_charting",
@@ -204,7 +399,12 @@
             "chart.referral_letter"
           ]
         }
-      ]
+      ],
+      "classification": {
+        "domain": "clinical",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "structured"
     },
     {
       "id": "prescribing",
@@ -220,7 +420,12 @@
             "educate.medication_counseling"
           ]
         }
-      ]
+      ],
+      "classification": {
+        "domain": "clinical",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "structured"
     },
     {
       "id": "dea_number",
@@ -229,13 +434,20 @@
       "required": true,
       "show_when": {
         "question_id": "prescribing",
-        "equals": "true"
+        "operator": "equals",
+        "value": "true"
       },
       "cans_field": "provider.dea_number",
       "validation": {
         "pattern": "^[A-Z]{2}\\d{7}$",
         "min_length": 9
-      }
+      },
+      "llm_guidance": "DEA numbers are exactly 9 characters: 2 uppercase letters followed by 7 digits (e.g., AB1234567).",
+      "classification": {
+        "domain": "clinical",
+        "sensitivity": "sensitive"
+      },
+      "mode": "structured"
     },
     {
       "id": "controlled_substances",
@@ -244,7 +456,8 @@
       "required": true,
       "show_when": {
         "question_id": "prescribing",
-        "equals": "true"
+        "operator": "equals",
+        "value": "true"
       },
       "cans_field": "scope.permitted_actions",
       "action_assignments": [
@@ -254,7 +467,12 @@
             "order.controlled_substance"
           ]
         }
-      ]
+      ],
+      "classification": {
+        "domain": "clinical",
+        "sensitivity": "sensitive"
+      },
+      "mode": "structured"
     },
     {
       "id": "diagnostic_ordering",
@@ -270,7 +488,12 @@
             "order.imaging"
           ]
         }
-      ]
+      ],
+      "classification": {
+        "domain": "clinical",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "structured"
     },
     {
       "id": "results_interpretation",
@@ -288,7 +511,12 @@
             "interpret.pathology_report"
           ]
         }
-      ]
+      ],
+      "classification": {
+        "domain": "clinical",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "structured"
     },
     {
       "id": "clinical_procedures",
@@ -304,7 +532,12 @@
             "perform.physical_exam"
           ]
         }
-      ]
+      ],
+      "classification": {
+        "domain": "clinical",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "structured"
     },
     {
       "id": "patient_education",
@@ -321,7 +554,12 @@
             "educate.informed_consent"
           ]
         }
-      ]
+      ],
+      "classification": {
+        "domain": "clinical",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "structured"
     },
     {
       "id": "care_coordination",
@@ -338,7 +576,12 @@
             "coordinate.multidisciplinary_conference"
           ]
         }
-      ]
+      ],
+      "classification": {
+        "domain": "clinical",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "structured"
     },
     {
       "id": "billing",
@@ -355,7 +598,240 @@
             "charge.diagnosis_coding"
           ]
         }
-      ]
+      ],
+      "classification": {
+        "domain": "administrative",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "structured"
+    },
+    {
+      "id": "clinical_philosophy",
+      "text": "Describe your clinical philosophy — how should your AI assistant approach clinical work?",
+      "answer_type": "text",
+      "required": true,
+      "validation": {
+        "min_length": 10
+      },
+      "llm_guidance": "Ask the provider to describe in their own words how they want their AI assistant to approach clinical decision-making. Encourage them to mention priorities like evidence-based practice, patient autonomy, conservative vs. aggressive approaches, communication style preferences, etc. This is a free-form response — give them space to express their values.",
+      "classification": {
+        "domain": "clinical",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "guided"
+    },
+    {
+      "id": "voice_chart",
+      "text": "Do you have specific instructions for how CareAgent should handle clinical documentation (charting)?",
+      "answer_type": "text",
+      "required": false,
+      "cans_field": "voice.chart",
+      "llm_guidance": "This is optional. Examples: 'Use structured SOAP format', 'Always include assessment and plan', 'Keep notes concise'. If the provider says no or skips, move on.",
+      "classification": {
+        "domain": "clinical",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "guided"
+    },
+    {
+      "id": "voice_educate",
+      "text": "Do you have specific instructions for how CareAgent should handle patient education?",
+      "answer_type": "text",
+      "required": false,
+      "cans_field": "voice.educate",
+      "llm_guidance": "Optional. Examples: 'Include visual diagrams', 'Write at 6th-grade reading level', 'Always mention lifestyle modifications'. If the provider says no or skips, move on.",
+      "classification": {
+        "domain": "clinical",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "guided"
+    },
+    {
+      "id": "voice_interpret",
+      "text": "Do you have specific instructions for how CareAgent should interpret clinical results?",
+      "answer_type": "text",
+      "required": false,
+      "cans_field": "voice.interpret",
+      "llm_guidance": "Optional. Examples: 'Always compare to previous results', 'Flag critical values prominently', 'Include reference ranges'. If the provider says no or skips, move on.",
+      "classification": {
+        "domain": "clinical",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "guided"
+    },
+    {
+      "id": "autonomy_chart",
+      "text": "What autonomy level for clinical documentation (charting)?",
+      "answer_type": "single_select",
+      "required": true,
+      "options": [
+        {
+          "value": "autonomous",
+          "label": "Autonomous",
+          "description": "CareAgent acts independently, you review afterward"
+        },
+        {
+          "value": "supervised",
+          "label": "Supervised",
+          "description": "CareAgent prepares the work, you approve before execution"
+        },
+        {
+          "value": "manual",
+          "label": "Manual",
+          "description": "You must explicitly initiate, CareAgent only assists when asked"
+        }
+      ],
+      "cans_field": "autonomy.chart",
+      "llm_guidance": "Most providers choose 'autonomous' for charting. Explain the three tiers clearly.",
+      "classification": {
+        "domain": "administrative",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "structured"
+    },
+    {
+      "id": "autonomy_order",
+      "text": "What autonomy level for orders (medications, labs, imaging)?",
+      "answer_type": "single_select",
+      "required": true,
+      "options": [
+        { "value": "autonomous", "label": "Autonomous", "description": "CareAgent acts independently" },
+        { "value": "supervised", "label": "Supervised", "description": "CareAgent prepares, you approve" },
+        { "value": "manual", "label": "Manual", "description": "You initiate, CareAgent assists" }
+      ],
+      "cans_field": "autonomy.order",
+      "llm_guidance": "Most providers choose 'supervised' or 'manual' for orders due to safety implications.",
+      "classification": {
+        "domain": "administrative",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "structured"
+    },
+    {
+      "id": "autonomy_charge",
+      "text": "What autonomy level for billing and coding?",
+      "answer_type": "single_select",
+      "required": true,
+      "options": [
+        { "value": "autonomous", "label": "Autonomous", "description": "CareAgent acts independently" },
+        { "value": "supervised", "label": "Supervised", "description": "CareAgent prepares, you approve" },
+        { "value": "manual", "label": "Manual", "description": "You initiate, CareAgent assists" }
+      ],
+      "cans_field": "autonomy.charge",
+      "classification": {
+        "domain": "administrative",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "structured"
+    },
+    {
+      "id": "autonomy_perform",
+      "text": "What autonomy level for clinical procedures?",
+      "answer_type": "single_select",
+      "required": true,
+      "options": [
+        { "value": "autonomous", "label": "Autonomous", "description": "CareAgent acts independently" },
+        { "value": "supervised", "label": "Supervised", "description": "CareAgent prepares, you approve" },
+        { "value": "manual", "label": "Manual", "description": "You initiate, CareAgent assists" }
+      ],
+      "cans_field": "autonomy.perform",
+      "llm_guidance": "Most providers choose 'manual' for procedures.",
+      "classification": {
+        "domain": "administrative",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "structured"
+    },
+    {
+      "id": "autonomy_interpret",
+      "text": "What autonomy level for result interpretation?",
+      "answer_type": "single_select",
+      "required": true,
+      "options": [
+        { "value": "autonomous", "label": "Autonomous", "description": "CareAgent acts independently" },
+        { "value": "supervised", "label": "Supervised", "description": "CareAgent prepares, you approve" },
+        { "value": "manual", "label": "Manual", "description": "You initiate, CareAgent assists" }
+      ],
+      "cans_field": "autonomy.interpret",
+      "classification": {
+        "domain": "administrative",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "structured"
+    },
+    {
+      "id": "autonomy_educate",
+      "text": "What autonomy level for patient education?",
+      "answer_type": "single_select",
+      "required": true,
+      "options": [
+        { "value": "autonomous", "label": "Autonomous", "description": "CareAgent acts independently" },
+        { "value": "supervised", "label": "Supervised", "description": "CareAgent prepares, you approve" },
+        { "value": "manual", "label": "Manual", "description": "You initiate, CareAgent assists" }
+      ],
+      "cans_field": "autonomy.educate",
+      "llm_guidance": "Most providers choose 'autonomous' for patient education.",
+      "classification": {
+        "domain": "administrative",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "structured"
+    },
+    {
+      "id": "autonomy_coordinate",
+      "text": "What autonomy level for care coordination (referrals, transitions)?",
+      "answer_type": "single_select",
+      "required": true,
+      "options": [
+        { "value": "autonomous", "label": "Autonomous", "description": "CareAgent acts independently" },
+        { "value": "supervised", "label": "Supervised", "description": "CareAgent prepares, you approve" },
+        { "value": "manual", "label": "Manual", "description": "You initiate, CareAgent assists" }
+      ],
+      "cans_field": "autonomy.coordinate",
+      "classification": {
+        "domain": "administrative",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "structured"
+    },
+    {
+      "id": "consent_hipaa",
+      "text": "I understand this system operates under HIPAA guidelines and I will not input real patient data. Do you acknowledge?",
+      "answer_type": "boolean",
+      "required": true,
+      "cans_field": "consent.hipaa_warning_acknowledged",
+      "llm_guidance": "This is a hard-stop consent question. The provider MUST answer 'yes' to proceed. If they answer 'no', explain that this acknowledgment is required and ask again. Do not skip.",
+      "classification": {
+        "domain": "administrative",
+        "sensitivity": "sensitive"
+      },
+      "mode": "structured"
+    },
+    {
+      "id": "consent_synthetic",
+      "text": "I confirm that this system uses synthetic data only — no real patient data will be processed. Do you confirm?",
+      "answer_type": "boolean",
+      "required": true,
+      "cans_field": "consent.synthetic_data_only",
+      "llm_guidance": "This is a hard-stop consent question. The provider MUST answer 'yes' to proceed. If they answer 'no', explain that this confirmation is required and ask again. Do not skip.",
+      "classification": {
+        "domain": "administrative",
+        "sensitivity": "sensitive"
+      },
+      "mode": "structured"
+    },
+    {
+      "id": "consent_audit",
+      "text": "I consent to all clinical interactions being logged to an append-only audit trail. Do you consent?",
+      "answer_type": "boolean",
+      "required": true,
+      "cans_field": "consent.audit_consent",
+      "llm_guidance": "This is a hard-stop consent question. The provider MUST answer 'yes' to proceed. If they answer 'no', explain that audit consent is required for clinical AI use and ask again. Do not skip.",
+      "classification": {
+        "domain": "administrative",
+        "sensitivity": "sensitive"
+      },
+      "mode": "structured"
     }
   ]
 }
