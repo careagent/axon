@@ -6,6 +6,16 @@
   "description": "Determines digital scope of practice for Physician (MD, DO) CareAgents",
   "questions": [
     {
+      "id": "provider_name",
+      "text": "What is your full name as it appears on your medical license?",
+      "answer_type": "text",
+      "required": true,
+      "cans_field": "provider.name",
+      "validation": {
+        "min_length": 2
+      }
+    },
+    {
       "id": "has_degrees",
       "text": "Do you hold any medical degrees (MD, DO, etc.)?",
       "answer_type": "boolean",
