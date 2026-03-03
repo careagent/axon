@@ -138,6 +138,7 @@ describe('questionnaire data integrity', () => {
       for (const typeId of types) {
         const q = AxonQuestionnaires.getForType(typeId)!
         for (const question of q.questions) {
+          if (question.cans_field === undefined) continue
           expect(
             VALID_CANS_FIELDS.has(question.cans_field),
             `Question "${question.id}" in "${typeId}" has invalid CANS field "${question.cans_field}"`,

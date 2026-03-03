@@ -11,6 +11,7 @@
  * provider-core CANS schema.
  */
 export const VALID_CANS_FIELDS: Set<string> = new Set([
+  'provider.npi',
   'provider.name',
   'provider.types',
   'provider.degrees',
@@ -24,6 +25,18 @@ export const VALID_CANS_FIELDS: Set<string> = new Set([
   'scope.taxonomy_version',
   'scope.practice_setting',
   'scope.supervision_level',
-  'autonomy.default_level',
+  'autonomy.chart',
+  'autonomy.order',
+  'autonomy.charge',
+  'autonomy.perform',
+  'autonomy.interpret',
+  'autonomy.educate',
+  'autonomy.coordinate',
+  'voice.chart',
+  'voice.educate',
+  'voice.interpret',
+  'consent.hipaa_warning_acknowledged',
+  'consent.synthetic_data_only',
+  'consent.audit_consent',
   'skills.authorized',
 ])
