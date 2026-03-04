@@ -59,6 +59,32 @@ export const SectionSchema = Type.Object({
   question_ids: Type.Array(Type.String()),
 })
 
+// --- Repeat-for directive (iterate a question group over a data array) ---
+export const RepeatForSchema = Type.Object({
+  /** Dot-path into the session context to iterate over (e.g., 'npi_lookup.licenses'). */
+  source: Type.String(),
+  /** Variable name exposed to child questions' text/llm_guidance via {{var}} interpolation. */
+  iterator_var: Type.String(),
+  /** If true, the first item is treated as primary with stricter validation. */
+  primary_first: Type.Optional(Type.Boolean()),
+})
+
+// --- Hard-stop rule (blocks onboarding on condition) ---
+export const HardStopSchema = Type.Object({
+  /** Condition that triggers the hard stop. */
+  operator: Type.Union([
+    Type.Literal('equals'),
+    Type.Literal('not_equals'),
+    Type.Literal('mismatch'),
+  ]),
+  /** Value to compare against (for equals/not_equals). */
+  value: Type.Optional(Type.String()),
+  /** Dot-path into session context for mismatch comparison. */
+  compare_to: Type.Optional(Type.String()),
+  /** Message to show the provider when the hard stop triggers. */
+  message: Type.String(),
+})
+
 // --- Question ---
 export const QuestionSchema = Type.Object({
   id: Type.String(),
@@ -79,6 +105,10 @@ export const QuestionSchema = Type.Object({
   classification: Type.Optional(ClassificationSchema),
   /** Interaction mode: structured (rigid) or guided (LLM has latitude). */
   mode: Type.Optional(Type.Union([Type.Literal('structured'), Type.Literal('guided')])),
+  /** Repeat this question for each item in a data array. */
+  repeat_for: Type.Optional(RepeatForSchema),
+  /** Hard-stop rule — blocks onboarding if the answer matches the condition. */
+  hard_stop: Type.Optional(HardStopSchema),
 })
 
 // --- Questionnaire (root schema) ---

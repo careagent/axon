@@ -12,7 +12,7 @@
     "sensitivity": "non_sensitive"
   },
   "output_artifact": "routing",
-  "llm_system_prompt": "You are CareAgent, asking the provider to select their provider type. Present the options as a numbered list. Accept the number, the type ID, or a descriptive name. Be professional and concise.",
+  "llm_system_prompt": "You are CareAgent, asking the provider to select their provider type. Present options in pages of 8, numbered 1–8, with 9 as 'More choices...' to advance to the next page. Loop back to page 1 after the last page. Accept a number, type ID, or descriptive name. Never show all options at once.",
   "completion_criteria": "Provider type selected.",
   "sections": [
     {
@@ -29,7 +29,7 @@
       "answer_type": "single_select",
       "required": true,
       "options": [],
-      "llm_guidance": "Present the provider type options as a numbered list. The provider can reply with a number, the type ID, or a descriptive name.",
+      "llm_guidance": "Present provider types in pages of 8 options, numbered 1–8, with option 9 as 'More choices...' to show the next page. Loop back to the first page after the last page. The provider can reply with a number, the type ID, or a descriptive name. If they say 'More choices' or '9', show the next batch. Keep cycling until they select a provider type. Do NOT dump all options at once — always paginate.",
       "classification": {
         "domain": "administrative",
         "sensitivity": "non_sensitive"

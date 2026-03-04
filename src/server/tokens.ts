@@ -1,6 +1,12 @@
 import { readFileSync, writeFileSync, renameSync, existsSync, mkdirSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { randomUUID, randomBytes } from 'node:crypto'
+import {
+  getSupabaseConfig,
+  fetchNeuronToken,
+  upsertNeuronToken,
+} from '../db/index.js'
+import type { SupabaseConfig } from '../db/index.js'
 
 /** Stored token record mapping a registration ID to its neuron's NPI and bearer token. */
 export interface TokenRecord {
@@ -12,16 +18,18 @@ export interface TokenRecord {
 /**
  * Persistent token store for neuron registration tokens.
  *
- * Uses the same atomic write-to-temp-then-rename pattern as AxonRegistry persistence.
- * Tokens survive process restarts by loading from a JSON file on construction.
+ * Uses file-backed persistence with optional Supabase sync.
+ * When SUPABASE_URL is set, tokens are written to both file and DB.
  */
 export class PersistentTokenStore {
   private readonly filePath: string
   private readonly tokens: Map<string, TokenRecord>
+  private readonly supabaseConfig: SupabaseConfig | null
 
   constructor(filePath: string) {
     this.filePath = filePath
     this.tokens = this.load()
+    this.supabaseConfig = getSupabaseConfig()
   }
 
   /** Register a new neuron and return its registration ID and bearer token. */
@@ -35,6 +43,13 @@ export class PersistentTokenStore {
       registered_at: new Date().toISOString(),
     })
     this.persist()
+
+    // Fire-and-forget Supabase sync
+    if (this.supabaseConfig) {
+      upsertNeuronToken(this.supabaseConfig, bearerToken, registrationId, npi).catch(() => {
+        // Supabase write failed — file persistence is source of truth
+      })
+    }
 
     return { registration_id: registrationId, bearer_token: bearerToken }
   }

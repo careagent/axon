@@ -4,3 +4,4 @@ coverage/
 *.tsbuildinfo
 axon-data/
 secrets.env
+.env

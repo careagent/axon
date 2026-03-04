@@ -102,15 +102,13 @@ describe('AxonQuestionnaires', () => {
       expect(q).toBeDefined()
       expect(q!.provider_type).toBe('_universal_consent')
       expect(q!.output_artifact).toBe('consent')
-      expect(q!.questions).toHaveLength(3)
+      expect(q!.questions).toHaveLength(1)
     })
 
-    it('universal consent has all 3 consent questions', () => {
+    it('universal consent has dev environment consent question', () => {
       const q = AxonQuestionnaires.getMetaQuestionnaire('_universal_consent')!
       const ids = q.questions.map((question) => question.id)
       expect(ids).toContain('consent_hipaa')
-      expect(ids).toContain('consent_synthetic')
-      expect(ids).toContain('consent_audit')
     })
 
     it('returns provider type selection questionnaire', () => {
@@ -180,7 +178,7 @@ describe('loadMetaQuestionnaire', () => {
   it('loads _universal_consent without taxonomy validation', () => {
     const q = loadMetaQuestionnaire('_universal_consent')
     expect(q.provider_type).toBe('_universal_consent')
-    expect(q.questions).toHaveLength(3)
+    expect(q.questions).toHaveLength(1)
   })
 
   it('loads _provider_type_selection with enriched options', () => {

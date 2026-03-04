@@ -7,6 +7,7 @@ import { AxonTaxonomy } from '../taxonomy/taxonomy.js'
 import { AxonQuestionnaires } from '../questionnaires/questionnaires.js'
 import { SignedMessageValidator } from '../protocol/schemas.js'
 import { PersistentTokenStore } from './tokens.js'
+import { getSupabaseConfig } from '../db/index.js'
 import type { SignedMessage } from '../types/index.js'
 
 const AXON_VERSION = '1.0.0'
@@ -31,6 +32,9 @@ export interface AxonServer {
  *
  * Unlike the mock server, this does NOT pre-seed fixtures. State is loaded
  * from persistent storage on startup and survives restarts.
+ *
+ * Calls async init on AxonTaxonomy and AxonQuestionnaires at startup
+ * to load data from Supabase when available.
  */
 export function createAxonServer(config: AxonServerConfig): AxonServer {
   const { port, host, dataDir } = config
@@ -42,12 +46,14 @@ export function createAxonServer(config: AxonServerConfig): AxonServer {
   const auditPath = join(dataDir, 'audit.jsonl')
   const tokensPath = join(dataDir, 'tokens.json')
 
-  const registry = new AxonRegistry(registryPath)
-  const audit = new AuditTrail(auditPath)
-  const broker = new AxonBroker(registry, audit)
-  const tokenStore = new PersistentTokenStore(tokensPath)
+  let registry: AxonRegistry
+  let broker: AxonBroker
+  let tokenStore: PersistentTokenStore
 
   const startTime = Date.now()
+
+  // Check if Supabase is configured for NPI lookup edge function
+  const supabaseConfig = getSupabaseConfig()
 
   function readBody(req: http.IncomingMessage): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -120,6 +126,122 @@ export function createAxonServer(config: AxonServerConfig): AxonServer {
     }
 
     return { authenticated: true, npi: record.npi }
+  }
+
+  /**
+   * NPI lookup via Supabase Edge Function (if configured) or direct NPPES call.
+   */
+  async function handleNpiLookup(npi: string): Promise<{ status: number; body: unknown }> {
+    // If Supabase is configured, proxy to the edge function
+    if (supabaseConfig) {
+      try {
+        const edgeUrl = `${supabaseConfig.url}/functions/v1/npi-lookup?npi=${npi}`
+        const edgeRes = await fetch(edgeUrl, {
+          headers: {
+            'Authorization': `Bearer ${supabaseConfig.key}`,
+          },
+          signal: AbortSignal.timeout(15_000),
+        })
+        const body = await edgeRes.json()
+        return { status: edgeRes.status, body }
+      } catch {
+        // Edge function unavailable — fall through to direct NPPES call
+      }
+    }
+
+    // Direct NPPES call (fallback)
+    try {
+      const nppesUrl = `https://npiregistry.cms.hhs.gov/api/?number=${npi}&version=2.1`
+      const nppesRes = await fetch(nppesUrl, {
+        signal: AbortSignal.timeout(10_000),
+      })
+      if (!nppesRes.ok) {
+        return { status: 502, body: { error: 'NPPES registry returned an error' } }
+      }
+      const nppesData = (await nppesRes.json()) as {
+        result_count?: number
+        results?: Array<{
+          number?: string
+          enumeration_type?: string
+          basic?: Record<string, string>
+          taxonomies?: Array<{
+            code?: string
+            desc?: string
+            primary?: boolean
+            state?: string
+            license?: string
+          }>
+          addresses?: Array<{
+            address_purpose?: string
+            city?: string
+            state?: string
+          }>
+        }>
+      }
+
+      if (!nppesData.result_count || nppesData.result_count === 0 || !nppesData.results?.[0]) {
+        return { status: 404, body: { error: `No NPPES record found for NPI: ${npi}` } }
+      }
+
+      const result = nppesData.results[0]
+      const basic = result.basic ?? {}
+      const enumerationType = result.enumeration_type === 'NPI-1' ? 'NPI-1' : 'NPI-2'
+      const primaryTaxonomy = result.taxonomies?.find(t => t.primary) ?? result.taxonomies?.[0]
+      const practiceAddress = result.addresses?.find(a => a.address_purpose === 'LOCATION')
+
+      const response: Record<string, unknown> = {
+        npi,
+        enumeration_type: enumerationType,
+        status: basic['status'] === 'A' ? 'active' : basic['status'] ?? 'unknown',
+      }
+
+      if (enumerationType === 'NPI-1') {
+        const nameParts: string[] = []
+        if (basic['name_prefix']) nameParts.push(basic['name_prefix'])
+        if (basic['first_name']) nameParts.push(basic['first_name'])
+        if (basic['middle_name']) nameParts.push(basic['middle_name'])
+        if (basic['last_name']) nameParts.push(basic['last_name'])
+        let displayName = nameParts.join(' ')
+        if (basic['credential']) displayName += `, ${basic['credential']}`
+
+        response['name'] = displayName
+        response['first_name'] = basic['first_name'] ?? ''
+        response['last_name'] = basic['last_name'] ?? ''
+        response['credential'] = basic['credential'] ?? undefined
+      } else {
+        response['name'] = basic['organization_name'] ?? 'Unknown Organization'
+        response['organization_name'] = basic['organization_name'] ?? undefined
+      }
+
+      if (primaryTaxonomy) {
+        response['specialty'] = primaryTaxonomy.desc ?? undefined
+        response['taxonomy_code'] = primaryTaxonomy.code ?? undefined
+        response['license_state'] = primaryTaxonomy.state ?? undefined
+        response['license_number'] = primaryTaxonomy.license ?? undefined
+      }
+
+      const allLicenses = (result.taxonomies ?? [])
+        .filter(t => t.state && t.license)
+        .map(t => ({
+          state: t.state!,
+          number: t.license!,
+          specialty: t.desc ?? undefined,
+          taxonomy_code: t.code ?? undefined,
+          primary: t.primary ?? false,
+        }))
+      if (allLicenses.length > 0) {
+        response['licenses'] = allLicenses
+      }
+
+      if (practiceAddress) {
+        response['practice_state'] = practiceAddress.state ?? undefined
+        response['practice_city'] = practiceAddress.city ?? undefined
+      }
+
+      return { status: 200, body: response }
+    } catch {
+      return { status: 502, body: { error: 'Failed to reach NPPES registry' } }
+    }
   }
 
   async function handleRequest(
@@ -403,105 +525,8 @@ export function createAxonServer(config: AxonServerConfig): AxonServer {
         return
       }
 
-      try {
-        const nppesUrl = `https://npiregistry.cms.hhs.gov/api/?number=${npi}&version=2.1`
-        const nppesRes = await fetch(nppesUrl, {
-          signal: AbortSignal.timeout(10_000),
-        })
-        if (!nppesRes.ok) {
-          sendJson(res, 502, { error: 'NPPES registry returned an error' })
-          return
-        }
-        const nppesData = (await nppesRes.json()) as {
-          result_count?: number
-          results?: Array<{
-            number?: string
-            enumeration_type?: string
-            basic?: Record<string, string>
-            taxonomies?: Array<{
-              code?: string
-              desc?: string
-              primary?: boolean
-              state?: string
-              license?: string
-            }>
-            addresses?: Array<{
-              address_purpose?: string
-              city?: string
-              state?: string
-            }>
-          }>
-        }
-
-        if (!nppesData.result_count || nppesData.result_count === 0 || !nppesData.results?.[0]) {
-          sendJson(res, 404, { error: `No NPPES record found for NPI: ${npi}` })
-          return
-        }
-
-        const result = nppesData.results[0]
-        const basic = result.basic ?? {}
-        const enumerationType = result.enumeration_type === 'NPI-1' ? 'NPI-1' : 'NPI-2'
-        const primaryTaxonomy = result.taxonomies?.find(t => t.primary) ?? result.taxonomies?.[0]
-        const practiceAddress = result.addresses?.find(a => a.address_purpose === 'LOCATION')
-
-        // Build response
-        const response: Record<string, unknown> = {
-          npi,
-          enumeration_type: enumerationType,
-          status: basic['status'] === 'A' ? 'active' : basic['status'] ?? 'unknown',
-        }
-
-        if (enumerationType === 'NPI-1') {
-          // Individual provider
-          const nameParts: string[] = []
-          if (basic['name_prefix']) nameParts.push(basic['name_prefix'])
-          if (basic['first_name']) nameParts.push(basic['first_name'])
-          if (basic['middle_name']) nameParts.push(basic['middle_name'])
-          if (basic['last_name']) nameParts.push(basic['last_name'])
-          let displayName = nameParts.join(' ')
-          if (basic['credential']) displayName += `, ${basic['credential']}`
-
-          response['name'] = displayName
-          response['first_name'] = basic['first_name'] ?? ''
-          response['last_name'] = basic['last_name'] ?? ''
-          response['credential'] = basic['credential'] ?? undefined
-        } else {
-          // Organization
-          response['name'] = basic['organization_name'] ?? 'Unknown Organization'
-          response['organization_name'] = basic['organization_name'] ?? undefined
-        }
-
-        if (primaryTaxonomy) {
-          response['specialty'] = primaryTaxonomy.desc ?? undefined
-          response['taxonomy_code'] = primaryTaxonomy.code ?? undefined
-          // Keep singular fields for backward compatibility
-          response['license_state'] = primaryTaxonomy.state ?? undefined
-          response['license_number'] = primaryTaxonomy.license ?? undefined
-        }
-
-        // All licenses from all taxonomy entries (not just primary)
-        const allLicenses = (result.taxonomies ?? [])
-          .filter(t => t.state && t.license)
-          .map(t => ({
-            state: t.state!,
-            number: t.license!,
-            specialty: t.desc ?? undefined,
-            taxonomy_code: t.code ?? undefined,
-            primary: t.primary ?? false,
-          }))
-        if (allLicenses.length > 0) {
-          response['licenses'] = allLicenses
-        }
-
-        if (practiceAddress) {
-          response['practice_state'] = practiceAddress.state ?? undefined
-          response['practice_city'] = practiceAddress.city ?? undefined
-        }
-
-        sendJson(res, 200, response)
-      } catch {
-        sendJson(res, 502, { error: 'Failed to reach NPPES registry' })
-      }
+      const { status, body } = await handleNpiLookup(npi)
+      sendJson(res, status, body)
       return
     }
 
@@ -509,7 +534,7 @@ export function createAxonServer(config: AxonServerConfig): AxonServer {
     const flowMatch = pathname.match(/^\/v1\/onboarding\/flow\/([^/]+)$/)
     if (req.method === 'GET' && flowMatch) {
       const targetType = flowMatch[1]!
-      const flow = AxonQuestionnaires.getOnboardingFlow(targetType)
+      const flow = await AxonQuestionnaires.getOnboardingFlowAsync(targetType)
 
       if (!flow) {
         sendJson(res, 404, { error: `No onboarding flow found for target type: "${targetType}"` })
@@ -592,6 +617,16 @@ export function createAxonServer(config: AxonServerConfig): AxonServer {
     },
 
     async start(): Promise<string> {
+      // Initialize Supabase-backed data sources
+      await AxonTaxonomy.init()
+      await AxonQuestionnaires.init()
+
+      // Initialize registry (with Supabase hydration if available)
+      registry = await AxonRegistry.create(registryPath)
+      const audit = new AuditTrail(auditPath)
+      broker = new AxonBroker(registry, audit)
+      tokenStore = new PersistentTokenStore(tokensPath)
+
       return new Promise<string>((resolve, reject) => {
         httpServer = http.createServer((req, res) => {
           handleRequest(req, res).catch((err) => {

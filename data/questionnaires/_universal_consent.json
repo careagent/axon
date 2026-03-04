@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "taxonomy_version": "1.0.0",
   "display_name": "Universal Consent",
-  "description": "HIPAA, synthetic data, and audit consent — all three are required before any onboarding can proceed.",
+  "description": "Development environment consent — required before onboarding can proceed.",
   "authority": "axon",
   "target_type": "provider",
   "classification": {
@@ -12,50 +12,24 @@
     "sensitivity": "sensitive"
   },
   "output_artifact": "consent",
-  "llm_system_prompt": "You are CareAgent, presenting required consent acknowledgments before provider onboarding. Present each consent question clearly and individually. All three must be acknowledged ('yes') to proceed. Be professional and concise. If the provider answers 'no', explain that the acknowledgment is required and ask again. Do not skip or reorder questions.",
-  "completion_criteria": "All three consent acknowledgments received: HIPAA warning, synthetic data confirmation, and audit trail consent.",
+  "llm_system_prompt": "You are CareAgent, presenting required consent before provider onboarding. The provider must acknowledge the development environment disclaimer to proceed. Be professional and concise. If the provider answers 'no', explain that this acknowledgment is required and ask again.",
+  "completion_criteria": "Development environment consent acknowledged.",
   "sections": [
     {
       "id": "consent",
       "title": "Consent Acknowledgment",
-      "description": "HIPAA, synthetic data, and audit consent — all three are required to proceed.",
-      "question_ids": ["consent_hipaa", "consent_synthetic", "consent_audit"]
+      "description": "Development environment consent — required to proceed.",
+      "question_ids": ["consent_hipaa"]
     }
   ],
   "questions": [
     {
       "id": "consent_hipaa",
-      "text": "I understand this system operates under HIPAA guidelines and I will not input real patient data. Do you acknowledge?",
+      "text": "This is a development environment which is not HIPAA compliant. I agree to never use real patient data when testing.",
       "answer_type": "boolean",
       "required": true,
       "cans_field": "consent.hipaa_warning_acknowledged",
       "llm_guidance": "This is a hard-stop consent question. The provider MUST answer 'yes' to proceed. If they answer 'no', explain that this acknowledgment is required and ask again. Do not skip.",
-      "classification": {
-        "domain": "administrative",
-        "sensitivity": "sensitive"
-      },
-      "mode": "structured"
-    },
-    {
-      "id": "consent_synthetic",
-      "text": "I confirm that this system uses synthetic data only — no real patient data will be processed. Do you confirm?",
-      "answer_type": "boolean",
-      "required": true,
-      "cans_field": "consent.synthetic_data_only",
-      "llm_guidance": "This is a hard-stop consent question. The provider MUST answer 'yes' to proceed. If they answer 'no', explain that this confirmation is required and ask again. Do not skip.",
-      "classification": {
-        "domain": "administrative",
-        "sensitivity": "sensitive"
-      },
-      "mode": "structured"
-    },
-    {
-      "id": "consent_audit",
-      "text": "I consent to all clinical interactions being logged to an append-only audit trail. Do you consent?",
-      "answer_type": "boolean",
-      "required": true,
-      "cans_field": "consent.audit_consent",
-      "llm_guidance": "This is a hard-stop consent question. The provider MUST answer 'yes' to proceed. If they answer 'no', explain that audit consent is required for clinical AI use and ask again. Do not skip.",
       "classification": {
         "domain": "administrative",
         "sensitivity": "sensitive"

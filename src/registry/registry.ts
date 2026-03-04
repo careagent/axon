@@ -1,6 +1,14 @@
 import { validateNPI } from './npi.js'
 import { persistRegistry, loadRegistry } from './persistence.js'
 import { AxonTaxonomy } from '../taxonomy/taxonomy.js'
+import {
+  getSupabaseConfig,
+  fetchRegistryEntry as fetchEntryFromDb,
+  fetchAllRegistryEntries as fetchAllFromDb,
+  upsertRegistryEntry as upsertEntryToDb,
+  deleteRegistryEntry as deleteEntryFromDb,
+} from '../db/index.js'
+import type { SupabaseConfig } from '../db/index.js'
 import type {
   RegistryEntry,
   CredentialRecord,
@@ -33,31 +41,51 @@ export interface NeuronRegistration {
 
 /**
  * Axon provider/Neuron registry with NPI validation, credential management,
- * multi-field search, and file-backed persistence.
+ * multi-field search, and dual persistence (Supabase + file fallback).
  *
- * Every mutation triggers an atomic persist to disk. Creating a new instance
- * with the same file path reloads previously persisted state.
+ * When SUPABASE_URL is set, mutations write to both the in-memory cache and
+ * Supabase. Reads come from the in-memory cache (populated at construction
+ * from Supabase or file). When SUPABASE_URL is not set, falls back to
+ * file-backed persistence only.
  *
  * @example
  * ```ts
- * import { AxonRegistry } from '@careagent/axon'
- *
  * const registry = new AxonRegistry('/tmp/axon-registry.json')
- * registry.registerProvider({
- *   npi: '1234567893',
- *   name: 'Dr. Smith',
- *   provider_types: ['physician'],
- * })
- * registry.search({ name: 'smith' }) // [{ npi: '1234567893', ... }]
+ * // or with Supabase:
+ * const registry = await AxonRegistry.create('/tmp/axon-registry.json')
  * ```
  */
 export class AxonRegistry {
   private readonly filePath: string
   private readonly entries: Map<string, RegistryEntry>
+  private readonly supabaseConfig: SupabaseConfig | null
 
   constructor(filePath: string) {
     this.filePath = filePath
     this.entries = loadRegistry(filePath)
+    this.supabaseConfig = getSupabaseConfig()
+  }
+
+  /**
+   * Async factory — loads entries from Supabase if available, otherwise file.
+   * Preferred over `new AxonRegistry()` when Supabase might be configured.
+   */
+  static async create(filePath: string): Promise<AxonRegistry> {
+    const registry = new AxonRegistry(filePath)
+
+    // If Supabase is available and we loaded no entries from file, try DB
+    if (registry.supabaseConfig && registry.entries.size === 0) {
+      try {
+        const dbEntries = await fetchAllFromDb(registry.supabaseConfig)
+        for (const entry of dbEntries) {
+          registry.entries.set(entry.npi, entry)
+        }
+      } catch {
+        // Supabase unavailable — stick with file-loaded data
+      }
+    }
+
+    return registry
   }
 
   /**
@@ -121,7 +149,7 @@ export class AxonRegistry {
     }
 
     this.entries.set(registration.npi, entry)
-    this.persist()
+    this.persist(entry)
     return entry
   }
 
@@ -161,7 +189,7 @@ export class AxonRegistry {
     }
 
     this.entries.set(registration.npi, entry)
-    this.persist()
+    this.persist(entry)
     return entry
   }
 
@@ -192,7 +220,7 @@ export class AxonRegistry {
       verification_source: 'self_attested',
     })
     entry.last_updated = new Date().toISOString()
-    this.persist()
+    this.persist(entry)
   }
 
   /**
@@ -221,7 +249,7 @@ export class AxonRegistry {
 
     credential.status = status
     entry.last_updated = new Date().toISOString()
-    this.persist()
+    this.persist(entry)
   }
 
   /**
@@ -242,7 +270,7 @@ export class AxonRegistry {
 
     entry.neuron_endpoint = endpoint
     entry.last_updated = new Date().toISOString()
-    this.persist()
+    this.persist(entry)
   }
 
   /**
@@ -333,9 +361,17 @@ export class AxonRegistry {
   }
 
   /**
-   * Atomically persist the current registry state to disk.
+   * Persist the entry — to file and optionally to Supabase.
+   * Supabase writes are fire-and-forget to avoid blocking the sync API.
    */
-  private persist(): void {
+  private persist(entry?: RegistryEntry): void {
     persistRegistry(this.filePath, this.entries)
+
+    // Fire-and-forget Supabase sync for the changed entry
+    if (this.supabaseConfig && entry) {
+      upsertEntryToDb(this.supabaseConfig, entry).catch(() => {
+        // Supabase write failed — file persistence is the source of truth
+      })
+    }
   }
 }

@@ -1,4 +1,6 @@
 import { loadTaxonomy } from './loader.js'
+import { TaxonomyVersionValidator } from './schemas.js'
+import { getSupabaseConfig, fetchTaxonomy as fetchTaxonomyFromDb } from '../db/index.js'
 import type {
   TaxonomyVersion,
   TaxonomyAction,
@@ -8,12 +10,18 @@ import type {
 /**
  * Static API for querying the Axon clinical action taxonomy.
  *
- * Uses lazy initialization -- the taxonomy JSON is loaded and indexed on first
- * access. All lookups after initialization are O(1) via Map/Set indexes.
+ * Supports two initialization paths:
+ * - `init()` (async): Supabase-first with JSON fallback. Call once at startup.
+ * - Lazy sync init: Falls back to JSON file loading on first property access
+ *   (preserves backward compatibility for tests and local dev).
+ *
+ * All lookups after initialization are O(1) via Map/Set indexes.
  *
  * @example
  * ```ts
  * import { AxonTaxonomy } from '@careagent/axon'
+ *
+ * await AxonTaxonomy.init() // at startup (optional — lazy init still works)
  *
  * AxonTaxonomy.getVersion()                       // '1.0.0'
  * AxonTaxonomy.validateAction('chart.progress_note') // true
@@ -34,8 +42,30 @@ export class AxonTaxonomy {
   private static _actionSet: Set<string> | undefined
 
   /**
+   * Async initialization — Supabase-first, JSON fallback.
+   * Call once at server startup. Safe to call multiple times (no-ops after first).
+   */
+  static async init(): Promise<void> {
+    if (AxonTaxonomy._data !== undefined) return
+
+    const config = getSupabaseConfig()
+    if (config) {
+      const data = await fetchTaxonomyFromDb(config)
+      if (data && TaxonomyVersionValidator.Check(data)) {
+        AxonTaxonomy._data = data
+        AxonTaxonomy._buildIndexes()
+        return
+      }
+    }
+
+    // Fallback to JSON file
+    AxonTaxonomy._data = loadTaxonomy()
+    AxonTaxonomy._buildIndexes()
+  }
+
+  /**
    * Lazy-loading getter for taxonomy data.
-   * Triggers load and index build on first access.
+   * Triggers sync load from JSON on first access if init() was not called.
    */
   private static get data(): TaxonomyVersion {
     if (AxonTaxonomy._data === undefined) {
@@ -47,11 +77,11 @@ export class AxonTaxonomy {
 
   /**
    * Build inverted indexes after data is loaded.
-   * Called once during lazy initialization.
+   * Called once during initialization.
    */
   private static _buildIndexes(): void {
-    // _buildIndexes is only called from the data getter after _data is assigned,
-    // so _data is guaranteed to be defined here. The non-null assertion is safe.
+    // _buildIndexes is only called after _data is assigned,
+    // so _data is guaranteed to be defined here.
     const data = AxonTaxonomy._data!
 
     // Action ID -> TaxonomyAction

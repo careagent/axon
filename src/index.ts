@@ -4,6 +4,7 @@ export * from './registry/index.js'
 export * from './protocol/index.js'
 export * from './broker/index.js'
 export * from './types/index.js'
+export * from './db/index.js'
 
 import { AxonRegistry } from './registry/index.js'
 import { AxonBroker } from './broker/index.js'
