@@ -61,6 +61,8 @@ export class AxonQuestionnaires {
           for (const row of rows) {
             index.set(row.provider_type, row.data)
           }
+          // Enrich _provider_type_selection options from taxonomy
+          AxonQuestionnaires._enrichProviderTypeSelection(index)
           AxonQuestionnaires._index = index
           return
         }
@@ -71,6 +73,19 @@ export class AxonQuestionnaires {
 
     // JSON fallback — same as lazy init
     AxonQuestionnaires._initFromJson()
+  }
+
+  /** Enrich _provider_type_selection options from taxonomy. */
+  private static _enrichProviderTypeSelection(index: Map<string, Questionnaire>): void {
+    const selection = index.get('_provider_type_selection')
+    if (!selection) return
+    const typeQuestion = selection.questions.find((q) => q.id === 'provider_type')
+    if (!typeQuestion) return
+    const providerTypes = AxonTaxonomy.getProviderTypes()
+    typeQuestion.options = providerTypes.map((t) => ({
+      value: t.id,
+      label: t.display_name,
+    } as QuestionOption))
   }
 
   /** Load all questionnaires from JSON files (sync). */
