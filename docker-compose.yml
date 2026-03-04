@@ -4,6 +4,8 @@ services:
     restart: unless-stopped
     volumes:
       - axon-data:/app/axon-data
+    env_file:
+      - .env
     environment:
       - AXON_PORT=9999
       - AXON_HOST=0.0.0.0
