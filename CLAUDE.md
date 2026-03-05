@@ -109,6 +109,19 @@ The interaction protocol defines structured agent-to-human conversations:
 - Classification-aware (clinical/administrative × sensitive/non_sensitive)
 - Authority hierarchy: axon > provider > patient
 
+### A2A Protocol Integration (Planned)
+
+Axon is becoming a **curated A2A Agent Card registry**. This means:
+
+- **Agent Card schema** -- TypeBox schema aligned with A2A spec for Agent Card CRUD (register, update, deregister, search)
+- **Form engine wrapping** -- existing form engine responses wrapped in A2A Task/Message/Part format. The form engine becomes a Task handler that translates between A2A Task lifecycle and internal form engine state.
+- **Discovery endpoint** -- returns Agent Cards by capability, location, and type
+- **Handshake protocol** -- updated to use A2A authentication (replacing custom Ed25519 handshake)
+
+The existing form engine (334+ tests) must be preserved. A2A wraps it externally — the internal `POST /v1/forms/next` and `POST /v1/forms/validate` APIs remain unchanged.
+
+**SDK:** `@a2a-js/sdk` (v0.3.10, published by Google). Wrap in an adapter layer to insulate from pre-1.0 API changes.
+
 ### Exports
 
 The package exposes a convenience namespace:

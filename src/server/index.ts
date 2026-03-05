@@ -8,6 +8,12 @@ import { AxonQuestionnaires } from '../questionnaires/questionnaires.js'
 import { SignedMessageValidator } from '../protocol/schemas.js'
 import { PersistentTokenStore } from './tokens.js'
 import { getSupabaseConfig } from '../db/index.js'
+import { AgentCardStore } from '../a2a/agent-card-store.js'
+import { A2AHandler } from '../a2a/json-rpc-handler.js'
+import { FormEngine } from '../forms/engine.js'
+import type { JsonRpcRequest } from '@careagent/a2a-types'
+import type { AgentCard } from '@careagent/a2a-types'
+import type { FormRequest } from '../forms/schemas.js'
 import type { SignedMessage } from '../types/index.js'
 
 const AXON_VERSION = '1.0.0'
@@ -49,6 +55,8 @@ export function createAxonServer(config: AxonServerConfig): AxonServer {
   let registry: AxonRegistry
   let broker: AxonBroker
   let tokenStore: PersistentTokenStore
+  let agentCardStore: AgentCardStore
+  let a2aHandler: A2AHandler
 
   const startTime = Date.now()
 
@@ -268,6 +276,61 @@ export function createAxonServer(config: AxonServerConfig): AxonServer {
         version: AXON_VERSION,
         uptime: Math.floor((Date.now() - startTime) / 1000),
       })
+      return
+    }
+
+    // GET /.well-known/agent.json — Axon's own Agent Card (A2A discovery)
+    if (req.method === 'GET' && pathname === '/.well-known/agent.json') {
+      res.setHeader('Cache-Control', 'public, max-age=3600')
+      sendJson(res, 200, {
+        id: 'axon-registry',
+        name: 'CareAgent Axon Registry',
+        description: 'Trust registry, Agent Card directory, and form engine for the CareAgent network',
+        version: AXON_VERSION,
+        url: baseUrl || `http://${host}:${port}`,
+        capabilities: [
+          { name: 'agent-card-registry', description: 'Register, discover, and manage Agent Cards' },
+          { name: 'form-engine', description: 'Deterministic questionnaire-driven onboarding flows' },
+          { name: 'credential-verification', description: 'NPI and provider credential validation' },
+        ],
+        authentication: { scheme: 'none' },
+        provider: { organization: 'CareAgent Network' },
+        careagent: {
+          classification: 'administrative',
+          consent_required: false,
+        },
+      })
+      return
+    }
+
+    // GET /v1/agent-cards/search — search Agent Cards (alternate path for client discovery)
+    if (req.method === 'GET' && pathname === '/v1/agent-cards/search') {
+      const capability = url.searchParams.get('capability') ?? undefined
+      const specialty = url.searchParams.get('specialty') ?? undefined
+      const state = url.searchParams.get('state') ?? undefined
+      const city = url.searchParams.get('city') ?? undefined
+      const zip = url.searchParams.get('zip') ?? undefined
+      const providerType = url.searchParams.get('provider_type') ?? undefined
+      const organization = url.searchParams.get('organization') ?? undefined
+      const limitParam = url.searchParams.get('limit')
+      const offsetParam = url.searchParams.get('offset')
+
+      const location =
+        state !== undefined || city !== undefined || zip !== undefined
+          ? { state, city, zip }
+          : undefined
+
+      const results = agentCardStore.search({
+        ...(capability !== undefined && { capability }),
+        ...(specialty !== undefined && { specialty }),
+        ...(location !== undefined && { location }),
+        ...(providerType !== undefined && { provider_type: providerType }),
+        ...(organization !== undefined && { organization }),
+        ...(limitParam !== null && { limit: Number(limitParam) }),
+        ...(offsetParam !== null && { offset: Number(offsetParam) }),
+      })
+
+      sendJson(res, 200, results)
       return
     }
 
@@ -604,6 +667,159 @@ export function createAxonServer(config: AxonServerConfig): AxonServer {
       return
     }
 
+    // POST /a2a — A2A JSON-RPC 2.0 endpoint
+    if (req.method === 'POST' && pathname === '/a2a') {
+      const body = await readBody(req)
+      let rpcRequest: JsonRpcRequest
+      try {
+        rpcRequest = JSON.parse(body) as JsonRpcRequest
+      } catch {
+        sendJson(res, 400, {
+          jsonrpc: '2.0',
+          id: null,
+          error: { code: -32700, message: 'Parse error' },
+        })
+        return
+      }
+
+      const rpcResponse = a2aHandler.handle(rpcRequest)
+      sendJson(res, 200, rpcResponse)
+      return
+    }
+
+    // GET /v1/agent-cards — list/search Agent Cards
+    if (req.method === 'GET' && pathname === '/v1/agent-cards') {
+      const capability = url.searchParams.get('capability') ?? undefined
+      const specialty = url.searchParams.get('specialty') ?? undefined
+      const state = url.searchParams.get('state') ?? undefined
+      const city = url.searchParams.get('city') ?? undefined
+      const zip = url.searchParams.get('zip') ?? undefined
+      const providerType = url.searchParams.get('provider_type') ?? undefined
+      const organization = url.searchParams.get('organization') ?? undefined
+      const limitParam = url.searchParams.get('limit')
+      const offsetParam = url.searchParams.get('offset')
+
+      const location =
+        state !== undefined || city !== undefined || zip !== undefined
+          ? { state, city, zip }
+          : undefined
+
+      const results = agentCardStore.search({
+        ...(capability !== undefined && { capability }),
+        ...(specialty !== undefined && { specialty }),
+        ...(location !== undefined && { location }),
+        ...(providerType !== undefined && { provider_type: providerType }),
+        ...(organization !== undefined && { organization }),
+        ...(limitParam !== null && { limit: Number(limitParam) }),
+        ...(offsetParam !== null && { offset: Number(offsetParam) }),
+      })
+
+      sendJson(res, 200, { results })
+      return
+    }
+
+    // POST /v1/agent-cards — register a new Agent Card
+    if (req.method === 'POST' && pathname === '/v1/agent-cards') {
+      const body = await readBody(req)
+      let card: AgentCard
+      try {
+        card = JSON.parse(body) as AgentCard
+      } catch {
+        sendJson(res, 400, { error: 'Invalid JSON' })
+        return
+      }
+
+      try {
+        agentCardStore.register(card)
+        sendJson(res, 201, card)
+      } catch (err) {
+        sendJson(res, 400, {
+          error: err instanceof Error ? err.message : 'Registration failed',
+        })
+      }
+      return
+    }
+
+    // GET/PUT/DELETE /v1/agent-cards/:id — Agent Card CRUD by ID
+    const agentCardMatch = pathname.match(/^\/v1\/agent-cards\/([^/]+)$/)
+    if (agentCardMatch) {
+      const cardId = agentCardMatch[1]!
+
+      if (req.method === 'GET') {
+        const card = agentCardStore.get(cardId)
+        if (card === undefined) {
+          sendJson(res, 404, { error: `Agent Card not found: "${cardId}"` })
+        } else {
+          sendJson(res, 200, card)
+        }
+        return
+      }
+
+      if (req.method === 'PUT') {
+        const body = await readBody(req)
+        let partial: Partial<AgentCard>
+        try {
+          partial = JSON.parse(body) as Partial<AgentCard>
+        } catch {
+          sendJson(res, 400, { error: 'Invalid JSON' })
+          return
+        }
+
+        try {
+          const updated = agentCardStore.update(cardId, partial)
+          sendJson(res, 200, updated)
+        } catch (err) {
+          sendJson(res, 404, {
+            error: err instanceof Error ? err.message : 'Update failed',
+          })
+        }
+        return
+      }
+
+      if (req.method === 'DELETE') {
+        agentCardStore.deregister(cardId)
+        res.writeHead(204)
+        res.end()
+        return
+      }
+    }
+
+    // POST /v1/forms/next — form engine next question
+    if (req.method === 'POST' && pathname === '/v1/forms/next') {
+      const body = await readBody(req)
+      let formRequest: FormRequest
+      try {
+        formRequest = JSON.parse(body) as FormRequest
+      } catch {
+        sendJson(res, 400, { error: 'Invalid JSON' })
+        return
+      }
+
+      const formResponse = FormEngine.next(formRequest)
+      sendJson(res, 200, formResponse)
+      return
+    }
+
+    // POST /v1/forms/validate — form engine validation
+    if (req.method === 'POST' && pathname === '/v1/forms/validate') {
+      const body = await readBody(req)
+      let payload: { questionnaire_id: string; question_id: string; answer: unknown }
+      try {
+        payload = JSON.parse(body) as typeof payload
+      } catch {
+        sendJson(res, 400, { error: 'Invalid JSON' })
+        return
+      }
+
+      const result = FormEngine.validate(
+        payload.questionnaire_id,
+        payload.question_id,
+        payload.answer,
+      )
+      sendJson(res, 200, result)
+      return
+    }
+
     // Default: 404
     sendJson(res, 404, { error: 'Not found' })
   }
@@ -626,6 +842,11 @@ export function createAxonServer(config: AxonServerConfig): AxonServer {
       const audit = new AuditTrail(auditPath)
       broker = new AxonBroker(registry, audit)
       tokenStore = new PersistentTokenStore(tokensPath)
+
+      // Initialize A2A components
+      const agentCardsPath = join(dataDir, 'agent-cards.json')
+      agentCardStore = new AgentCardStore(agentCardsPath)
+      a2aHandler = new A2AHandler(agentCardStore)
 
       return new Promise<string>((resolve, reject) => {
         httpServer = http.createServer((req, res) => {

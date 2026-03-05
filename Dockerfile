@@ -3,6 +3,14 @@ FROM node:22-alpine AS build
 
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
+# Copy shared dependency first (referenced via file:../shared)
+WORKDIR /shared
+COPY shared/package.json shared/pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
+COPY shared/src/ src/
+COPY shared/tsconfig.json ./
+RUN pnpm build
+
 WORKDIR /app
 
 COPY package.json pnpm-lock.yaml ./
