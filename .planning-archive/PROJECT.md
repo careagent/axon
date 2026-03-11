@@ -51,7 +51,7 @@ Axon must provide a trusted, open, neutral discovery and handshake layer so that
 
 ## Context
 
-**Current state:** v1.0.0 shipped (2026-02-22). Production server live at `https://axon.opencare.ai`. 253 tests, 0 runtime deps, >80% coverage.
+**Current state:** v1.0.0 shipped (2026-02-22). Production server live at `https://axon.opencare.ai`. 253 tests, 0 runtime deps, >80% coverage. Post-v1.0: interaction protocol spec (spec/interaction.md), NPI lookup endpoints, expanded questionnaire schema, physician questionnaire expanded to 24+ questions (2026-03-02).
 
 **Tech stack:** TypeScript 5.9, pnpm, tsdown 0.20, vitest 4.0, @sinclair/typebox 0.34, Node.js >=22.12.0
 
@@ -64,10 +64,12 @@ Axon must provide a trusted, open, neutral discovery and handshake layer so that
 Only `@careagent/provider-core`, `@careagent/patient-core`, and `@careagent/neuron` communicate with Axon. No third-party access.
 
 **Known tech debt:**
-- README.md and docs/questionnaire-authoring.md say "12 questions" for physician (actual: 13)
+- README.md and docs/questionnaire-authoring.md say "12 questions" for physician (actual: 24+, expanded with NPI integration, DEA, credentials, multi-state licenses)
 - README.md `new AxonRegistry()` example missing required `filePath` argument
 - 1 pending todo: build-permitted-actions-taxonomy (may be v2 scope)
 - README.md does not yet document the standalone server, Docker deployment, or GitHub Packages publishing
+- NPI lookup endpoints implemented (GET /v1/taxonomy/provider-types, GET /v1/npi/lookup/:npi proxying NPPES) but not documented in README
+- Interaction protocol spec exists (spec/interaction.md) but runtime engine not yet built in axon -- runtime lives in provider-core and patient-core
 
 ## Constraints
 
@@ -95,10 +97,11 @@ Only `@careagent/provider-core`, `@careagent/patient-core`, and `@careagent/neur
 | Stateless broker pipeline | No session state after handshake; every connect() is atomic | ✓ Good — clean separation, no connection leaks |
 | Hash-chained audit trail | Tamper-evident JSONL with SHA-256 chain | ✓ Good — verifyChain() detects tampering |
 | ASCII over Mermaid for docs | Universal rendering without special tooling | ✓ Good — works in any markdown viewer |
+| Interaction protocol defined in axon spec/ — runtime engine lives in provider-core and patient-core | Axon defines the protocol; runtime execution is a consumer concern | Pending — spec complete, runtime not yet built |
 | 2-level taxonomy hierarchy (3 for surgical) | Balance between specificity and manageability | ✓ Good — 61 actions cover physician scope adequately |
 | Standalone server with bearer token auth | Neuron instances need authenticated access; simple token-per-registration | ✓ Good — persistent tokens survive restarts |
 | Docker + Caddy for VPS deployment | Auto TLS, reverse proxy, non-root container, health checks | ✓ Good — single `docker compose up` deploys |
 | GitHub Packages for npm distribution | Private registry for @careagent scoped packages | ✓ Good — v* tag triggers automated publish |
 
 ---
-*Last updated: 2026-02-22 after standalone server deployment*
+*Last updated: 2026-03-02 after interaction protocol spec + schema evolution + NPI endpoints*
