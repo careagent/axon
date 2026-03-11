@@ -12,24 +12,65 @@
     "sensitivity": "sensitive"
   },
   "output_artifact": "consent",
-  "llm_system_prompt": "You are CareAgent, presenting required consent before provider onboarding. The provider must acknowledge the development environment disclaimer to proceed. Be professional and concise. If the provider answers 'no', explain that this acknowledgment is required and ask again.",
-  "completion_criteria": "Development environment consent acknowledged.",
+  "llm_system_prompt": "You are CareAgent, presenting required consent before provider onboarding. The provider must acknowledge all three development environment disclaimers to proceed. Be professional and concise. If the provider declines any acknowledgment, explain that all are required.",
+  "completion_criteria": "All three development environment consent items acknowledged.",
   "sections": [
     {
       "id": "consent",
       "title": "Consent Acknowledgment",
       "description": "Development environment consent — required to proceed.",
-      "question_ids": ["consent_hipaa"]
+      "question_ids": ["consent_hipaa", "consent_synthetic_data", "consent_audit_trail"]
     }
   ],
   "questions": [
     {
       "id": "consent_hipaa",
-      "text": "This is a development environment which is not HIPAA compliant. I agree to never use real patient data when testing.",
+      "text": "I acknowledge this is a development environment and is not HIPAA compliant.",
       "answer_type": "boolean",
       "required": true,
+      "hard_stop": {
+        "operator": "equals",
+        "value": "false",
+        "message": "HIPAA acknowledgment is required to proceed with provider onboarding."
+      },
       "cans_field": "consent.hipaa_warning_acknowledged",
-      "llm_guidance": "This is a hard-stop consent question. The provider MUST answer 'yes' to proceed. If they answer 'no', explain that this acknowledgment is required and ask again. Do not skip.",
+      "llm_guidance": "This is a hard-stop consent checkbox. The provider MUST check this to proceed. If they decline, explain that this acknowledgment is required.",
+      "classification": {
+        "domain": "administrative",
+        "sensitivity": "sensitive"
+      },
+      "mode": "structured"
+    },
+    {
+      "id": "consent_synthetic_data",
+      "text": "I agree to use only synthetic data and will never enter real patient information.",
+      "answer_type": "boolean",
+      "required": true,
+      "hard_stop": {
+        "operator": "equals",
+        "value": "false",
+        "message": "Commitment to synthetic data only is required to proceed."
+      },
+      "cans_field": "consent.synthetic_data_acknowledged",
+      "llm_guidance": "This is a hard-stop consent checkbox. The provider MUST check this to proceed. If they decline, explain that only synthetic data may be used.",
+      "classification": {
+        "domain": "administrative",
+        "sensitivity": "sensitive"
+      },
+      "mode": "structured"
+    },
+    {
+      "id": "consent_audit_trail",
+      "text": "I understand that all actions will be recorded in an audit trail.",
+      "answer_type": "boolean",
+      "required": true,
+      "hard_stop": {
+        "operator": "equals",
+        "value": "false",
+        "message": "Audit trail acknowledgment is required to proceed."
+      },
+      "cans_field": "consent.audit_trail_acknowledged",
+      "llm_guidance": "This is a hard-stop consent checkbox. The provider MUST check this to proceed. If they decline, explain that audit trail acknowledgment is required.",
       "classification": {
         "domain": "administrative",
         "sensitivity": "sensitive"
