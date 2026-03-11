@@ -37,6 +37,8 @@ export const VALID_CANS_FIELDS: Set<string> = new Set([
   'voice.interpret',
   'consent.hipaa_warning_acknowledged',
   'consent.synthetic_data_only',
+  'consent.synthetic_data_acknowledged',
   'consent.audit_consent',
+  'consent.audit_trail_acknowledged',
   'skills.authorized',
 ])

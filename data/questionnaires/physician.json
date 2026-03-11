@@ -100,12 +100,12 @@
     },
     {
       "id": "organization_name",
-      "text": "Is {{npi_lookup.dba_name}} your practice name?",
+      "text": "Is {{npi_org_lookup.dba_name}} your practice name?",
       "answer_type": "boolean",
       "required": true,
       "npi_prefill": "dba_name",
       "cans_field": "provider.organizations",
-      "llm_guidance": "Present the DBA (Doing Business As) name from the NPI-2 lookup: 'The NPI you entered returned the practice name {{npi_lookup.dba_name}}. Is this correct?' If no DBA exists, fall back to the legal organization_name. If they confirm, store and continue. If they deny, explain that the practice name is tied to the NPI number they entered, and ask them to re-enter their practice NPI. Loop back to the practice NPI question (organization_npi). After 5 failed attempts, say: 'It looks like there is a mismatch with the NPI number you are entering and your practice name. Please verify your practice NPI and try again.' Continue the loop — the provider cannot proceed until the practice NPI and name match.",
+      "llm_guidance": "Present the DBA (Doing Business As) name from the NPI-2 lookup: 'The NPI you entered returned the practice name {{npi_org_lookup.dba_name}}. Is this correct?' If no DBA exists, fall back to the legal organization_name. If they confirm, store and continue. If they deny, explain that the practice name is tied to the NPI number they entered, and ask them to re-enter their practice NPI. Loop back to the practice NPI question (organization_npi). After 5 failed attempts, say: 'It looks like there is a mismatch with the NPI number you are entering and your practice name. Please verify your practice NPI and try again.' Continue the loop — the provider cannot proceed until the practice NPI and name match.",
       "classification": {
         "domain": "administrative",
         "sensitivity": "non_sensitive"

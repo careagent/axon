@@ -200,9 +200,15 @@ export class FormEngine {
     question: Question,
     context: Record<string, unknown>,
   ): FormQuestion {
+    // Interpolate {{path.to.value}} context references in text and llm_guidance
+    const interpolatedText = FormEngine._interpolateContext(question.text, context)
+    const interpolatedGuidance = question.llm_guidance
+      ? FormEngine._interpolateContext(question.llm_guidance, context)
+      : undefined
+
     const formQuestion: FormQuestion = {
       id: question.id,
-      text: question.text,
+      text: interpolatedText,
       answer_type: question.answer_type,
       required: question.required,
     }
@@ -210,8 +216,8 @@ export class FormEngine {
     if (question.options) {
       formQuestion.options = question.options
     }
-    if (question.llm_guidance) {
-      formQuestion.llm_guidance = question.llm_guidance
+    if (interpolatedGuidance) {
+      formQuestion.llm_guidance = interpolatedGuidance
     }
     if (question.classification) {
       formQuestion.classification = question.classification
@@ -222,9 +228,22 @@ export class FormEngine {
     if (question.validation) {
       formQuestion.validation = question.validation
     }
+    if (question.npi_lookup) {
+      formQuestion.npi_lookup = true
+    }
     if (question.npi_prefill) {
       formQuestion.npi_prefill = question.npi_prefill
-      const prefilled = FormEngine._resolveContextPath(question.npi_prefill, context)
+      // npi_prefill paths are relative to the npi_lookup context (e.g., "name" → context.npi_lookup.name)
+      const npiContext = context.npi_lookup as Record<string, unknown> | undefined
+      const npiOrgContext = context.npi_org_lookup as Record<string, unknown> | undefined
+      // Try npi_lookup first, then npi_org_lookup, then full context as fallback
+      let prefilled = npiContext ? FormEngine._resolveContextPath(question.npi_prefill, npiContext) : undefined
+      if (prefilled === undefined && npiOrgContext) {
+        prefilled = FormEngine._resolveContextPath(question.npi_prefill, npiOrgContext)
+      }
+      if (prefilled === undefined) {
+        prefilled = FormEngine._resolveContextPath(question.npi_prefill, context)
+      }
       if (prefilled !== undefined) {
         formQuestion.prefilled_value = prefilled
       }
@@ -297,6 +316,20 @@ export class FormEngine {
     }
 
     return expanded
+  }
+
+  /** Replace {{path.to.value}} patterns in text with values from the context object. */
+  private static _interpolateContext(
+    text: string,
+    context: Record<string, unknown>,
+  ): string {
+    return text.replace(
+      /\{\{([\w.]+)\}\}/g,
+      (_match, path: string) => {
+        const value = FormEngine._resolveContextPath(path, context)
+        return value !== undefined ? String(value) : `{{${path}}}`
+      },
+    )
   }
 
   /** Replace {{var.field}} patterns in text with values from the iterator item. */
