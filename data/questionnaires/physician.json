@@ -4,7 +4,7 @@
   "version": "2.0.0",
   "taxonomy_version": "1.0.0",
   "display_name": "Physician Onboarding Questionnaire",
-  "description": "Complete onboarding for Physician (MD, DO) CareAgents — identity, credentials, scope, and autonomy.",
+  "description": "Complete onboarding for Physician (MD, DO) CareAgents \u2014 identity, credentials, scope, and autonomy.",
   "authority": "axon",
   "target_type": "provider",
   "classification": {
@@ -19,31 +19,63 @@
       "id": "identity",
       "title": "Provider Identity",
       "description": "NPI verification and provider identification.",
-      "question_ids": ["individual_npi", "provider_name", "organization_npi", "organization_name"]
+      "question_ids": [
+        "individual_npi",
+        "provider_name",
+        "organization_npi",
+        "organization_name"
+      ]
     },
     {
       "id": "credentials",
       "title": "Credentials",
       "description": "Professional degrees, licenses, and certifications.",
-      "question_ids": ["license_primary_state_confirm", "license_active", "license_number_confirm", "has_certifications", "certifications_list"]
+      "question_ids": [
+        "license_primary_state_confirm",
+        "license_active",
+        "license_number_confirm",
+        "has_certifications",
+        "certifications_list"
+      ]
     },
     {
       "id": "specialty",
       "title": "Specialty",
       "description": "Medical specialty and subspecialty information.",
-      "question_ids": ["has_subspecialty", "subspecialty_list"]
+      "question_ids": [
+        "has_subspecialty",
+        "subspecialty_list"
+      ]
     },
     {
       "id": "scope",
       "title": "Scope of Practice",
       "description": "Clinical activities and permitted actions for the AI agent.",
-      "question_ids": ["practice_setting", "clinical_charting", "prescribing", "dea_number", "controlled_substances", "diagnostic_ordering", "results_interpretation", "patient_education", "care_coordination", "billing"]
+      "question_ids": [
+        "practice_setting",
+        "clinical_charting",
+        "prescribing",
+        "dea_number",
+        "controlled_substances",
+        "diagnostic_ordering",
+        "results_interpretation",
+        "patient_education",
+        "care_coordination",
+        "billing"
+      ]
     },
     {
       "id": "autonomy",
       "title": "Autonomy Configuration",
       "description": "Per-action autonomy tiers controlling CareAgent's independence.",
-      "question_ids": ["autonomy_chart", "autonomy_order", "autonomy_charge", "autonomy_interpret", "autonomy_educate", "autonomy_coordinate"]
+      "question_ids": [
+        "autonomy_chart",
+        "autonomy_order",
+        "autonomy_charge",
+        "autonomy_interpret",
+        "autonomy_educate",
+        "autonomy_coordinate"
+      ]
     }
   ],
   "questions": [
@@ -69,7 +101,7 @@
       "text": "What is your full name as it appears on your medical license?",
       "answer_type": "text",
       "required": true,
-      "npi_prefill": "name",
+      "npi_prefill": "npi_lookup.name",
       "cans_field": "provider.name",
       "validation": {
         "min_length": 2
@@ -100,12 +132,12 @@
     },
     {
       "id": "organization_name",
-      "text": "Is {{npi_org_lookup.dba_name}} your practice name?",
+      "text": "Is {{npi_org_lookup.organization_name}} your practice name?",
       "answer_type": "boolean",
       "required": true,
-      "npi_prefill": "dba_name",
+      "npi_prefill": "npi_org_lookup.organization_name",
       "cans_field": "provider.organizations",
-      "llm_guidance": "Present the DBA (Doing Business As) name from the NPI-2 lookup: 'The NPI you entered returned the practice name {{npi_org_lookup.dba_name}}. Is this correct?' If no DBA exists, fall back to the legal organization_name. If they confirm, store and continue. If they deny, explain that the practice name is tied to the NPI number they entered, and ask them to re-enter their practice NPI. Loop back to the practice NPI question (organization_npi). After 5 failed attempts, say: 'It looks like there is a mismatch with the NPI number you are entering and your practice name. Please verify your practice NPI and try again.' Continue the loop — the provider cannot proceed until the practice NPI and name match.",
+      "llm_guidance": "Present the DBA (Doing Business As) name from the NPI-2 lookup: 'The NPI you entered returned the practice name {{npi_org_lookup.organization_name}}. Is this correct?' If no DBA exists, fall back to the legal organization_name. If they confirm, store and continue. If they deny, explain that the practice name is tied to the NPI number they entered, and ask them to re-enter their practice NPI. Loop back to the practice NPI question (organization_npi). After 5 failed attempts, say: 'It looks like there is a mismatch with the NPI number you are entering and your practice name. Please verify your practice NPI and try again.' Continue the loop \u2014 the provider cannot proceed until the practice NPI and name match.",
       "classification": {
         "domain": "administrative",
         "sensitivity": "non_sensitive"
@@ -114,21 +146,16 @@
     },
     {
       "id": "license_primary_state_confirm",
-      "text": "Is {{license.state}} your primary practice state?",
+      "text": "Is {{npi_lookup.license_state}} your primary practice state?",
       "answer_type": "boolean",
       "required": true,
-      "repeat_for": {
-        "source": "npi_lookup.licenses",
-        "iterator_var": "license",
-        "primary_first": true
-      },
       "cans_field": "provider.licenses",
       "hard_stop": {
         "operator": "equals",
         "value": "false",
         "message": "Your primary practice state could not be confirmed. Onboarding cannot continue."
       },
-      "llm_guidance": "This question only applies to the PRIMARY license (first in the array, where primary=true). Ask: 'Is {{license.state}} your primary practice state?' If they answer no, onboarding stops.",
+      "llm_guidance": "Ask: 'Is {{npi_lookup.license_state}} your primary practice state?' This uses the primary license state from the NPI lookup. If they answer no, onboarding stops.",
       "classification": {
         "domain": "clinical",
         "sensitivity": "sensitive"
@@ -136,22 +163,17 @@
       "mode": "structured"
     },
     {
-      "id": "license_active",
-      "text": "Is your {{license.state}} medical license active?",
+      "id": "license_active_primary",
+      "text": "Is your {{npi_lookup.license_state}} medical license active?",
       "answer_type": "boolean",
       "required": true,
-      "repeat_for": {
-        "source": "npi_lookup.licenses",
-        "iterator_var": "license",
-        "primary_first": true
-      },
       "cans_field": "provider.licenses",
       "hard_stop": {
         "operator": "equals",
         "value": "false",
         "message": "Your primary medical license is not active. Onboarding cannot continue."
       },
-      "llm_guidance": "For the PRIMARY license: if they answer no, hard stop — onboarding cannot continue. For SECONDARY licenses: if they answer no, store as inactive and move on. No hard stop for secondary licenses.",
+      "llm_guidance": "Ask about their primary license state from the NPI lookup. If not active, hard stop.",
       "classification": {
         "domain": "clinical",
         "sensitivity": "sensitive"
@@ -159,25 +181,20 @@
       "mode": "structured"
     },
     {
-      "id": "license_number_confirm",
-      "text": "What is your {{license.state}} license number?",
+      "id": "license_number_primary",
+      "text": "What is your {{npi_lookup.license_state}} license number?",
       "answer_type": "text",
       "required": true,
-      "repeat_for": {
-        "source": "npi_lookup.licenses",
-        "iterator_var": "license",
-        "primary_first": true
-      },
       "cans_field": "provider.licenses",
       "validation": {
         "min_length": 1
       },
       "hard_stop": {
         "operator": "mismatch",
-        "compare_to": "license.number",
+        "compare_to": "npi_lookup.license_number",
         "message": "The license number you entered does not match NPPES records. Onboarding cannot continue."
       },
-      "llm_guidance": "Ask for their license number. The answer is validated against the NPI lookup value. For the PRIMARY license: if it doesn't match, hard stop. For SECONDARY licenses: if it doesn't match, flag a warning but allow the provider to correct or skip.",
+      "llm_guidance": "Ask for their primary license number. Validated against NPI lookup.",
       "classification": {
         "domain": "clinical",
         "sensitivity": "sensitive"
@@ -518,11 +535,19 @@
       "answer_type": "single_select",
       "required": true,
       "options": [
-        { "value": "supervised", "label": "1. Supervised", "description": "CareAgent prepares, you approve" },
-        { "value": "manual", "label": "2. Manual", "description": "You initiate, CareAgent assists" }
+        {
+          "value": "supervised",
+          "label": "1. Supervised",
+          "description": "CareAgent prepares, you approve"
+        },
+        {
+          "value": "manual",
+          "label": "2. Manual",
+          "description": "You initiate, CareAgent assists"
+        }
       ],
       "cans_field": "autonomy.order",
-      "llm_guidance": "Orders cannot be autonomous — only Supervised or Manual. Most providers choose Supervised.",
+      "llm_guidance": "Orders cannot be autonomous \u2014 only Supervised or Manual. Most providers choose Supervised.",
       "classification": {
         "domain": "administrative",
         "sensitivity": "non_sensitive"
@@ -535,9 +560,21 @@
       "answer_type": "single_select",
       "required": true,
       "options": [
-        { "value": "autonomous", "label": "Autonomous", "description": "CareAgent acts independently" },
-        { "value": "supervised", "label": "Supervised", "description": "CareAgent prepares, you approve" },
-        { "value": "manual", "label": "Manual", "description": "You initiate, CareAgent assists" }
+        {
+          "value": "autonomous",
+          "label": "Autonomous",
+          "description": "CareAgent acts independently"
+        },
+        {
+          "value": "supervised",
+          "label": "Supervised",
+          "description": "CareAgent prepares, you approve"
+        },
+        {
+          "value": "manual",
+          "label": "Manual",
+          "description": "You initiate, CareAgent assists"
+        }
       ],
       "cans_field": "autonomy.charge",
       "classification": {
@@ -552,11 +589,19 @@
       "answer_type": "single_select",
       "required": true,
       "options": [
-        { "value": "supervised", "label": "1. Supervised", "description": "CareAgent prepares, you approve" },
-        { "value": "manual", "label": "2. Manual", "description": "You initiate, CareAgent assists" }
+        {
+          "value": "supervised",
+          "label": "1. Supervised",
+          "description": "CareAgent prepares, you approve"
+        },
+        {
+          "value": "manual",
+          "label": "2. Manual",
+          "description": "You initiate, CareAgent assists"
+        }
       ],
       "cans_field": "autonomy.interpret",
-      "llm_guidance": "Result interpretation cannot be autonomous — only Supervised or Manual.",
+      "llm_guidance": "Result interpretation cannot be autonomous \u2014 only Supervised or Manual.",
       "classification": {
         "domain": "administrative",
         "sensitivity": "non_sensitive"
@@ -569,9 +614,21 @@
       "answer_type": "single_select",
       "required": true,
       "options": [
-        { "value": "autonomous", "label": "Autonomous", "description": "CareAgent acts independently" },
-        { "value": "supervised", "label": "Supervised", "description": "CareAgent prepares, you approve" },
-        { "value": "manual", "label": "Manual", "description": "You initiate, CareAgent assists" }
+        {
+          "value": "autonomous",
+          "label": "Autonomous",
+          "description": "CareAgent acts independently"
+        },
+        {
+          "value": "supervised",
+          "label": "Supervised",
+          "description": "CareAgent prepares, you approve"
+        },
+        {
+          "value": "manual",
+          "label": "Manual",
+          "description": "You initiate, CareAgent assists"
+        }
       ],
       "cans_field": "autonomy.educate",
       "llm_guidance": "Most providers choose 'autonomous' for patient education.",
@@ -587,9 +644,21 @@
       "answer_type": "single_select",
       "required": true,
       "options": [
-        { "value": "autonomous", "label": "Autonomous", "description": "CareAgent acts independently" },
-        { "value": "supervised", "label": "Supervised", "description": "CareAgent prepares, you approve" },
-        { "value": "manual", "label": "Manual", "description": "You initiate, CareAgent assists" }
+        {
+          "value": "autonomous",
+          "label": "Autonomous",
+          "description": "CareAgent acts independently"
+        },
+        {
+          "value": "supervised",
+          "label": "Supervised",
+          "description": "CareAgent prepares, you approve"
+        },
+        {
+          "value": "manual",
+          "label": "Manual",
+          "description": "You initiate, CareAgent assists"
+        }
       ],
       "cans_field": "autonomy.coordinate",
       "classification": {

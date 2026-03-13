@@ -200,9 +200,18 @@ export class FormEngine {
     question: Question,
     context: Record<string, unknown>,
   ): FormQuestion {
+    // Resolve {{path.to.value}} templates in question text using context
+    const resolvedText = question.text.replace(
+      /\{\{(\w+(?:\.\w+)*)\}\}/g,
+      (_match: string, path: string) => {
+        const value = FormEngine._resolveContextPath(path, context)
+        return value !== undefined ? String(value) : _match
+      },
+    )
+
     const formQuestion: FormQuestion = {
       id: question.id,
-      text: question.text,
+      text: resolvedText,
       answer_type: question.answer_type,
       required: question.required,
     }
@@ -221,6 +230,9 @@ export class FormEngine {
     }
     if (question.validation) {
       formQuestion.validation = question.validation
+    }
+    if (question.npi_lookup) {
+      formQuestion.npi_lookup = question.npi_lookup
     }
     if (question.npi_prefill) {
       formQuestion.npi_prefill = question.npi_prefill
@@ -272,8 +284,16 @@ export class FormEngine {
         continue
       }
 
-      for (let i = 0; i < sourceArray.length; i++) {
-        const item = sourceArray[i] as Record<string, unknown>
+      const items = question.repeat_for.primary_first
+        ? [...sourceArray].sort((a, b) => {
+            const aP = (a as Record<string, unknown>).primary ? 1 : 0
+            const bP = (b as Record<string, unknown>).primary ? 1 : 0
+            return bP - aP
+          })
+        : sourceArray
+
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i] as Record<string, unknown>
         const iteratorVar = question.repeat_for.iterator_var
 
         // Create a clone with interpolated text and unique ID

@@ -27,6 +27,7 @@ export const FormQuestionSchema = Type.Object({
   classification: Type.Optional(ClassificationSchema),
   mode: Type.Optional(Type.String()),
   validation: Type.Optional(TextValidationSchema),
+  npi_lookup: Type.Optional(Type.Boolean()),
   npi_prefill: Type.Optional(Type.String()),
   prefilled_value: Type.Optional(Type.Unknown()),
 })
