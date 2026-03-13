@@ -1,4 +1,5 @@
 import { AxonQuestionnaires } from '../questionnaires/questionnaires.js'
+import { generateCANS } from './cans-generator.js'
 import type { Question, Questionnaire, QuestionCondition } from '../types/index.js'
 import type { FormRequest, FormResponse, FormQuestion, ValidationResult } from './schemas.js'
 
@@ -78,9 +79,26 @@ export class FormEngine {
     // Build artifacts from cans_field mappings
     const artifacts = FormEngine._buildArtifacts(visibleQuestions, answers)
 
+    // Generate CANS.md if this is a provider-type questionnaire (not meta-questionnaires)
+    const isMeta = request.questionnaire_id.startsWith('_')
+    let cans: Record<string, unknown> | undefined
+    if (!isMeta) {
+      const cansResult = generateCANS({
+        artifacts,
+        context,
+        answers,
+      })
+      cans = {
+        content: cansResult.content,
+        hash: cansResult.hash,
+        document: cansResult.document,
+      }
+    }
+
     return {
       status: 'completed',
       artifacts,
+      ...(cans ? { cans } : {}),
       progress: {
         current: totalVisible,
         total: totalVisible,

@@ -13,3 +13,5 @@ export type {
   FormProgress,
   ValidationResult,
 } from './schemas.js'
+export { generateCANS } from './cans-generator.js'
+export type { CANSGeneratorInput, CANSGeneratorOutput } from './cans-generator.js'
