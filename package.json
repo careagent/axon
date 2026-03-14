@@ -48,7 +48,7 @@
     "test:coverage": "vitest run --coverage"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "access": "public"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
@@ -66,6 +66,6 @@
     "vitest": "^4.0.18"
   },
   "dependencies": {
-    "@careagent/a2a-types": "file:../shared"
+    "@careagent/a2a-types": "^0.1.0"
   }
 }

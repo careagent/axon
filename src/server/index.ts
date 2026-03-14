@@ -1,4 +1,5 @@
 import http from 'node:http'
+import { createHash } from 'node:crypto'
 import { join } from 'node:path'
 import { AxonRegistry } from '../registry/registry.js'
 import { AxonBroker } from '../broker/broker.js'
@@ -796,6 +797,18 @@ export function createAxonServer(config: AxonServerConfig): AxonServer {
       }
 
       const formResponse = FormEngine.next(formRequest)
+
+      // When a provider-type questionnaire completes, generate CANS.md from artifacts.
+      // Skip CANS generation for utility questionnaires (consent, type selection).
+      const skipCans = formRequest.questionnaire_id.startsWith('_')
+      if (formResponse.status === 'completed' && formResponse.artifacts && !skipCans) {
+        const a = formResponse.artifacts as Record<string, unknown>
+        const doc = buildCANSDocument(a, formRequest.context ?? {})
+        const content = '---\n' + serializeYaml(doc) + '---\n'
+        const hash = createHash('sha256').update(content, 'utf-8').digest('hex')
+        ;(formResponse as Record<string, unknown>).cans = { content, hash, document: doc }
+      }
+
       sendJson(res, 200, formResponse)
       return
     }
@@ -887,3 +900,141 @@ export function createAxonServer(config: AxonServerConfig): AxonServer {
 }
 
 export { PersistentTokenStore } from './tokens.js'
+
+// ---------------------------------------------------------------------------
+// CANS document builder — transforms raw form engine artifacts into a
+// schema-compliant CANS document that provider-core can activate.
+// ---------------------------------------------------------------------------
+
+function toStringArray(value: unknown): string[] {
+  if (Array.isArray(value)) return value.filter((v): v is string => typeof v === 'string')
+  if (typeof value === 'string') return value.split(',').map(s => s.trim()).filter(Boolean)
+  return []
+}
+
+function toAutonomyTier(value: unknown): 'autonomous' | 'supervised' | 'manual' {
+  if (value === 'autonomous' || value === 'supervised' || value === 'manual') return value
+  return 'manual'
+}
+
+function buildCANSDocument(
+  artifacts: Record<string, unknown>,
+  context: Record<string, unknown>,
+): Record<string, unknown> {
+  // Flatten nested artifact structure — the form engine uses dot-path CANS fields
+  // which produce nested objects like { provider: { npi: '...' } }
+  const p = (artifacts.provider ?? {}) as Record<string, unknown>
+  const a = (artifacts.autonomy ?? {}) as Record<string, unknown>
+  const s = (artifacts.scope ?? {}) as Record<string, unknown>
+  const c = (artifacts.consent ?? {}) as Record<string, unknown>
+  const v = (artifacts.voice ?? undefined) as Record<string, unknown> | undefined
+
+  const providerType = (context.provider_type as string) ?? (p.types as string) ?? 'provider'
+
+  // Build organizations array from practice data
+  const orgName = (p.organizations as string) ??
+    (artifacts.practice_name as string) ?? 'Unknown Organization'
+  const organizations: Record<string, unknown>[] = [
+    { name: typeof orgName === 'string' ? orgName : 'Unknown Organization', primary: true },
+  ]
+
+  // Build permitted_actions — default to standard clinical actions
+  const rawActions = s.permitted_actions
+  const permittedActions = Array.isArray(rawActions) && rawActions.length > 0
+    ? rawActions.filter((v): v is string => typeof v === 'string')
+    : typeof rawActions === 'string' && rawActions.length > 0
+      ? rawActions.split(',').map(x => x.trim()).filter(Boolean)
+      : ['chart', 'order', 'educate', 'coordinate', 'interpret']
+
+  return {
+    version: '2.0',
+    identity_type: 'provider',
+    provider: {
+      name: String(p.name ?? 'Unknown Provider'),
+      ...(p.npi !== undefined ? { npi: String(p.npi) } : {}),
+      types: toStringArray(p.types).length > 0 ? toStringArray(p.types) : [providerType],
+      degrees: toStringArray(p.degrees).length > 0 ? toStringArray(p.degrees) : ['MD'],
+      licenses: toStringArray(p.licenses),
+      certifications: toStringArray(p.certifications),
+      ...(p.dea_number !== undefined ? { dea_number: String(p.dea_number) } : {}),
+      ...(p.specialty !== undefined ? { specialty: String(p.specialty) } : {}),
+      ...(p.subspecialty !== undefined || (p.subspecialties !== undefined) ? {
+        subspecialties: toStringArray(p.subspecialties ?? p.subspecialty),
+      } : {}),
+      organizations,
+    },
+    scope: {
+      permitted_actions: permittedActions,
+      ...(s.practice_setting !== undefined ? { practice_setting: String(s.practice_setting) } : {}),
+    },
+    autonomy: {
+      chart: toAutonomyTier(a.chart),
+      order: toAutonomyTier(a.order),
+      charge: toAutonomyTier(a.charge),
+      perform: toAutonomyTier(a.perform),
+      interpret: toAutonomyTier(a.interpret),
+      educate: toAutonomyTier(a.educate),
+      coordinate: toAutonomyTier(a.coordinate),
+    },
+    ...(v !== undefined ? { voice: v } : {}),
+    consent: {
+      hipaa_warning_acknowledged: Boolean(c.hipaa_warning_acknowledged ?? context.consent_hipaa_warning_acknowledged ?? false),
+      synthetic_data_only: Boolean(c.synthetic_data_acknowledged ?? c.synthetic_data_only ?? context.consent_synthetic_data_only ?? false),
+      audit_consent: Boolean(c.audit_trail_acknowledged ?? c.audit_consent ?? context.consent_audit_consent ?? false),
+      acknowledged_at: String(c.acknowledged_at ?? new Date().toISOString()),
+    },
+    skills: {
+      authorized: toStringArray(artifacts.skills_authorized ?? (artifacts.skills as Record<string, unknown>)?.authorized),
+    },
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Simple YAML serializer for CANS.md frontmatter generation
+// ---------------------------------------------------------------------------
+
+function serializeYaml(obj: Record<string, unknown>, indent = 0): string {
+  const prefix = '  '.repeat(indent)
+  let out = ''
+  for (const [key, value] of Object.entries(obj)) {
+    if (value === undefined || value === null) continue
+    if (typeof value === 'object' && !Array.isArray(value)) {
+      out += `${prefix}${key}:\n`
+      out += serializeYaml(value as Record<string, unknown>, indent + 1)
+    } else if (Array.isArray(value)) {
+      if (value.length === 0) {
+        out += `${prefix}${key}: []\n`
+      } else {
+        out += `${prefix}${key}:\n`
+        for (const item of value) {
+          if (typeof item === 'object' && item !== null) {
+            out += `${prefix}  -\n`
+            out += serializeYaml(item as Record<string, unknown>, indent + 2)
+          } else {
+            out += `${prefix}  - ${yamlScalar(item)}\n`
+          }
+        }
+      }
+    } else {
+      out += `${prefix}${key}: ${yamlScalar(value)}\n`
+    }
+  }
+  return out
+}
+
+function yamlScalar(value: unknown): string {
+  if (typeof value === 'boolean') return value ? 'true' : 'false'
+  if (typeof value === 'number') return String(value)
+  const s = String(value)
+  // Quote strings that contain special chars, look like numbers, or are YAML keywords
+  if (
+    /[:#\[\]{}&*!|>'"@`,%]/.test(s) ||
+    s.includes('\n') ||
+    s.trim() !== s ||
+    /^\d+(\.\d+)?$/.test(s) ||
+    s === 'true' || s === 'false' || s === 'null' || s === ''
+  ) {
+    return `"${s.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`
+  }
+  return s
+}
