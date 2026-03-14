@@ -73,11 +73,11 @@ describe('FormEngine (real questionnaires)', () => {
         makeRequest(
           QID,
           { individual_npi: '1234567890' },
-          { name: 'Dr. Smith' },
+          { npi_lookup: { name: 'Dr. Smith' } },
         ),
       )
       expect(res.question!.id).toBe('provider_name')
-      expect(res.question!.npi_prefill).toBe('name')
+      expect(res.question!.npi_prefill).toBe('npi_lookup.name')
       expect(res.question!.prefilled_value).toBe('Dr. Smith')
     })
 
@@ -89,8 +89,8 @@ describe('FormEngine (real questionnaires)', () => {
         organization_npi: '1234567891',
         organization_name: true,
         license_primary_state_confirm: true,
-        license_active: true,
-        license_number_confirm: 'ABC123',
+        license_active_primary: true,
+        license_number_primary: 'ABC123',
         has_certifications: false,
       }
 
@@ -107,8 +107,8 @@ describe('FormEngine (real questionnaires)', () => {
         organization_npi: '1234567891',
         organization_name: true,
         license_primary_state_confirm: true,
-        license_active: true,
-        license_number_confirm: 'ABC123',
+        license_active_primary: true,
+        license_number_primary: 'ABC123',
         has_certifications: true,
       }
 
@@ -138,7 +138,7 @@ describe('FormEngine (real questionnaires)', () => {
         organization_npi: '1234567891',
         organization_name: true,
         license_primary_state_confirm: true,
-        license_active: false,
+        license_active_primary: false,
       }
 
       const res = FormEngine.next(makeRequest(QID, answers))
@@ -153,8 +153,8 @@ describe('FormEngine (real questionnaires)', () => {
         organization_npi: '1234567891',
         organization_name: true,
         license_primary_state_confirm: true,
-        license_active: true,
-        license_number_confirm: 'ABC123',
+        license_active_primary: true,
+        license_number_primary: 'ABC123',
         has_certifications: false,
         has_subspecialty: false,
         practice_setting: 'private',
@@ -171,6 +171,7 @@ describe('FormEngine (real questionnaires)', () => {
         autonomy_interpret: 'supervised',
         autonomy_educate: 'autonomous',
         autonomy_coordinate: 'autonomous',
+        cans_acknowledgment: true,
       }
 
       const res = FormEngine.next(makeRequest(QID, allAnswers))
@@ -197,8 +198,8 @@ describe('FormEngine (real questionnaires)', () => {
         organization_npi: '1234567891',
         organization_name: true,
         license_primary_state_confirm: true,
-        license_active: true,
-        license_number_confirm: 'ABC123',
+        license_active_primary: true,
+        license_number_primary: 'ABC123',
         has_certifications: false,
         has_subspecialty: false,
         practice_setting: 'private',
@@ -219,8 +220,8 @@ describe('FormEngine (real questionnaires)', () => {
         organization_npi: '1234567891',
         organization_name: true,
         license_primary_state_confirm: true,
-        license_active: true,
-        license_number_confirm: 'ABC123',
+        license_active_primary: true,
+        license_number_primary: 'ABC123',
         has_certifications: false,
         has_subspecialty: false,
         practice_setting: 'private',
@@ -336,8 +337,8 @@ describe('FormEngine (unit tests)', () => {
         organization_npi: '1234567891',
         organization_name: true,
         license_primary_state_confirm: true,
-        license_active: true,
-        license_number_confirm: 'ABC123',
+        license_active_primary: true,
+        license_number_primary: 'ABC123',
         has_certifications: true,
       }
       const res = FormEngine.next(makeRequest('physician', answers))
@@ -351,8 +352,8 @@ describe('FormEngine (unit tests)', () => {
         organization_npi: '1234567891',
         organization_name: true,
         license_primary_state_confirm: true,
-        license_active: true,
-        license_number_confirm: 'ABC123',
+        license_active_primary: true,
+        license_number_primary: 'ABC123',
         has_certifications: false,
       }
       const res = FormEngine.next(makeRequest('physician', answers))
@@ -395,44 +396,32 @@ describe('FormEngine (unit tests)', () => {
         organization_npi: '1234567891',
         organization_name: true,
         license_primary_state_confirm: true,
-        license_active: true,
-        license_number_confirm: 'WRONG123',
+        license_active_primary: false,
       }
-      const context = {
-        license: { number: 'CORRECT456' },
-      }
-      const res = FormEngine.next(makeRequest('physician', answers, context))
+      const res = FormEngine.next(makeRequest('physician', answers))
       expect(res.status).toBe('hard_stop')
-      expect(res.hard_stop_message).toContain('does not match')
     })
 
-    it('passes when answer matches context value', () => {
+    it('passes when answer matches expected value', () => {
       const answers: Record<string, unknown> = {
         individual_npi: '1234567890',
         provider_name: 'Dr. Smith',
         organization_npi: '1234567891',
         organization_name: true,
         license_primary_state_confirm: true,
-        license_active: true,
-        license_number_confirm: 'CORRECT456',
+        license_active_primary: true,
       }
-      const context = {
-        license: { number: 'CORRECT456' },
-      }
-      const res = FormEngine.next(makeRequest('physician', answers, context))
+      const res = FormEngine.next(makeRequest('physician', answers))
       expect(res.status).toBe('question')
-      expect(res.question!.id).toBe('has_certifications')
+      expect(res.question!.id).toBe('license_number_primary')
     })
   })
 
-  describe('repeat_for expansion', () => {
-    it('expands questions for each item in context source array', () => {
+  describe('context interpolation in question text', () => {
+    it('interpolates npi_lookup.license_state in question text', () => {
       const context = {
         npi_lookup: {
-          licenses: [
-            { state: 'SC', number: 'SC-001' },
-            { state: 'NC', number: 'NC-002' },
-          ],
+          license_state: 'SC',
         },
       }
       const answers: Record<string, unknown> = {
@@ -443,14 +432,14 @@ describe('FormEngine (unit tests)', () => {
       }
       const res = FormEngine.next(makeRequest('physician', answers, context))
       expect(res.status).toBe('question')
-      // Should be the first expanded instance: license_primary_state_confirm_0
-      expect(res.question!.id).toBe('license_primary_state_confirm_0')
+      expect(res.question!.id).toBe('license_primary_state_confirm')
       expect(res.question!.text).toContain('SC')
     })
 
-    it('interpolates iterator variables in question text', () => {
+    it('interpolates context variables in question text', () => {
       const context = {
         npi_lookup: {
+          license_state: 'TX',
           licenses: [{ state: 'TX', number: 'TX-999' }],
         },
       }
@@ -487,12 +476,12 @@ describe('FormEngine (unit tests)', () => {
   })
 
   describe('npi_prefill from context', () => {
-    it('sets prefilled_value when context has the key', () => {
+    it('sets prefilled_value when context has the key (nested path)', () => {
       const res = FormEngine.next(
         makeRequest(
           'physician',
           { individual_npi: '1234567890' },
-          { name: 'Jane Doe' },
+          { npi_lookup: { name: 'Jane Doe' } },
         ),
       )
       expect(res.question!.id).toBe('provider_name')
@@ -516,7 +505,7 @@ describe('FormEngine (unit tests)', () => {
             provider_name: 'Dr. Smith',
             organization_npi: '1234567891',
           },
-          { dba_name: 'Smith Clinic' },
+          { npi_org_lookup: { organization_name: 'Smith Clinic' } },
         ),
       )
       expect(res.question!.id).toBe('organization_name')
@@ -572,8 +561,8 @@ describe('FormEngine (unit tests)', () => {
         organization_npi: '1234567891',
         organization_name: true,
         license_primary_state_confirm: true,
-        license_active: true,
-        license_number_confirm: 'ABC123',
+        license_active_primary: true,
+        license_number_primary: 'ABC123',
         has_certifications: false,
         has_subspecialty: false,
       }
