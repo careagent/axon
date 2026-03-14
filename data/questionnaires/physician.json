@@ -666,6 +666,23 @@
         "sensitivity": "non_sensitive"
       },
       "mode": "structured"
+    },
+    {
+      "id": "cans_acknowledgment",
+      "text": "Your CareAgent Nervous System (CANS) certificate has been generated. The CANS defines your clinical identity, credentials, scope of practice, and autonomy settings \u2014 it is the single document that activates your AI agent for clinical work. Without it, your CareAgent cannot operate. Do you acknowledge and approve this activation?",
+      "answer_type": "boolean",
+      "required": true,
+      "hard_stop": {
+        "operator": "equals",
+        "value": "false",
+        "message": "Provider declined activation. CANS.md will not be delivered. You may restart onboarding at any time."
+      },
+      "llm_guidance": "Present a clear summary: provider name, NPI, specialty, organization, autonomy tiers for each of the 7 actions, and permitted scope. Explain that the CANS is the activation certificate that governs what their AI agent can do clinically. Then ask for final confirmation.",
+      "classification": {
+        "domain": "administrative",
+        "sensitivity": "non_sensitive"
+      },
+      "mode": "structured"
     }
   ]
 }
