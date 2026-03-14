@@ -255,7 +255,7 @@ describe('AxonServer', () => {
     expect(res.status).toBe(200)
     const data = (await res.json()) as { provider_type: string; questions: unknown[] }
     expect(data.provider_type).toBe('_universal_consent')
-    expect(data.questions).toHaveLength(1)
+    expect(data.questions).toHaveLength(3)
   })
 
   it('GET /v1/questionnaires/_provider_type_selection returns routing questionnaire with enriched options', async () => {

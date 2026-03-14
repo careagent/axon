@@ -102,7 +102,7 @@ describe('AxonQuestionnaires', () => {
       expect(q).toBeDefined()
       expect(q!.provider_type).toBe('_universal_consent')
       expect(q!.output_artifact).toBe('consent')
-      expect(q!.questions).toHaveLength(1)
+      expect(q!.questions).toHaveLength(3)
     })
 
     it('universal consent has dev environment consent question', () => {
@@ -178,7 +178,7 @@ describe('loadMetaQuestionnaire', () => {
   it('loads _universal_consent without taxonomy validation', () => {
     const q = loadMetaQuestionnaire('_universal_consent')
     expect(q.provider_type).toBe('_universal_consent')
-    expect(q.questions).toHaveLength(1)
+    expect(q.questions).toHaveLength(3)
   })
 
   it('loads _provider_type_selection with enriched options', () => {
